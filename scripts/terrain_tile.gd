@@ -36,8 +36,7 @@ func _ready() -> void:
 	
 	_update_heightmap(heightmap_tex)
 	
-	$TerrainTileStaticBody3D.add_terrain_sig.connect(_on_add_material.bind())
-	$TerrainTileStaticBody3D.remove_terrain_sig.connect(_on_remove_material.bind())
+
 
 	
 	pass # Replace with function body.
@@ -58,22 +57,14 @@ func _update_heightmap(new_heightmap: Texture2D) -> void:
 	heightmap_collision.update_map_data_from_image(heightmap_img, 0, terrain_height)
 	
 	
-func _on_add_material(global_pos: Vector3) -> void:
+func sculpt_tile(global_pos: Vector3, radius: float, height: float) -> void:
 	var world_to_local: Transform3D = global_transform.inverse()
 	var local_pos: Vector3 = world_to_local * global_pos
 	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
 	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
 	
-	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), 50.0, 0.2)
+	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), radius, height)
 
-
-func _on_remove_material(global_pos: Vector3) -> void:
-	var world_to_local: Transform3D = global_transform.inverse()
-	var local_pos: Vector3 = world_to_local * global_pos
-	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
-	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
-	
-	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), 50.0, -0.2)
 
 func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float) -> void:
 	var compositor_effect: HeightmapEditCompositorEffect = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects[0]
@@ -84,7 +75,7 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 	
 	$HeightMapGenViewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	
-	await RenderingServer.frame_post_draw
+	# await RenderingServer.frame_post_draw
 	_update_heightmap(heightmap_tex)
 	
 	if (first_heightmap_update):
