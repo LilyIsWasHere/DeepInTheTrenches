@@ -209,6 +209,7 @@ func _process(delta: float) -> void:
 
 			compute_shader_kernel_compilations[shader_name].clear()
 
+			print("recompiling " + file_path)
 			compile_compute_shader(file_path)
 
 

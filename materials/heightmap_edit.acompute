@@ -1,0 +1,49 @@
+#kernel EditHeightmap
+
+
+layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
+
+layout(binding = 1) uniform UniformBufferObject {
+	vec4 _LocationRadiusHeight;
+};
+
+layout(push_constant, std430) uniform Params {
+	vec2 raster_size;
+};
+
+const float PI = 3.14159265;
+const float E = 2.71828;
+ 
+
+float weight_function(float x) {
+
+    float sigma = 3.0;
+    return 1.0/(sigma * sqrt(2 * PI)) * exp((-1.0 * (x*x)) / 2*sigma*sigma);
+}
+
+float calculate_weight(float distance, float brush_radius) {
+    // Map the distance to [0, 1] so we can more easily fit a weight function
+    float max_distance = brush_radius;
+    float distance_ratio = min(1.0, distance / max_distance);
+    return weight_function(distance_ratio);
+}
+
+[numthreads(8, 8, 1)]
+void EditHeightmap() {
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 size = ivec2(raster_size);
+	
+	if (uv.x >= size.x || uv.y >= size.y) return;
+
+    vec2 location = _LocationRadiusHeight.xy;
+    float radius = _LocationRadiusHeight.z;
+    float height = _LocationRadiusHeight.w;
+	
+    float dist = distance(vec2(float(uv.x), float(uv.y)), location);
+
+    if (dist > radius) return;
+
+    vec3 color = imageLoad(_RenderTarget, uv).rgb + height * calculate_weight(dist, radius);
+	
+	imageStore(_RenderTarget, uv, vec4(color, 1.0));
+}

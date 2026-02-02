@@ -110,7 +110,7 @@ void fragment() {
 		banding = false;
 	}
 	
-	vec3 color = vec3(0.5, 1, 0.5) * float(banding);
+	vec3 color = vec3(UV.x, UV.y, 0.5) * float(banding);
 	
 	ALBEDO = color;
 }

@@ -1,9 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://b438djrjx0hs4"]
+[gd_scene load_steps=17 format=3 uid="uid://b438djrjx0hs4"]
 
+[ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="2_8rhti"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
+[ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="4_tpea4"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 [ext_resource type="Script" uid="uid://bsouf48aos0dn" path="res://scripts/label_3d.gd" id="7_56f15"]
 
-[sub_resource type="Shader" id="Shader_3vi8l"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_21bcp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21bcp"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_21bcp")
+albedo_texture_force_srgb = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_8rhti"]
+resource_local_to_scene = true
+
+[sub_resource type="Shader" id="Shader_21bcp"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -64,7 +77,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 resource_local_to_scene = true
-shader = SubResource("Shader_3vi8l")
+shader = SubResource("Shader_21bcp")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
 shader_parameter/small_scale = 2.0
@@ -72,10 +85,34 @@ shader_parameter/large_scale = 0.8
 shader_parameter/small_intensity = 0.2
 shader_parameter/large_intensity = 1.5
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohhpf"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ohhpf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8rhti"]
+resource_local_to_scene = true
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ohhpf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_21bcp"]
+shader = ExtResource("5_21bcp")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 500
+shader_parameter/small_frequency = 3.505
+shader_parameter/large_frequency = 13.485
+shader_parameter/small_intensity = 0.625
+shader_parameter/large_intensity = 0.86
+
 [node name="Node3D" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.66898173, 0.2043073, -0.7146482, 0, 0.96148056, 0.27487302, 0.74327886, 0.18388502, -0.6432129, -48.609924, 81.514824, -53.612064)
+transform = Transform3D(-0.017263496, 0.5656666, -0.82445335, 0, 0.8245762, 0.5657509, 0.999851, 0.009766839, -0.014235069, -24.025064, 94.722206, 214.82797)
 
 [node name="Label3D" type="Label3D" parent="Camera3D"]
 transform = Transform3D(1, -6.7055225e-08, 2.9802322e-08, 0, 1, 1.1920929e-07, 0, -2.9802322e-08, 0.9999999, -0.6081147, 0.3632822, -0.60115767)
@@ -84,6 +121,17 @@ font_size = 10
 outline_size = 5
 script = ExtResource("7_56f15")
 
+[node name="SculptBrush" type="Node3D" parent="Camera3D"]
+script = ExtResource("2_8rhti")
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D/SculptBrush"]
+
+[node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
+material_override = SubResource("StandardMaterial3D_21bcp")
+mesh = SubResource("QuadMesh_8rhti")
+script = ExtResource("4_tpea4")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45240167, 0.7380956, 0.30523363, -0.60170364, -165.5405, 138.63272, 283.12396)
 
@@ -91,3 +139,32 @@ transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(8, 8)
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
+
+[node name="DebugRaycastTo" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_ohhpf")
+mesh = SubResource("SphereMesh_ohhpf")
+
+[node name="DebugRaycastFrom" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_8rhti")
+mesh = SubResource("SphereMesh_ohhpf")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(0.7131177, 0.23741893, 0.6596176, 0, 0.9409071, -0.33866465, -0.7010443, 0.24150777, 0.67097753, -36.596283, 75.934204, -40.066788)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_8rhti")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_ohhpf")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
+size = Vector2i(500, 500)
+
+[node name="ColorRect" type="ColorRect" parent="SubViewport"]
+material = SubResource("ShaderMaterial_21bcp")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

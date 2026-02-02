@@ -1,7 +1,48 @@
-[gd_scene load_steps=6 format=3 uid="uid://dj4e1o62sggak"]
+[gd_scene load_steps=16 format=3 uid="uid://dj4e1o62sggak"]
 
 [ext_resource type="Script" uid="uid://dupy50x5vv28b" path="res://scripts/terrain_tile.gd" id="1_cfsic"]
 [ext_resource type="Shader" uid="uid://clpcrx3w1xj7o" path="res://materials/heightmap_terrain.gdshader" id="2_hp1fw"]
+[ext_resource type="Shader" uid="uid://bahag0l77m5ti" path="res://fullscreen_quad.gdshader" id="3_hp1fw"]
+[ext_resource type="Script" uid="uid://hb05se8utxgu" path="res://terrain_tile_static_body_3d.gd" id="3_rg4wi"]
+[ext_resource type="Script" uid="uid://dsejgw4f86mnh" path="res://heightmap_edit_shader.gd" id="4_cfsic"]
+
+[sub_resource type="Environment" id="Environment_hp1fw"]
+resource_local_to_scene = true
+background_mode = 3
+ambient_light_source = 1
+reflected_light_source = 1
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_hp1fw"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+location = Vector2(67.29, 71.72)
+radius = 0.0
+height = 0.0
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="Compositor" id="Compositor_lrlw4"]
+resource_local_to_scene = true
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1fw")])
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrlw4"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hp1fw"]
+viewport_path = NodePath("HeightMapGenViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_68x4c"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_hp1fw")
+shader_parameter/viewport_tex = SubResource("ViewportTexture_hp1fw")
+
+[sub_resource type="QuadMesh" id="QuadMesh_fxlds"]
+flip_faces = true
+size = Vector2(2, 2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1blrm"]
 resource_local_to_scene = true
@@ -25,19 +66,33 @@ map_data = PackedFloat32Array(100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 [node name="TerrainTile_Node" type="Node3D"]
 script = ExtResource("1_cfsic")
 
-[node name="HeightMapRT" type="SubViewport" parent="."]
-disable_3d = true
+[node name="HeightMapGenViewport" type="SubViewport" parent="."]
 own_world_3d = true
+transparent_bg = true
 use_hdr_2d = true
-size = Vector2i(2, 2)
+size = Vector2i(500, 500)
+render_target_clear_mode = 1
 render_target_update_mode = 1
 
-[node name="HeightMapColorRect" type="ColorRect" parent="HeightMapRT"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="HeightMapGenViewport"]
+environment = SubResource("Environment_hp1fw")
+
+[node name="HeightMapEditCam" type="Camera3D" parent="HeightMapGenViewport/WorldEnvironment"]
+compositor = SubResource("Compositor_lrlw4")
+fov = 63.352615
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HeightMapGenViewport/WorldEnvironment/HeightMapEditCam"]
+material_override = SubResource("ShaderMaterial_lrlw4")
+material_overlay = SubResource("ShaderMaterial_68x4c")
+mesh = SubResource("QuadMesh_fxlds")
+
+[node name="HeightMapGenColorRect" type="ColorRect" parent="HeightMapGenViewport"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(1, 0, 1, 1)
 
 [node name="TerrainMeshScale" type="Node3D" parent="."]
 
@@ -46,8 +101,8 @@ material_override = SubResource("ShaderMaterial_1blrm")
 mesh = SubResource("PlaneMesh_27wy6")
 skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-collision_layer = 0
+[node name="TerrainTileStaticBody3D" type="StaticBody3D" parent="."]
+script = ExtResource("3_rg4wi")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TerrainTileStaticBody3D"]
 shape = SubResource("HeightMapShape3D_kt35w")

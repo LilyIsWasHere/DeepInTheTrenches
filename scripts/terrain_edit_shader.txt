@@ -1,28 +1,28 @@
 @tool
 extends CompositorEffect
-class_name ExposureCompositorEffect
+class_name TerrainEditCompositorEffect
 
 @export_group("Shader Settings")
 @export var location := Vector2(0, 0)
 @export var radius: float = 10
 @export var height: float = 0.2
-
+@export var input_heightmap: Texture2D
 
 var rd : RenderingDevice
-var exposure_compute : ACompute
+var terrain_edit_compute : ACompute
 
 func _init() -> void:
 	effect_callback_type = EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
 	rd = RenderingServer.get_rendering_device()
 
 	# To make use of an existing ACompute shader we use its filename to access it, in this case, the example compute shader file is 'exposure_example.acompute'
-	exposure_compute = ACompute.new('exposure_example')
+	terrain_edit_compute = ACompute.new('dbg_terrain_edit')
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		# ACompute will handle the freeing of any resources attached to it
-		exposure_compute.free()
+		terrain_edit_compute.free()
 
 
 func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) -> void:
@@ -31,6 +31,9 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 	
 	if not rd:
 		push_error("No rendering device")
+		return
+
+	if not input_heightmap:
 		return
 	
 	var render_scene_buffers : RenderSceneBuffersRD = p_render_data.get_render_scene_buffers()
@@ -55,14 +58,16 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 	for view in range(render_scene_buffers.get_view_count()):
 		var input_image: RID = render_scene_buffers.get_color_layer(view)
 
+		var heightmap: RID = input_heightmap.get_rid()
 
 		# Pack the exposure vector into a byte array
 		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height]).to_byte_array()
-		
+
 		# ACompute handles uniform caching under the hood, as long as the exposure value doesn't change or the render target doesn't change, these functions will only do work once
-		exposure_compute.set_texture(0, input_image)
-		exposure_compute.set_uniform_buffer(1, uniform_array)
-		exposure_compute.set_push_constant(push_constant.to_byte_array())
+		terrain_edit_compute.set_texture(0, input_image)
+		terrain_edit_compute.set_uniform_buffer(1, uniform_array)
+		terrain_edit_compute.set_texture(2, heightmap)
+		terrain_edit_compute.set_push_constant(push_constant.to_byte_array())
 
 		# Dispatch the compute kernel
-		exposure_compute.dispatch(0, x_groups, y_groups, z_groups)
+		terrain_edit_compute.dispatch(0, x_groups, y_groups, z_groups)

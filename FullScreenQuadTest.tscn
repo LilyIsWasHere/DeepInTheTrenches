@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://fly6w6kaw05x"]
+
+[ext_resource type="Script" uid="uid://bwro3nluahahc" path="res://scripts/exposure_shader.gd" id="1_i3x5l"]
+
+[sub_resource type="Environment" id="Environment_f000m"]
+background_mode = 4
+ambient_light_source = 1
+reflected_light_source = 1
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_f000m"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_i3x5l")
+location = Vector2(254.745, 200.015)
+radius = 49.72
+height = 0.375
+metadata/_custom_type_script = "uid://bwro3nluahahc"
+
+[sub_resource type="Compositor" id="Compositor_i3x5l"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_f000m")])
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_f000m"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3x5l"]
+resource_local_to_scene = true
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_f000m")
+
+[sub_resource type="QuadMesh" id="QuadMesh_f000m"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
+transparent_bg = true
+use_hdr_2d = true
+render_target_clear_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewport"]
+environment = SubResource("Environment_f000m")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport/WorldEnvironment"]
+compositor = SubResource("Compositor_i3x5l")
+fov = 63.352615
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.94432855, 0.6912677, 0)
+material_override = SubResource("StandardMaterial3D_i3x5l")
+mesh = SubResource("QuadMesh_f000m")

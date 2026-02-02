@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://dgtaxnepwhdnq"]
+
+[ext_resource type="Script" uid="uid://bwro3nluahahc" path="res://scripts/exposure_shader.gd" id="1_ck76p"]
+
+[sub_resource type="Environment" id="Environment_ck76p"]
+background_mode = 3
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ck76p"]
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_x1wob"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_ck76p")
+metadata/_custom_type_script = "uid://bwro3nluahahc"
+
+[sub_resource type="Compositor" id="Compositor_pqctp"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_x1wob")])
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ck76p"]
+albedo_color = Color(0.99999994, 0.30385947, 0.72687423, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_x1wob"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ck76p")
+camera_attributes = SubResource("CameraAttributesPractical_ck76p")
+compositor = SubResource("Compositor_pqctp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldEnvironment"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ck76p")
+mesh = SubResource("SphereMesh_x1wob")
+
+[node name="SubViewport" type="SubViewport" parent="WorldEnvironment"]
+
+[node name="ColorRect" type="ColorRect" parent="WorldEnvironment/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.23921569, 0.6313726, 1)

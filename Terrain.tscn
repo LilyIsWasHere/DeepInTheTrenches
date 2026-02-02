@@ -8,8 +8,8 @@ resource_local_to_scene = true
 shader = ExtResource("2_nrd8o")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
-shader_parameter/small_scale = 0.0
-shader_parameter/large_scale = 1.0
+shader_parameter/small_frequency = 0.0
+shader_parameter/large_frequency = 0.0
 shader_parameter/small_intensity = 1.0
 shader_parameter/large_intensity = 1.0
 

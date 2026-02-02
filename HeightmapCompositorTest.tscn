@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://boojb2oddpj0n"]
+
+[ext_resource type="Script" uid="uid://bwro3nluahahc" path="res://scripts/exposure_shader.gd" id="1_pmcoo"]
+
+[sub_resource type="Environment" id="Environment_oqjb1"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_0kjfi"]
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_wehca"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_pmcoo")
+exposure = null
+metadata/_custom_type_script = "uid://bwro3nluahahc"
+
+[sub_resource type="Compositor" id="Compositor_5s8kr"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_wehca")])
+
+[node name="Node2D" type="Node2D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_oqjb1")
+camera_attributes = SubResource("CameraAttributesPractical_0kjfi")
+compositor = SubResource("Compositor_5s8kr")
+
+[node name="ColorRect" type="ColorRect" parent="WorldEnvironment"]
+offset_right = 1147.0
+offset_bottom = 644.0
+color = Color(1, 0, 1, 1)

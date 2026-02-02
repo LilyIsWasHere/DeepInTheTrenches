@@ -4,7 +4,7 @@
 layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
 
 layout(binding = 1) uniform UniformBufferObject {
-	vec4 _Exposure;
+	vec4 _LocationRadiusHeight;
 };
 
 layout(push_constant, std430) uniform Params {
@@ -17,8 +17,14 @@ void ExposureExample() {
 	ivec2 size = ivec2(raster_size);
 	
 	if (uv.x >= size.x || uv.y >= size.y) return;
+
+    vec2 location = _LocationRadiusHeight.xy;
+    float radius = _LocationRadiusHeight.z;
+    float height = _LocationRadiusHeight.w;
 	
-    vec3 color = imageLoad(_RenderTarget, uv).rgb * _Exposure.gba * _Exposure.r;
+    if (distance(vec2(float(uv.x), float(uv.y)), location) > radius) return;
+
+    vec3 color = imageLoad(_RenderTarget, uv).rgb + height;
 	
 	imageStore(_RenderTarget, uv, vec4(color, 1.0));
 }

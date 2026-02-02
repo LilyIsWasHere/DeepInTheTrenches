@@ -1,6 +1,6 @@
 @tool
 extends CompositorEffect
-class_name ExposureCompositorEffect
+class_name HeightmapEditCompositorEffect
 
 @export_group("Shader Settings")
 @export var location := Vector2(0, 0)
@@ -9,20 +9,20 @@ class_name ExposureCompositorEffect
 
 
 var rd : RenderingDevice
-var exposure_compute : ACompute
+var heightmap_edit_compute : ACompute
 
 func _init() -> void:
 	effect_callback_type = EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
 	rd = RenderingServer.get_rendering_device()
 
-	# To make use of an existing ACompute shader we use its filename to access it, in this case, the example compute shader file is 'exposure_example.acompute'
-	exposure_compute = ACompute.new('exposure_example')
+	# To make use of an existing ACompute shader we use its filename to access it, in this case, the example compute shader file is 'heightmap_edit.acompute'
+	heightmap_edit_compute = ACompute.new('heightmap_edit')
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		# ACompute will handle the freeing of any resources attached to it
-		exposure_compute.free()
+		heightmap_edit_compute.free()
 
 
 func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) -> void:
@@ -60,9 +60,9 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height]).to_byte_array()
 		
 		# ACompute handles uniform caching under the hood, as long as the exposure value doesn't change or the render target doesn't change, these functions will only do work once
-		exposure_compute.set_texture(0, input_image)
-		exposure_compute.set_uniform_buffer(1, uniform_array)
-		exposure_compute.set_push_constant(push_constant.to_byte_array())
+		heightmap_edit_compute.set_texture(0, input_image)
+		heightmap_edit_compute.set_uniform_buffer(1, uniform_array)
+		heightmap_edit_compute.set_push_constant(push_constant.to_byte_array())
 
 		# Dispatch the compute kernel
-		exposure_compute.dispatch(0, x_groups, y_groups, z_groups)
+		heightmap_edit_compute.dispatch(0, x_groups, y_groups, z_groups)
