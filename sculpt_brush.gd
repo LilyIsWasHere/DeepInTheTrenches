@@ -19,7 +19,6 @@ func _process(delta: float) -> void:
 		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
 		query.collide_with_areas = true
 		var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
-		print(result)
 		if result.is_empty():
 			return
 		
@@ -40,7 +39,6 @@ func _process(delta: float) -> void:
 		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
 		query.collide_with_areas = true
 		var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
-		print(result)
 		if result.is_empty():
 			return
 		

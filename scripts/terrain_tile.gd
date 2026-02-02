@@ -76,7 +76,6 @@ func _on_remove_material(global_pos: Vector3) -> void:
 	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), 50.0, -0.2)
 
 func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float) -> void:
-	print($HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects)
 	var compositor_effect: HeightmapEditCompositorEffect = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects[0]
 	compositor_effect.location = position
 	compositor_effect.radius = radius
