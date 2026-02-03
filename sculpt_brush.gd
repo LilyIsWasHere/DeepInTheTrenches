@@ -9,15 +9,16 @@ const RAY_LENGTH: float = 3000.0
 
 
 @export var brush_radius: float = 100
-@export var brush_height: float = 0.2
+@export var brush_height: float = 20
 
-func _process(delta: float) -> void:
+
+func _physics_process(delta: float) -> void:
 	
 	if (Input.is_action_pressed("AddMaterial") || Input.is_action_pressed("RemoveMaterial")):
 		
 		var sculpt_height: float = 0.0
-		if Input.is_action_pressed("AddMaterial"): sculpt_height = brush_height
-		elif Input.is_action_pressed("RemoveMaterial"): sculpt_height = -brush_height
+		if Input.is_action_pressed("AddMaterial"): sculpt_height = brush_height * delta
+		elif Input.is_action_pressed("RemoveMaterial"): sculpt_height = -brush_height * delta
 		
 		var mouse_pos := get_viewport().get_mouse_position()
 		var cam: Camera3D = $".."

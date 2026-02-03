@@ -1,5 +1,6 @@
-[gd_scene load_steps=17 format=3 uid="uid://b438djrjx0hs4"]
+[gd_scene load_steps=18 format=3 uid="uid://b438djrjx0hs4"]
 
+[ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="1_tpea4"]
 [ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="2_8rhti"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="4_tpea4"]
@@ -10,13 +11,14 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21bcp"]
 resource_local_to_scene = true
+shading_mode = 0
 albedo_texture = SubResource("ViewportTexture_21bcp")
 albedo_texture_force_srgb = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_8rhti"]
 resource_local_to_scene = true
 
-[sub_resource type="Shader" id="Shader_21bcp"]
+[sub_resource type="Shader" id="Shader_tpea4"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -77,12 +79,12 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 resource_local_to_scene = true
-shader = SubResource("Shader_21bcp")
+shader = SubResource("Shader_tpea4")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
 shader_parameter/small_scale = 2.0
 shader_parameter/large_scale = 0.8
-shader_parameter/small_intensity = 0.2
+shader_parameter/small_intensity = 0.4
 shader_parameter/large_intensity = 1.5
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohhpf"]
@@ -112,7 +114,8 @@ shader_parameter/large_intensity = 0.86
 [node name="Node3D" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.07391761, 0.6235927, -0.77824706, 0, 0.7803819, 0.62530327, 0.9972643, 0.046220925, -0.057683967, -77.88458, 174.2047, 90.9405)
+transform = Transform3D(-0.021619054, 0.65859395, -0.7521879, 0, 0.75236374, 0.6587479, 0.9997663, 0.014241506, -0.016265392, -63.30556, 160.4014, 108.935036)
+script = ExtResource("1_tpea4")
 
 [node name="Label3D" type="Label3D" parent="Camera3D"]
 transform = Transform3D(1, -6.7055225e-08, 2.9802322e-08, 0, 1, 1.1920929e-07, 0, -2.9802322e-08, 0.9999999, -0.6081147, 0.3632822, -0.60115767)
@@ -123,8 +126,7 @@ script = ExtResource("7_56f15")
 
 [node name="SculptBrush" type="Node3D" parent="Camera3D"]
 script = ExtResource("2_8rhti")
-
-[node name="RayCast3D" type="RayCast3D" parent="Camera3D/SculptBrush"]
+brush_radius = 400.0
 
 [node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
@@ -137,8 +139,8 @@ transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45
 
 [node name="Terrain" parent="." instance=ExtResource("3_ohhpf")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
-num_tiles = Vector2i(8, 8)
-tile_size = 300
+num_tiles = Vector2i(10, 10)
+tile_size = 256
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
 
 [node name="DebugRaycastTo" type="MeshInstance3D" parent="."]

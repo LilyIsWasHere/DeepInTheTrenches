@@ -15,7 +15,7 @@ varying vec3 world_normal;
 // References:
 //  https://stackoverflow.com/questions/13501081/efficient-bicubic-filtering-code-in-glsl
 //  http://www.java-gaming.org/index.php?topic=35123.0
-vec4 
+vec4
 cubic_spline_weights(float v)
 {
     vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
@@ -70,8 +70,8 @@ vec4 textureBicubic(sampler2D sampler, vec2 texCoords)
     float sy = s.z / (s.z + s.w);
 
     return mix(
-       mix(sample3, sample2, sx), 
-       mix(sample1, sample0, sx), 
+       mix(sample3, sample2, sx),
+       mix(sample1, sample0, sx),
        sy);
 }
 
@@ -85,33 +85,30 @@ float height(vec2 position) {
 
 
 void vertex() {
-	
-	
-	
 	// Called for every vertex the material is visible on.
   	vec2 pos = UV;
   	float k = height(pos);
  	VERTEX.y = k;
 	NORMAL = normalize(vec3(height(pos + vec2(-normal_offset, 0.0)) - height(pos + vec2(normal_offset, 0.0)), normal_offset, height(pos + vec2(0.0, -normal_offset)) - height(pos + vec2(0.0, normal_offset))));
-	
+
     world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = (vec4(NORMAL, 1.0)).xyz;
-	
+
 }
 
 void fragment() {
 	// Called for every pixel the material is visible on.
 	// ALBEDO = NORMAL;
-	
-	
+
+
 	bool banding = mod(world_position.y, 1) < 0.9;
-	
+
 	if (distance(world_normal, vec3(0, 1, 0)) < 0.05) {
 		banding = false;
 	}
-	
+
 	vec3 color = vec3(UV.x, UV.y, 0.5) * float(banding);
-	
+
 	ALBEDO = color;
 }
 

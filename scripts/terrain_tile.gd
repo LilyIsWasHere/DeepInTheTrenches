@@ -30,11 +30,15 @@ func _ready() -> void:
 	$HeightMapGenViewport/HeightMapGenColorRect.material = heightmap_mat
 	$HeightMapGenViewport.size = Vector2i(size, size)
 	heightmap_tex = $HeightMapGenViewport.get_texture()
-	
-	
+	$TerrainMeshScale/TerrainMesh.mesh.subdivide_width = size-1
+	$TerrainMeshScale/TerrainMesh.mesh.subdivide_depth = size-1
+
 	await RenderingServer.frame_post_draw
 	
-	_update_heightmap(heightmap_tex)
+	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("heightmap", heightmap_tex)
+	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("vertical_scale", terrain_height)
+
+	readback_heightmap_data()
 	
 
 
@@ -45,16 +49,17 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
-func _update_heightmap(new_heightmap: Texture2D) -> void:
-
 	
-	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("heightmap", heightmap_tex)
-	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("vertical_scale", terrain_height)
+	
+func readback_heightmap_data() -> void:
 	var heightmap_collision: HeightMapShape3D = $TerrainTileStaticBody3D/CollisionShape3D.shape
-	var heightmap_img: Image = new_heightmap.get_image()
+	var heightmap_img: Image = heightmap_tex.get_image()
 	heightmap_img.decompress()
 	heightmap_img.convert(Image.FORMAT_RF)
 	heightmap_collision.update_map_data_from_image(heightmap_img, 0, terrain_height)
+
+	
+
 	
 	
 func sculpt_tile(global_pos: Vector3, radius: float, height: float) -> void:
@@ -64,6 +69,12 @@ func sculpt_tile(global_pos: Vector3, radius: float, height: float) -> void:
 	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
 	
 	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), radius, height)
+
+func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:
+
+	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
+	
+	_update_edit_heightmap_compositor(Vector2(size/2, size/2), radius, height)
 
 
 func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float) -> void:
@@ -75,12 +86,11 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 	
 	$HeightMapGenViewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	
-	# await RenderingServer.frame_post_draw
-	_update_heightmap(heightmap_tex)
-	
 	if (first_heightmap_update):
 		$HeightMapGenViewport/HeightMapGenColorRect.queue_free()
 		first_heightmap_update = false
+		
+	TerrainReadbackManager.queue_for_readback(self)
 
 	
 
