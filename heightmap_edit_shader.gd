@@ -57,7 +57,7 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 
 
 		# Pack the exposure vector into a byte array
-		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height]).to_byte_array()
+		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height, float(Time.get_ticks_msec()), 0.0, 0.0, 0.0]).to_byte_array()
 		
 		# ACompute handles uniform caching under the hood, as long as the exposure value doesn't change or the render target doesn't change, these functions will only do work once
 		heightmap_edit_compute.set_texture(0, input_image)

@@ -31,6 +31,7 @@ func _physics_process(delta: float) -> void:
 		if result.is_empty():
 			return
 		
+		$"../../CollisionIndicator".global_position = result["position"]
 		$"../../Terrain".sculpt_terrain(result["position"], brush_radius, sculpt_height)
 		
 		if result["collider"].has_method("get_heightmap_viewport_tex"):

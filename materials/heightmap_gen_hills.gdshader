@@ -40,7 +40,14 @@ float snoise(vec2 v){
 
 
 float hills(vec2 uv, int tile_size, vec2 tile_offset) {
-	vec2 sample = (uv * float(size)) + offset;
+
+	vec2 tex_size = vec2(float(tile_size), float(tile_size));
+	//vec2 tex_size = vec2(textureSize(heightmap, 0));
+//
+	//vec2 scale_adj = (1.0 / tex_size) * 2.0;
+	//UV = scale_uv_by_center(UV, 1.0 + scale_adj);
+
+	vec2 sample = (uv * float(tile_size + 3)) + offset;
 
 	float small_noise = (snoise(sample * small_frequency * 0.001)) * small_intensity;
 	float large_noise = ((snoise(sample * large_frequency
@@ -51,7 +58,8 @@ float hills(vec2 uv, int tile_size, vec2 tile_offset) {
 
 void fragment() {
 
+
 	float height = hills(UV, size, offset);
-	COLOR = vec4(height, 0, 0, 1);
+	COLOR = vec4(height, height, 0, 1);
 
 }

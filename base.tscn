@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b438djrjx0hs4"]
+[gd_scene load_steps=15 format=3 uid="uid://b438djrjx0hs4"]
 
 [ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="1_tpea4"]
 [ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="2_8rhti"]
@@ -13,108 +13,34 @@
 resource_local_to_scene = true
 shading_mode = 0
 albedo_texture = SubResource("ViewportTexture_21bcp")
-albedo_texture_force_srgb = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_8rhti"]
 resource_local_to_scene = true
 
-[sub_resource type="Shader" id="Shader_tpea4"]
-resource_local_to_scene = true
-code = "shader_type canvas_item;
-
-uniform vec2 offset;
-uniform int size;
-
-uniform float small_scale;
-uniform float large_scale;
-
-uniform float small_intensity=1.0;
-uniform float large_intensity=1.0;
-
-vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-
-float snoise(vec2 v){
-  const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-           -0.577350269189626, 0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy) );
-  vec2 x0 = v -   i + dot(i, C.xx);
-  vec2 i1;
-  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod(i, 289.0);
-  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-  + i.x + vec3(0.0, i1.x, 1.0 ));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-    dot(x12.zw,x12.zw)), 0.0);
-  m = m*m ;
-  m = m*m ;
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
-}
-
-
-float hills(vec2 uv, int tile_size, vec2 tile_offset) {
-	vec2 sample = (uv * float(size)) + offset;
-
-	float small_noise = ((snoise(sample * small_scale * 0.001) + 1.0)/2.0) * small_intensity;
-	float large_noise = ((snoise(sample * large_scale * 0.001) + 1.0)/2.0) * large_intensity;
-
-	return  small_noise + large_noise;
-}
-
-void fragment() {
-
-	float height = hills(UV, size, offset);
-	COLOR = vec4(height, 0, 0, 1);
-
-}"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 resource_local_to_scene = true
-shader = SubResource("Shader_tpea4")
+shader = ExtResource("5_21bcp")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
-shader_parameter/small_scale = 2.0
-shader_parameter/large_scale = 0.8
-shader_parameter/small_intensity = 0.4
-shader_parameter/large_intensity = 1.5
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohhpf"]
-shading_mode = 0
-albedo_color = Color(0, 1, 0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_ohhpf"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8rhti"]
-resource_local_to_scene = true
-shading_mode = 0
-albedo_color = Color(1, 0, 0, 1)
+shader_parameter/small_frequency = 2.52
+shader_parameter/large_frequency = 0.52
+shader_parameter/small_intensity = 0.07
+shader_parameter/large_intensity = 1.465
 
 [sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ohhpf"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_21bcp"]
-shader = ExtResource("5_21bcp")
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/size = 500
-shader_parameter/small_frequency = 3.505
-shader_parameter/large_frequency = 13.485
-shader_parameter/small_intensity = 0.625
-shader_parameter/large_intensity = 0.86
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tpea4"]
+shading_mode = 0
+albedo_color = Color(0.8932828, 5.9297086e-05, 0.6791383, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_42dj3"]
 
 [node name="Node3D" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.021619054, 0.65859395, -0.7521879, 0, 0.75236374, 0.6587479, 0.9997663, 0.014241506, -0.016265392, -63.30556, 160.4014, 108.935036)
+transform = Transform3D(0.7814975, 0.44230682, -0.44002995, 0, 0.70527977, 0.7089291, 0.6239084, -0.5540263, 0.55117434, -7.6374674, 17.70421, 6.0194516)
 script = ExtResource("1_tpea4")
 
 [node name="Label3D" type="Label3D" parent="Camera3D"]
@@ -126,7 +52,8 @@ script = ExtResource("7_56f15")
 
 [node name="SculptBrush" type="Node3D" parent="Camera3D"]
 script = ExtResource("2_8rhti")
-brush_radius = 400.0
+brush_radius = 20.0
+brush_height = 10.0
 
 [node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
@@ -140,16 +67,8 @@ transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45
 [node name="Terrain" parent="." instance=ExtResource("3_ohhpf")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(10, 10)
-tile_size = 256
+tile_size = 255
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
-
-[node name="DebugRaycastTo" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_ohhpf")
-mesh = SubResource("SphereMesh_ohhpf")
-
-[node name="DebugRaycastFrom" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_8rhti")
-mesh = SubResource("SphereMesh_ohhpf")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(0.7131177, 0.23741893, 0.6596176, 0, 0.9409071, -0.33866465, -0.7010443, 0.24150777, 0.67097753, -36.596283, 75.934204, -40.066788)
@@ -160,14 +79,8 @@ mesh = SubResource("BoxMesh_8rhti")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_ohhpf")
 
-[node name="SubViewport" type="SubViewport" parent="."]
-own_world_3d = true
-size = Vector2i(500, 500)
-
-[node name="ColorRect" type="ColorRect" parent="SubViewport"]
-material = SubResource("ShaderMaterial_21bcp")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="CollisionIndicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.002161911, 0.0658594, -0.07521879, 0, 0.07523637, 0.06587479, 0.09997663, 0.0014241544, -0.0016265434, -63.30556, 160.4014, 108.935036)
+material_override = SubResource("StandardMaterial3D_tpea4")
+mesh = SubResource("SphereMesh_42dj3")
+skeleton = NodePath("../Camera3D/SculptBrush")

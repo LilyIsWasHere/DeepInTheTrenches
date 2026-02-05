@@ -5,7 +5,10 @@ layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
 
 layout(binding = 1) uniform UniformBufferObject {
 	vec4 _LocationRadiusHeight;
+    float _Time; 
+
 };
+
 
 layout(push_constant, std430) uniform Params {
 	vec2 raster_size;
@@ -15,9 +18,8 @@ const float PI = 3.14159265;
 const float E = 2.71828;
  
 
-float weight_function(float x) {
+float weight_function(float x, float sigma) {
 
-    float sigma = 3.0;
     return 1.0/(sigma * sqrt(2 * PI)) * exp((-1.0 * (x*x)) / 2*sigma*sigma);
 }
 
@@ -25,25 +27,64 @@ float calculate_weight(float distance, float brush_radius) {
     // Map the distance to [0, 1] so we can more easily fit a weight function
     float max_distance = brush_radius;
     float distance_ratio = min(1.0, distance / max_distance);
-    return weight_function(distance_ratio);
+
+    float sigma = 4.0 + sin(_Time * 0.1);
+
+    return weight_function(distance_ratio, sigma);
+}
+
+ivec2 scale_uv_by_center(ivec2 uv, vec2 scale) {
+    return ivec2((vec2(uv) - (vec2(raster_size)/2.0) * scale) + vec2(raster_size)/2.0); 
 }
 
 [numthreads(8, 8, 1)]
-void EditHeightmap() {
-	ivec2 uv = ivec2(gl_GlobalInvocationID.xy);
+void EditHeightmap() { 
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy); 
+
+	// vec2 scale_adj = (1.0 / raster_size);
+	// uv = scale_uv_by_center(uv, 1.0 - scale_adj);
+
+
 	ivec2 size = ivec2(raster_size);
 	
+    // if (uv.x < size.x/2) uv.x -= 1;
+    // else uv.x +=1;
+
+    // if (uv.y < size.y/2) uv.y -= 1;
+    // else uv.y +=1;
+
+
 	if (uv.x >= size.x || uv.y >= size.y) return;
+
+
 
     vec2 location = _LocationRadiusHeight.xy;
     float radius = _LocationRadiusHeight.z;
-    float height = _LocationRadiusHeight.w;
+    float height_delta = _LocationRadiusHeight.w;
+
+    vec2 mod_dir = vec2(sin(_Time * .1), cos(_Time * .1)) * radius/15.0;
+
+    // location += mod_dir;
 	
     float dist = distance(vec2(float(uv.x), float(uv.y)), location);
 
     if (dist > radius) return;
 
-    vec3 color = imageLoad(_RenderTarget, uv).rgb + height * calculate_weight(dist, radius);
+    vec4 height_data = imageLoad(_RenderTarget, uv);
+
+    float prev_height = height_data.r;
+    float init_height = height_data.g;
+
+    float diff = abs(init_height - prev_height);
+
+
+    float a = 100.0;
+    height_delta = height_delta / (a * diff * diff + 1);
+
+    float new_height = prev_height + height_delta * calculate_weight(dist, radius);
 	
-	imageStore(_RenderTarget, uv, vec4(color, 1.0));
+
+
+
+	imageStore(_RenderTarget, uv, vec4(new_height, init_height, 0.0, 1.0));
 }

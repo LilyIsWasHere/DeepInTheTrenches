@@ -38,6 +38,12 @@ func _ready() -> void:
 	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("heightmap", heightmap_tex)
 	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("vertical_scale", terrain_height)
 
+	var scale_adj: float = (1.0 / float(size)) * 3
+	
+	$TerrainTileStaticBody3D/CollisionShape3D.scale += Vector3(scale_adj, scale_adj, scale_adj)
+	$TerrainMeshScale/TerrainMesh.scale += Vector3(scale_adj, 0.0, scale_adj)
+	
+
 	readback_heightmap_data()
 	
 
@@ -54,7 +60,6 @@ func _process(delta: float) -> void:
 func readback_heightmap_data() -> void:
 	var heightmap_collision: HeightMapShape3D = $TerrainTileStaticBody3D/CollisionShape3D.shape
 	var heightmap_img: Image = heightmap_tex.get_image()
-	heightmap_img.decompress()
 	heightmap_img.convert(Image.FORMAT_RF)
 	heightmap_collision.update_map_data_from_image(heightmap_img, 0, terrain_height)
 
@@ -67,7 +72,7 @@ func sculpt_tile(global_pos: Vector3, radius: float, height: float) -> void:
 	var local_pos: Vector3 = world_to_local * global_pos
 	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
 	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
-	
+
 	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), radius, height)
 
 func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:

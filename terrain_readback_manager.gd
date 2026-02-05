@@ -15,7 +15,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if (tile_readback_queue.size() > 0): print("tiles in queue: " + str(tile_readback_queue.size()))
 	readback_queued_tiles()
 
 		
@@ -26,6 +25,8 @@ func queue_for_readback(tile: TerrainTile_Class) -> void:
 	if (!tile_in_queue_set.get(tile_id, false)):
 		tile_readback_queue.append(tile) 
 		tile_in_queue_set[tile_id] = true
+		
+
 
 func readback_queued_tiles() -> void:
 	var pixel_count: int = 0
@@ -39,12 +40,10 @@ func readback_queued_tiles() -> void:
 			break
 		else:
 			tiles_to_readback.append(tile)
-		
+	
 		
 	for tile in tiles_to_readback:
 		tile.readback_heightmap_data()
-		tile_readback_queue.pop_front()
-		tile_in_queue_set.erase(tile)
-	
-	
+		tile_readback_queue.erase(tile)
+		tile_in_queue_set.erase(tile.get_instance_id())
 	

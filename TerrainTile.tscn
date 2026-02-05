@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dj4e1o62sggak"]
+[gd_scene load_steps=14 format=3 uid="uid://dj4e1o62sggak"]
 
 [ext_resource type="Script" uid="uid://dupy50x5vv28b" path="res://scripts/terrain_tile.gd" id="1_cfsic"]
 [ext_resource type="Shader" uid="uid://clpcrx3w1xj7o" path="res://materials/heightmap_terrain.gdshader" id="2_hp1fw"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="3_hp1fw"]
 [ext_resource type="Script" uid="uid://hb05se8utxgu" path="res://terrain_tile_static_body_3d.gd" id="3_rg4wi"]
 [ext_resource type="Script" uid="uid://dsejgw4f86mnh" path="res://heightmap_edit_shader.gd" id="4_cfsic"]
 
@@ -28,10 +29,23 @@ metadata/_custom_type_script = "uid://dsejgw4f86mnh"
 resource_local_to_scene = true
 compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1fw")])
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lrlw4"]
+shader = ExtResource("3_hp1fw")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 500
+shader_parameter/small_frequency = 0.685
+shader_parameter/large_frequency = 1.8
+shader_parameter/small_intensity = -0.605
+shader_parameter/large_intensity = 0.61
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_68x4c"]
+viewport_path = NodePath("HeightMapGenViewport")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1blrm"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_hp1fw")
+shader_parameter/heightmap = SubResource("ViewportTexture_68x4c")
 shader_parameter/vertical_scale = 100.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_27wy6"]
@@ -66,6 +80,7 @@ compositor = SubResource("Compositor_lrlw4")
 fov = 63.352615
 
 [node name="HeightMapGenColorRect" type="ColorRect" parent="HeightMapGenViewport"]
+material = SubResource("ShaderMaterial_lrlw4")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -74,9 +89,11 @@ grow_vertical = 2
 color = Color(1, 0, 1, 1)
 
 [node name="TerrainMeshScale" type="Node3D" parent="."]
+transform = Transform3D(500, 0, 0, 0, 1, 0, 0, 0, 500, 0, 0, 0)
 
 [node name="TerrainMesh" type="MeshInstance3D" parent="TerrainMeshScale"]
 material_override = SubResource("ShaderMaterial_1blrm")
+extra_cull_margin = 10.0
 mesh = SubResource("PlaneMesh_27wy6")
 skeleton = NodePath("../..")
 

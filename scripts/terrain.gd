@@ -34,7 +34,7 @@ func _process(delta: float) -> void:
 	pass
 	
 	
-func sculpt_terrain(global_pos: Vector3i, radius: float, height: float) -> void:
+func sculpt_terrain(global_pos: Vector3, radius: float, height: float) -> void:
 	var affected_tiles: Array[TerrainTile_Class] = get_affected_tiles(global_pos, radius)
 	
 	for tile in affected_tiles:

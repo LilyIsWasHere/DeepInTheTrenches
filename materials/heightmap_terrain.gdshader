@@ -1,12 +1,13 @@
 shader_type spatial;
 
-uniform sampler2D heightmap: repeat_disable;
+uniform sampler2D heightmap: repeat_disable, filter_nearest;
 uniform float vertical_scale = 100;
 
 const float normal_offset = 0.001;
 
 varying vec3 world_position;
 varying vec3 world_normal;
+
 
 
 // Returns the weights for a cubic spline interpolation.
@@ -78,21 +79,75 @@ vec4 textureBicubic(sampler2D sampler, vec2 texCoords)
 
 float height(vec2 position) {
 
-	return texture(heightmap, position).x * vertical_scale;
+	return textureBicubic(heightmap, position).x * vertical_scale;
 	// return texture(heightmap, position).x * heightmap_scale;
 }
 
+vec2 scale_uv_by_center(vec2 uv, vec2 scale) {
+	 return (uv-vec2(0.5,0.5)*scale) + vec2(0.5, 0.5);
+}
 
+
+vec3 hsv2rgb(vec3 c)
+{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+vec4 fromLinear(vec4 linearRGB)
+{
+    bvec3 cutoff = lessThan(linearRGB.rgb, vec3(0.0031308));
+    vec3 higher = vec3(1.055)*pow(linearRGB.rgb, vec3(1.0/2.4)) - vec3(0.055);
+    vec3 lower = linearRGB.rgb * vec3(12.92);
+
+    return vec4(mix(higher, lower, cutoff), linearRGB.a);
+}
+
+// Converts a color from sRGB gamma to linear light gamma
+vec4 toLinear(vec4 sRGB)
+{
+    bvec3 cutoff = lessThan(sRGB.rgb, vec3(0.04045));
+    vec3 higher = pow((sRGB.rgb + vec3(0.055))/vec3(1.055), vec3(2.4));
+    vec3 lower = sRGB.rgb/vec3(12.92);
+
+    return vec4(mix(higher, lower, cutoff), sRGB.a);
+}
+
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+
+varying float is_edge;
 
 void vertex() {
-	// Called for every vertex the material is visible on.
+
+	//vec2 tex_size = vec2(textureSize(heightmap, 0));
+//
+	//vec2 scale_adj = (1.0 / tex_size) * 2.0;
+	//UV = scale_uv_by_center(UV, 1.0 + scale_adj);
+	if (min(UV.x, UV.y) == 0.0 || max(UV.x, UV.y) == 1.0) {
+		is_edge = 1.0;
+	}
+	else is_edge = 0.0;
+
   	vec2 pos = UV;
   	float k = height(pos);
  	VERTEX.y = k;
-	NORMAL = normalize(vec3(height(pos + vec2(-normal_offset, 0.0)) - height(pos + vec2(normal_offset, 0.0)), normal_offset, height(pos + vec2(0.0, -normal_offset)) - height(pos + vec2(0.0, normal_offset))));
+
+	vec2 height_delta = vec2(height(pos + vec2(-normal_offset, 0.0)) - height(pos + vec2(normal_offset, 0.0)), height(pos + vec2(0.0, -normal_offset)) - height(pos + vec2(0.0, normal_offset)));
+	NORMAL = normalize(vec3(height_delta.x, 100.0*normal_offset, height_delta.y));
 
     world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	world_normal = (vec4(NORMAL, 1.0)).xyz;
+	world_normal = normalize((vec4(NORMAL, 1.0)).xyz);
 
 }
 
@@ -101,15 +156,42 @@ void fragment() {
 	// ALBEDO = NORMAL;
 
 
+	vec2 tex_size = vec2(textureSize(heightmap, 0));
+
 	bool banding = mod(world_position.y, 1) < 0.9;
 
 	if (distance(world_normal, vec3(0, 1, 0)) < 0.05) {
 		banding = false;
 	}
 
-	vec3 color = vec3(UV.x, UV.y, 0.5) * float(banding);
+    vec4 height_data = texture(heightmap, UV);
 
-	ALBEDO = color;
+	vec3 dirt_color = vec3(0.1, 0.05, 0.02);
+	vec3 grass_color = vec3(0.3, 0.5, 0.3);
+
+    vec3 mud_colour = vec3(0.07, 0.08, 0.055);
+
+	float flatness = dot(vec3(0.0, 1.0, 0.0), world_normal);
+
+	float height_diff = abs(height_data.r - height_data.g);
+	float h = clamp(10.0 * height_diff, 0.0, 1.0);
+	vec3 flat_colour = mix(grass_color, mud_colour, h);
+
+
+
+
+	vec3 color = mix(dirt_color, flat_colour, flatness);
+
+
+	ALBEDO = color * float(banding);
+
+
+
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+	ALPHA = (is_edge > 0.0) ? 0.0 : 1.0;
+
+    ROUGHNESS = 1.0;
+    SPECULAR = mix(0.0, mix(0.0, 0.5, flatness), h);
 }
 
 //void light() {
