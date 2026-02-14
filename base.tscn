@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b438djrjx0hs4"]
+[gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
 [ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="1_tpea4"]
 [ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="2_8rhti"]
@@ -17,15 +17,12 @@ albedo_texture = SubResource("ViewportTexture_21bcp")
 [sub_resource type="QuadMesh" id="QuadMesh_8rhti"]
 resource_local_to_scene = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tpea4"]
 resource_local_to_scene = true
 shader = ExtResource("5_21bcp")
 shader_parameter/offset = Vector2(0, 0)
-shader_parameter/size = 500
-shader_parameter/small_frequency = 2.52
-shader_parameter/large_frequency = 0.52
-shader_parameter/small_intensity = 0.07
-shader_parameter/large_intensity = 1.465
+shader_parameter/size = 255
+shader_parameter/frequency_scale = 10.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
 
@@ -37,49 +34,51 @@ albedo_color = Color(0.8932828, 5.9297086e-05, 0.6791383, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_42dj3"]
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=198694909]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1103113513]
 transform = Transform3D(0.7814975, 0.44230682, -0.44002995, 0, 0.70527977, 0.7089291, 0.6239084, -0.5540263, 0.55117434, -7.6374674, 17.70421, 6.0194516)
 script = ExtResource("1_tpea4")
 
-[node name="Label3D" type="Label3D" parent="Camera3D"]
+[node name="Label3D" type="Label3D" parent="Camera3D" unique_id=752740287]
 transform = Transform3D(1, -6.7055225e-08, 2.9802322e-08, 0, 1, 1.1920929e-07, 0, -2.9802322e-08, 0.9999999, -0.6081147, 0.3632822, -0.60115767)
+visible = false
 text = "FPS: "
 font_size = 10
 outline_size = 5
 script = ExtResource("7_56f15")
 
-[node name="SculptBrush" type="Node3D" parent="Camera3D"]
+[node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=1811880900]
 script = ExtResource("2_8rhti")
 brush_radius = 20.0
-brush_height = 10.0
+brush_height = 5.0
 
-[node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D"]
+[node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D" unique_id=829916301]
 transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
+visible = false
 material_override = SubResource("StandardMaterial3D_21bcp")
 mesh = SubResource("QuadMesh_8rhti")
 script = ExtResource("4_tpea4")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=531165362]
 transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45240167, 0.7380956, 0.30523363, -0.60170364, -165.5405, 138.63272, 283.12396)
 
-[node name="Terrain" parent="." instance=ExtResource("3_ohhpf")]
+[node name="Terrain" parent="." unique_id=1045056070 instance=ExtResource("3_ohhpf")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(10, 10)
 tile_size = 255
-heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
+heightmap_gen_material = SubResource("ShaderMaterial_tpea4")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=264412665]
 transform = Transform3D(0.7131177, 0.23741893, 0.6596176, 0, 0.9409071, -0.33866465, -0.7010443, 0.24150777, 0.67097753, -36.596283, 75.934204, -40.066788)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1196097143]
 mesh = SubResource("BoxMesh_8rhti")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1209543364]
 shape = SubResource("BoxShape3D_ohhpf")
 
-[node name="CollisionIndicator" type="MeshInstance3D" parent="."]
+[node name="CollisionIndicator" type="MeshInstance3D" parent="." unique_id=167268614]
 transform = Transform3D(-0.002161911, 0.0658594, -0.07521879, 0, 0.07523637, 0.06587479, 0.09997663, 0.0014241544, -0.0016265434, -63.30556, 160.4014, 108.935036)
 material_override = SubResource("StandardMaterial3D_tpea4")
 mesh = SubResource("SphereMesh_42dj3")

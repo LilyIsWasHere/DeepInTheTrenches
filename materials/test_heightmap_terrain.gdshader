@@ -1,7 +1,6 @@
 shader_type spatial;
-render_mode unshaded;
+#include "noise.gdshaderinc"
 
-uniform sampler2D heightmap: repeat_disable, filter_nearest;
 uniform float vertical_scale = 100;
 
 const float normal_offset = 0.001;
@@ -80,8 +79,7 @@ vec4 textureBicubic(sampler2D sampler, vec2 texCoords)
 
 float height(vec2 position) {
 
-	return textureBicubic(heightmap, position).x * vertical_scale;
-	// return texture(heightmap, position).x * heightmap_scale;
+	return layered_snoise(position, 6);
 }
 
 vec2 scale_uv_by_center(vec2 uv, vec2 scale) {
@@ -141,7 +139,7 @@ void vertex() {
 	else is_edge = 0.0;
 
   	vec2 pos = UV;
-  	float k = height(pos);
+  	float k = height(pos)  * vertical_scale;
  	VERTEX.y = k;
 
 	vec2 height_delta = vec2(height(pos + vec2(-normal_offset, 0.0)) - height(pos + vec2(normal_offset, 0.0)), height(pos + vec2(0.0, -normal_offset)) - height(pos + vec2(0.0, normal_offset)));
@@ -152,80 +150,24 @@ void vertex() {
 
 }
 
-uniform float band_thickness = 0.15;
-uniform float band_height = 0.5;
-
-uniform bool antialiasing = true;
-uniform bool aa_opacity = true;
-uniform bool display_aa_bands = false;
-
 void fragment() {
 	// Called for every pixel the material is visible on.
-	// ALBEDO = NORMAL;
+	// ALBEDO = NORMAL;4
 
 
-	vec2 tex_size = vec2(textureSize(heightmap, 0));
-    vec4 height_data = texture(heightmap, UV);
-	
-	float slope_offset = 1.0 / tex_size.x;
-	float slope = length(vec2(	height_data.x - texture(heightmap, UV + vec2(slope_offset, slope_offset)).x, 	height_data.y - texture(heightmap, UV + vec2(-slope_offset, slope_offset)).x	));
-	
-	float scaled_band_thickness = band_height * band_thickness;
-	
-	float bmod = mod(world_position.y, band_height);
 
-	vec2 px_dd = vec2(dFdx(world_position.y), dFdy(world_position.y));
-	float band_range = scaled_band_thickness * pow(slope, 0.33);
-	float aa_band_range = max(band_range, length(px_dd));
-	
-	
-	float banding = float(mod(world_position.y, band_height) >= band_height - band_range);
-	float aa_banding = float(mod(world_position.y, band_height) >= band_height - aa_band_range);
-	
-	vec3 override = vec3(0.0);
-	
-	if (aa_opacity) {
-		if (aa_banding > 0.9 && length(px_dd) > band_range) {
-			aa_banding = mix(0.5, 1.0, sqrt(band_range / length(px_dd)));
-			if ((px_dd.x > band_range || px_dd.y > band_range) && display_aa_bands) override = vec3(1.0, 0.0, 0.0);
-
-		}
-	}
-	
-	if(antialiasing) banding = aa_banding;
+	bool banding = mod(world_position.y, 2) < 1.8;
 
 
-	vec2 banding_dd = vec2(dFdx(bmod), dFdy(bmod));
-	// Analytical AA
-	
+    float h = height(UV);
 
-	vec3 dirt_color = vec3(0.1, 0.05, 0.02);
 	vec3 grass_color = vec3(0.3, 0.5, 0.3);
 
-    vec3 mud_colour = vec3(0.07, 0.08, 0.055);
-
-	float flatness = dot(vec3(0.0, 1.0, 0.0), world_normal);
-
-	float height_diff = abs(height_data.r - height_data.g);
-	float h = clamp(10.0 * height_diff, 0.0, 1.0);
-	vec3 flat_colour = mix(grass_color, mud_colour, h);
-
-
-
-
-	vec3 color = mix(dirt_color, flat_colour, flatness);
-
-
-	ALBEDO = color * (1.0 - banding);
-	if (length(override) > 0.01) ALBEDO = override;
-	// if (show_dd) ALBEDO = vec3(bmod, 0.0, 0.0);
-
-
-	ALPHA_SCISSOR_THRESHOLD = 0.5;
-	ALPHA = (is_edge > 0.0) ? 0.0 : 1.0;
+	ALBEDO = grass_color * float(banding);
+	if (h < 0.0) ALBEDO = vec3(1.0, 0.0, 0.0);
 
     ROUGHNESS = 1.0;
-    SPECULAR = mix(0.0, mix(0.0, 0.5, flatness), h);
+	SPECULAR = 0.5;
 }
 
 //void light() {
