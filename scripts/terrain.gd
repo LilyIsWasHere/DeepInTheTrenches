@@ -1,21 +1,37 @@
+@tool
 extends Node3D
 class_name Terrain
 
+@export var reset: bool = false:
+	set(value):
+		if not is_inside_tree():
+			await ready
+		reset = value
+		if (reset): initialze()
+	
 @export var num_tiles: Vector2i
 @export var tile_size: int
 @export var heightmap_gen_material: ShaderMaterial
 # Called when the node enters the scene tree for the first time.
 
 var terrain_tile_scene := preload("res://TerrainTile.tscn")
-
 var tile_arr: Array[Array] = []
 
+
 func _init() -> void:
-	
-	
 	pass
 
 func _ready() -> void:
+	if (!Engine.is_editor_hint()):
+		initialze()
+				
+
+
+func initialze() -> void:
+	
+	for child in self.get_children():
+		child.queue_free()
+		
 	for x in range(num_tiles.x):
 		tile_arr.append([])
 		for z in range(num_tiles.y):
@@ -23,10 +39,6 @@ func _ready() -> void:
 			tile.initialize(Vector3i(x * tile_size, 0, z * tile_size), tile_size, heightmap_gen_material.duplicate(true))
 			tile_arr[x].append(tile)
 			self.add_child(tile)
-			
-	
-	pass # Replace with function body.
-
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
