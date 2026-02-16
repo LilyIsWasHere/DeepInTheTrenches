@@ -8,7 +8,8 @@ class_name Terrain
 			await ready
 		reset = value
 		if (reset): initialze()
-	
+		reset = false
+		
 @export var num_tiles: Vector2i
 @export var tile_size: int
 @export var heightmap_gen_material: ShaderMaterial
@@ -41,9 +42,7 @@ func initialze() -> void:
 			self.add_child(tile)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void: 
-	pass
+
 	
 	
 func sculpt_terrain(global_pos: Vector3, radius: float, height: float) -> void:

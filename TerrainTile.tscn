@@ -33,10 +33,7 @@ compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1f
 shader = ExtResource("3_hp1fw")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
-shader_parameter/small_frequency = 0.685
-shader_parameter/large_frequency = 1.8
-shader_parameter/small_intensity = -0.605
-shader_parameter/large_intensity = 0.61
+shader_parameter/frequency_scale = 1.0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_68x4c"]
 viewport_path = NodePath("HeightMapGenViewport")
@@ -47,6 +44,11 @@ render_priority = 0
 shader = ExtResource("2_hp1fw")
 shader_parameter/heightmap = SubResource("ViewportTexture_68x4c")
 shader_parameter/vertical_scale = 100.0
+shader_parameter/band_thickness = 0.15
+shader_parameter/band_height = 0.5
+shader_parameter/antialiasing = true
+shader_parameter/aa_opacity = true
+shader_parameter/display_aa_bands = false
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_27wy6"]
 resource_local_to_scene = true

@@ -1,4 +1,4 @@
-
+@tool
 extends Node3D
 class_name TerrainTile_Class
 
@@ -27,35 +27,32 @@ func initialize(_position: Vector3i, _size: int, _heightmap_generator: ShaderMat
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$HeightMapGenViewport/HeightMapGenColorRect.material = heightmap_mat
-	$HeightMapGenViewport.size = Vector2i(size, size)
-	heightmap_tex = $HeightMapGenViewport.get_texture()
-	$TerrainMeshScale/TerrainMesh.mesh.subdivide_width = size-1
-	$TerrainMeshScale/TerrainMesh.mesh.subdivide_depth = size-1
+	
+	print("Parent:" + str(get_parent_node_3d()))
+	
+	if(!Engine.is_editor_hint()):
+	
+		$HeightMapGenViewport/HeightMapGenColorRect.material = heightmap_mat
+		$HeightMapGenViewport.size = Vector2i(size, size)
+		heightmap_tex = $HeightMapGenViewport.get_texture()
+		$TerrainMeshScale/TerrainMesh.mesh.subdivide_width = size-1
+		$TerrainMeshScale/TerrainMesh.mesh.subdivide_depth = size-1
 
-	await RenderingServer.frame_post_draw
-	
-	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("heightmap", heightmap_tex)
-	$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("vertical_scale", terrain_height)
+		await RenderingServer.frame_post_draw
+		
+		$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("heightmap", heightmap_tex)
+		$TerrainMeshScale/TerrainMesh.material_override.set_shader_parameter("vertical_scale", terrain_height)
 
-	var scale_adj: float = (1.0 / float(size)) * 3
-	
-	$TerrainTileStaticBody3D/CollisionShape3D.scale += Vector3(scale_adj, scale_adj, scale_adj)
-	$TerrainMeshScale/TerrainMesh.scale += Vector3(scale_adj, 0.0, scale_adj)
-	
+		var scale_adj: float = (1.0 / float(size)) * 3
+		
+		$TerrainTileStaticBody3D/CollisionShape3D.scale += Vector3(scale_adj, scale_adj, scale_adj)
+		$TerrainMeshScale/TerrainMesh.scale += Vector3(scale_adj, 0.0, scale_adj)
+		
 
-	readback_heightmap_data()
-	
+		readback_heightmap_data()
+		
 
 
-	
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-	
-	
 	
 func readback_heightmap_data() -> void:
 	var heightmap_collision: HeightMapShape3D = $TerrainTileStaticBody3D/CollisionShape3D.shape
