@@ -7,7 +7,7 @@ var heightmap_tex: Texture2D
 var heightmap_mat: ShaderMaterial
 var first_heightmap_update: bool = true
 
-var size: int
+var size: int = 255
 var terrain_heightmap_updated: bool = false
 
 const terrain_height: float = 100;
@@ -27,10 +27,8 @@ func initialize(_position: Vector3i, _size: int, _heightmap_generator: ShaderMat
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
-	print("Parent:" + str(get_parent_node_3d()))
-	
-	if(!Engine.is_editor_hint()):
+		
+	if(get_parent_node_3d() != null):
 	
 		$HeightMapGenViewport/HeightMapGenColorRect.material = heightmap_mat
 		$HeightMapGenViewport.size = Vector2i(size, size)
