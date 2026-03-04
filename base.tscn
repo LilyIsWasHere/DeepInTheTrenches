@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dpgp3e6f2xmk5" path="res://Player.tscn" id="4_ohhpf"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_21bcp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 resource_local_to_scene = true
 shader = ExtResource("5_21bcp")
 shader_parameter/offset = Vector2(0, 0)
@@ -24,7 +24,7 @@ transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(10, 10)
 tile_size = 255
-heightmap_gen_material = SubResource("ShaderMaterial_21bcp")
+heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=264412665]
 transform = Transform3D(0.7131177, 0.23741893, 0.6596176, 0, 0.9409071, -0.33866465, -0.7010443, 0.24150777, 0.67097753, -36.596283, 75.934204, -40.066788)

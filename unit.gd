@@ -76,7 +76,7 @@ func move_along_terrain(delta: float) -> void:
 		
 func set_hidden(hidden: bool) -> void:
 	if (hidden):
-		$MeshInstance3D.material_override.albedo_color.a = 0.2
+		$MeshInstance3D.material_override.albedo_color.a = 0.35
 	else:
 		$MeshInstance3D.material_override.albedo_color.a = 1
 		
