@@ -78,7 +78,7 @@ void EditHeightmap() {
     float diff = abs(init_height - prev_height);
 
 
-    float a = 100.0;
+    float a = 1.0;
     height_delta = height_delta / (a * diff * diff + 1);
 
     float new_height = prev_height + height_delta * calculate_weight(dist, radius);

@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://dpgp3e6f2xmk5"]
+
+[ext_resource type="Script" uid="uid://bkjdinmrtk6my" path="res://scripts/player.gd" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="2_cxr5p"]
+[ext_resource type="Script" uid="uid://bsouf48aos0dn" path="res://scripts/label_3d.gd" id="3_tdg3f"]
+[ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="4_dtqjt"]
+[ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="5_5ncpa"]
+[ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="6_tdg3f"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hp6x6"]
+resource_local_to_scene = true
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_wi0c6")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3tkgg"]
+resource_local_to_scene = true
+
+[node name="Node3D" type="Node3D" unique_id=1877591714]
+script = ExtResource("1_xhfnw")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=254286163]
+transform = Transform3D(-0.99993616, 0.008546469, -0.0073906905, 0, 0.6541089, 0.7564004, 0.011298869, 0.7563521, -0.6540671, -0.304357, 23.854485, -15.972433)
+script = ExtResource("2_cxr5p")
+
+[node name="Label3D" type="Label3D" parent="Camera3D" unique_id=1024218606]
+transform = Transform3D(1, -6.7055225e-08, 2.9802322e-08, 0, 1, 1.1920929e-07, 0, -2.9802322e-08, 0.9999999, -0.6081147, 0.3632822, -0.60115767)
+visible = false
+text = "FPS: "
+font_size = 10
+outline_size = 5
+script = ExtResource("3_tdg3f")
+
+[node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=1804094318]
+script = ExtResource("4_dtqjt")
+brush_radius = 20.0
+
+[node name="HeightmapDBGMesh" type="MeshInstance3D" parent="Camera3D" unique_id=105558569]
+transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
+visible = false
+material_override = SubResource("StandardMaterial3D_hp6x6")
+mesh = SubResource("QuadMesh_3tkgg")
+script = ExtResource("5_5ncpa")
+
+[node name="UnitSpawner" type="Node3D" parent="Camera3D" unique_id=1871115205]
+script = ExtResource("6_tdg3f")

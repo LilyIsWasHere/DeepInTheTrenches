@@ -37,7 +37,7 @@ func _input(event: InputEvent)-> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			MOUSE_BUTTON_RIGHT: # Only allows rotation if right click down
-				if !Input.is_key_pressed(KEY_SHIFT):
+				if !Input.is_key_pressed(KEY_SHIFT) && !Input.is_key_pressed(KEY_ALT):
 					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if event.pressed else Input.MOUSE_MODE_VISIBLE)
 			MOUSE_BUTTON_WHEEL_UP: # Increases max velocity
 				_vel_multiplier = clamp(_vel_multiplier * 1.1, 0.2, 50)

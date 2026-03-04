@@ -11,6 +11,7 @@ const RAY_LENGTH: float = 3000.0
 @export var brush_radius: float = 100
 @export var brush_height: float = 20
 
+var terrain: Terrain
 
 func _physics_process(delta: float) -> void:
 	
@@ -31,8 +32,7 @@ func _physics_process(delta: float) -> void:
 		if result.is_empty():
 			return
 		
-		$"../../CollisionIndicator".global_position = result["position"]
-		$"../../Terrain".sculpt_terrain(result["position"], brush_radius, sculpt_height)
+		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height)
 		
 		if result["collider"].has_method("get_heightmap_viewport_tex"):
 			$"../HeightmapDBGMesh".set_heightmap(result["collider"].get_heightmap_viewport_tex())

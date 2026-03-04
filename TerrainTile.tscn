@@ -104,3 +104,4 @@ script = ExtResource("3_rg4wi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TerrainTileStaticBody3D" unique_id=205778229]
 shape = SubResource("HeightMapShape3D_kt35w")
+debug_color = Color(0, 0.6, 0.69803923, 1)

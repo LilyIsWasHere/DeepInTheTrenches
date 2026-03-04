@@ -1,13 +1,38 @@
 extends AnimatableBody3D
-
+class_name Unit
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
-var velocity: Vector3 = Vector3(1.0, 0.0, 1.0)
+@export var LineOfSightTarget: Node3D
+@export var BodyMesh: MeshInstance3D
+
+@export var team: int = 0:
+	set(value):
+		LineOfSightManager.unregister_unit(self)
+	
+		team = value
+		LineOfSightManager.register_unit(self, team)
+		
+		
+		if (team == 0):
+			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
+		else:
+			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
+		
+
+@export var velocity: Vector3 = Vector3(1.0, 0.0, 1.0)
 
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
+
+func _ready() -> void:
+	if (team == 0):
+		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)
+	else:
+		$MeshInstance3D.material_override.albedo_color = Color(1, 0.2, 0.2)
+
+	LineOfSightManager.register_unit(self, team)
 
 func _physics_process(delta: float) -> void:
 	if !on_floor:
@@ -17,10 +42,13 @@ func _physics_process(delta: float) -> void:
 	move_along_terrain(delta)
 
 func get_slope_velocity_multiplier(normal: Vector3, vel_dir: Vector3) -> float:
-	if (!on_floor):
+	if (!on_floor): 
 		return 1.0
 		
 	return 1.0
+
+
+	
 
 func move_along_terrain(delta: float) -> void:
 	
@@ -46,6 +74,11 @@ func move_along_terrain(delta: float) -> void:
 	
 		
 		
+func set_hidden(hidden: bool) -> void:
+	if (hidden):
+		$MeshInstance3D.material_override.albedo_color.a = 0.2
+	else:
+		$MeshInstance3D.material_override.albedo_color.a = 1
 		
 		
 		
