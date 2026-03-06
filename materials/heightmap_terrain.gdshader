@@ -9,6 +9,8 @@ const float normal_offset = 0.001;
 varying vec3 world_position;
 varying vec3 world_normal;
 
+uniform vec4 organic_colour: source_color = vec4(1,0,0,1);
+uniform vec4 crystal_colour: source_color = vec4(0.5,0,0,1);
 
 
 // Returns the weights for a cubic spline interpolation.
@@ -166,6 +168,7 @@ void fragment() {
 
 	vec2 tex_size = vec2(textureSize(heightmap, 0));
     vec4 height_data = texture(heightmap, UV);
+	int resource_data = int(round(height_data.z));
 	
 	float slope_offset = 1.0 / tex_size.x;
 	float slope = length(vec2(	height_data.x - texture(heightmap, UV + vec2(slope_offset, slope_offset)).x, 	height_data.y - texture(heightmap, UV + vec2(-slope_offset, slope_offset)).x	));
@@ -210,10 +213,19 @@ void fragment() {
 	float h = clamp(10.0 * height_diff, 0.0, 1.0);
 	vec3 flat_colour = mix(grass_color, mud_colour, h);
 
-
-
-
 	vec3 color = mix(dirt_color, flat_colour, flatness);
+
+
+	switch(resource_data) {
+		case 1:
+			color = mix(color, organic_colour.rgb, organic_colour.a);
+			break;
+		case 2:
+			color = mix(color, crystal_colour.rgb, crystal_colour.a);
+			break;
+
+	}
+
 
 
 	ALBEDO = color * (1.0 - banding);

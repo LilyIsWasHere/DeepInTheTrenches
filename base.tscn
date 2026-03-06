@@ -5,11 +5,16 @@
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
-resource_local_to_scene = true
 shader = ExtResource("5_21bcp")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 255
-shader_parameter/frequency_scale = 10.0
+shader_parameter/heightmap_frequency_scale = 10.0
+shader_parameter/organic_frequency_scale = 3.915
+shader_parameter/crystal_frequency_scale = 2.565
+shader_parameter/organic_offset = 100.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.71
+shader_parameter/crystal_scarcity = 0.88
 
 [sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
 

@@ -8,7 +8,13 @@ resource_local_to_scene = true
 shader = ExtResource("2_nrd8o")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 255
-shader_parameter/frequency_scale = 1.0
+shader_parameter/heightmap_frequency_scale = 1.0
+shader_parameter/organic_frequency_scale = 0.515
+shader_parameter/crystal_frequency_scale = 0.49
+shader_parameter/organic_offset = 50.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.75
+shader_parameter/crystal_scarcity = 0.595
 
 [node name="Terrain" type="Node3D" unique_id=1718280512]
 script = ExtResource("1_po3o5")

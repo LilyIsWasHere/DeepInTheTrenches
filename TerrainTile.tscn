@@ -33,7 +33,13 @@ compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1f
 shader = ExtResource("3_hp1fw")
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/size = 500
-shader_parameter/frequency_scale = 1.0
+shader_parameter/heightmap_frequency_scale = 10.0
+shader_parameter/organic_frequency_scale = 3.915
+shader_parameter/crystal_frequency_scale = 2.565
+shader_parameter/organic_offset = 100.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.71
+shader_parameter/crystal_scarcity = 0.88
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_68x4c"]
 viewport_path = NodePath("HeightMapGenViewport")
@@ -44,6 +50,8 @@ render_priority = 0
 shader = ExtResource("2_hp1fw")
 shader_parameter/heightmap = SubResource("ViewportTexture_68x4c")
 shader_parameter/vertical_scale = 100.0
+shader_parameter/organic_colour = Color(0.3764706, 0, 0, 0.7058824)
+shader_parameter/crystal_colour = Color(0.5019608, 0, 1, 0.6431373)
 shader_parameter/band_thickness = 0.15
 shader_parameter/band_height = 0.5
 shader_parameter/antialiasing = true
@@ -72,7 +80,6 @@ transparent_bg = true
 use_hdr_2d = true
 size = Vector2i(500, 500)
 render_target_clear_mode = 1
-render_target_update_mode = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="HeightMapGenViewport" unique_id=959298656]
 environment = SubResource("Environment_hp1fw")
