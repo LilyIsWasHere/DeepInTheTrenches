@@ -23,8 +23,8 @@ config/icon="res://icon.svg"
 
 AcerolaShaderCompiler="*res://scripts/acerola_shader_compiler.gd"
 DebugMenu="*uid://cggqb75a8w8r"
-TerrainReadbackManager="*res://terrain_readback_manager.gd"
 LineOfSightManager="*uid://c46w87xe2vgki"
+GlobalTerrainManager="*uid://dtnl2gu1141o0"
 
 [debug]
 

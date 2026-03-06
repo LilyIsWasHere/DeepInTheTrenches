@@ -25,6 +25,7 @@ func _init() -> void:
 func _ready() -> void:
 	if (!Engine.is_editor_hint()):
 		initialze()
+		GlobalTerrainManager.register_terrain(self)
 				
 
 
@@ -128,3 +129,10 @@ func get_affected_tiles(global_pos: Vector3, radius: float) -> Array[TerrainTile
 				
 				
 	return affected_tiles
+
+
+
+func get_terrain_data(location: Vector3) -> Dictionary:
+	var tile: TerrainTile_Class = get_affected_tiles(location, 0.01)[0]
+	return tile.get_terrain_data(location)
+	

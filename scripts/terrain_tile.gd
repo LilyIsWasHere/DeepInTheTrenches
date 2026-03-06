@@ -2,8 +2,13 @@
 extends Node3D
 class_name TerrainTile_Class
 
+enum TerrainResource {
+	ORGANIC,
+	CRYSTAL
+}
 
 var heightmap_tex: Texture2D
+var heightmap_img: Image = null
 var heightmap_mat: ShaderMaterial
 var first_heightmap_update: bool = true
 
@@ -54,22 +59,28 @@ func _ready() -> void:
 	
 func readback_heightmap_data() -> void:
 	var heightmap_collision: HeightMapShape3D = $TerrainTileStaticBody3D/CollisionShape3D.shape
-	var heightmap_img: Image = heightmap_tex.get_image()
-	heightmap_img.convert(Image.FORMAT_RF)
-	heightmap_collision.update_map_data_from_image(heightmap_img, 0, terrain_height)
+	heightmap_img = heightmap_tex.get_image()
+	
+	var heightmap_img_rf: Image = Image.new()
+	heightmap_img_rf.copy_from(heightmap_img)
+	heightmap_img_rf.convert(Image.FORMAT_RF)
+	heightmap_collision.update_map_data_from_image(heightmap_img_rf, 0, terrain_height)
 
 	
 
-	
-	
-func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2) -> void:
+func global_to_pixel(global_pos: Vector3) -> Vector2i:
 	var world_to_local: Transform3D = global_transform.inverse()
 	var local_pos: Vector3 = world_to_local * global_pos
 	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
 	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
+	return Vector2i(pixel_pos.x, pixel_pos.z)
+	
+func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2) -> void:
+
 	var scaled_min_max_height_delta: Vector2 = (min_max_height_delta * 10.0) / Vector2(terrain_height, terrain_height)
 
-	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.z), radius, height, scaled_min_max_height_delta)
+	var pixel_pos: Vector2i = global_to_pixel(global_pos)
+	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta)
 
 func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:
 
@@ -94,7 +105,7 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 		$HeightMapGenViewport/HeightMapGenColorRect.queue_free()
 		first_heightmap_update = false
 		
-	TerrainReadbackManager.queue_for_readback(self)
+	GlobalTerrainManager.queue_for_readback(self)
 
 	
 
@@ -111,3 +122,13 @@ func _get_global_scale(basis: Basis) -> Vector3:
 	var scale_z_len: float = scaleZ.length()
 	
 	return Vector3(scale_x_len, scale_y_len, scale_z_len)
+
+func get_terrain_data(location: Vector3) -> Dictionary:
+	
+	var pixel_pos: Vector2i = global_to_pixel(location)
+	var px_val: Color = heightmap_img.get_pixelv(pixel_pos)
+	var data: Dictionary
+	data["height"] = px_val.r
+	data["initial_height"] = px_val.g
+	data["resource"] = int(px_val.b) as TerrainResource
+	return data

@@ -1,5 +1,5 @@
 extends Node
-
+class_name TerrainManager
 
 
 const max_tile_readback: int = 4
@@ -7,6 +7,8 @@ const max_pixel_readback: int = 490000
 
 var tile_readback_queue: Array[TerrainTile_Class]
 var tile_in_queue_set: Dictionary
+
+var terrain: Terrain = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -18,7 +20,12 @@ func _process(delta: float) -> void:
 	readback_queued_tiles()
 
 		
-		
+func register_terrain(t: Terrain) -> void:
+	terrain = t
+
+func get_terrain() -> Terrain:
+	return terrain
+
 func queue_for_readback(tile: TerrainTile_Class) -> void:
 	var tile_id := tile.get_instance_id()
 

@@ -9,6 +9,8 @@ var ActivePath: ExcavationPath = null
 @export var point_distance_interval: float = 1.0
 @export var point_max_distance_delta: float = 10.0
 
+
+
 var tool_active: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -54,10 +56,14 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if (tool_active && Input.is_action_pressed("ToolClick")):
+		
+		
 		var mouse_pos := get_viewport().get_mouse_position()
 		var cam: Camera3D = $"../Camera3D"
 		var from := cam.project_ray_origin(mouse_pos)
 		var to := from + cam.project_ray_normal(mouse_pos) * 3000
+		
+
 		
 		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
 		query.collide_with_areas = true

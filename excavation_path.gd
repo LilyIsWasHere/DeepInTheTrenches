@@ -17,3 +17,9 @@ func _process(delta: float) -> void:
 		var arrow_color := Color(0.2, 0.2, 1) if height_delta < 0.0 else Color(1, 0.2, 0.2)
 		
 		DebugDraw3D.draw_arrow(arrow_begin, arrow_end, arrow_color, 0.1)
+
+
+#func is_point_excavated(idx: int) -> bool: 
+	#var terrain: Terrain = GlobalTerrainManager.get_terrain()
+	
+	
