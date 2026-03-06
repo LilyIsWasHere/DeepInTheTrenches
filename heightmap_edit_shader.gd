@@ -6,6 +6,7 @@ class_name HeightmapEditCompositorEffect
 @export var location := Vector2(0, 0)
 @export var radius: float = 10
 @export var height: float = 0.2
+@export var min_max_height_delta: Vector2 = Vector2(-9999, 9999)
 
 
 var rd : RenderingDevice
@@ -57,7 +58,7 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 
 
 		# Pack the exposure vector into a byte array
-		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height, float(Time.get_ticks_msec()), 0.0, 0.0, 0.0]).to_byte_array()
+		var uniform_array := PackedFloat32Array([location.x, location.y, radius, height, float(Time.get_ticks_msec()), min_max_height_delta.x, min_max_height_delta.y, 0.0]).to_byte_array()
 		
 		# ACompute handles uniform caching under the hood, as long as the exposure value doesn't change or the render target doesn't change, these functions will only do work once
 		heightmap_edit_compute.set_texture(0, input_image)

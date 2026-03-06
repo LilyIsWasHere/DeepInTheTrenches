@@ -6,9 +6,10 @@ layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
 layout(binding = 1) uniform UniformBufferObject {
 	vec4 _LocationRadiusHeight;
     float _Time; 
-
-};
-
+    float _MinHeightDelta;
+    float _MaxHeightDelta;
+};  
+ 
 
 layout(push_constant, std430) uniform Params {
 	vec2 raster_size;
@@ -81,9 +82,20 @@ void EditHeightmap() {
     float a = 100.0;
     height_delta = height_delta / (a * diff * diff + 1);
 
-    float new_height = prev_height + height_delta * calculate_weight(dist, radius);
+    float weight = calculate_weight(dist, radius);
+    float new_height = prev_height + height_delta * weight;
 	
+    if (weight > 0.001) {
+        if ((new_height - init_height) < _MinHeightDelta && sign(height_delta) < 0.0) {
+            if ((prev_height - init_height) >= _MinHeightDelta) new_height =  init_height + _MinHeightDelta;
+            else new_height = prev_height;
+        }
+        if ((new_height - init_height) > _MaxHeightDelta && sign(height_delta) > 0.0) {
+            if ((prev_height - init_height) <= _MaxHeightDelta) new_height = init_height + _MaxHeightDelta;
+            else new_height = prev_height;
+        }
 
+    }
 
 
 	imageStore(_RenderTarget, uv, vec4(new_height, init_height, height_data.z, 1.0));

@@ -27,10 +27,10 @@ float hills(vec2 uv, int tile_size) {
 
 float resources(vec2 uv, int tile_size) {
 	vec2 organic_sample = (uv * float(tile_size + 3)) + organic_offset + offset;
-	float organic_noise = layered_snoise(organic_sample * 1.0/(organic_frequency_scale * 100.0), 1);
+	float organic_noise = layered_snoise(organic_sample * 1.0/(organic_frequency_scale * 100.0), 5);
 	
 	vec2 crystal_sample = (uv * float(tile_size + 3)) + crystal_offset + offset;
-	float crystal_noise = layered_snoise(crystal_sample * 1.0/(crystal_frequency_scale * 100.0), 1);
+	float crystal_noise = layered_snoise(crystal_sample * 1.0/(crystal_frequency_scale * 100.0), 5);
 	
 	float organic = ceil(organic_noise - organic_scarcity);
 	float crystal = (organic_noise - organic_scarcity < 0.0) ? ceil(crystal_noise - crystal_scarcity) : 0.0;

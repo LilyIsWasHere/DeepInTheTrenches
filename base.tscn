@@ -7,14 +7,14 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 shader = ExtResource("5_21bcp")
 shader_parameter/offset = Vector2(0, 0)
-shader_parameter/size = 255
+shader_parameter/size = 500
 shader_parameter/heightmap_frequency_scale = 10.0
-shader_parameter/organic_frequency_scale = 3.915
+shader_parameter/organic_frequency_scale = 4.344
 shader_parameter/crystal_frequency_scale = 2.565
 shader_parameter/organic_offset = 100.0
 shader_parameter/crystal_offset = 70.0
-shader_parameter/organic_scarcity = 0.71
-shader_parameter/crystal_scarcity = 0.88
+shader_parameter/organic_scarcity = 0.663
+shader_parameter/crystal_scarcity = 0.762
 
 [sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
 

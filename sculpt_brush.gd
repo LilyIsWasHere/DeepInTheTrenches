@@ -1,5 +1,5 @@
 extends Node3D
-
+class_name SculptBrush
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -11,11 +11,23 @@ const RAY_LENGTH: float = 3000.0
 @export var brush_radius: float = 100
 @export var brush_height: float = 20
 
+# The minimum and maximum deviation from the original terrain height
+@export var min_height_delta: float = -9999 
+@export var max_height_delta: float = 9999
+
+@export var continuous: bool = true
+
 var terrain: Terrain
 
 func _physics_process(delta: float) -> void:
 	
-	if (Input.is_action_pressed("AddMaterial") || Input.is_action_pressed("RemoveMaterial")):
+	var do_edit: bool = false
+	if (continuous):
+		do_edit = Input.is_action_pressed("AddMaterial") || Input.is_action_pressed("RemoveMaterial")
+	else:
+		do_edit = Input.is_action_just_pressed("AddMaterial") || Input.is_action_just_pressed("RemoveMaterial")
+	
+	if (do_edit):
 		
 		var sculpt_height: float = 0.0
 		if Input.is_action_pressed("AddMaterial"): sculpt_height = brush_height * delta
@@ -32,7 +44,7 @@ func _physics_process(delta: float) -> void:
 		if result.is_empty():
 			return
 		
-		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height)
+		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height, Vector2(min_height_delta, max_height_delta))
 		
 		if result["collider"].has_method("get_heightmap_viewport_tex"):
 			$"../HeightmapDBGMesh".set_heightmap(result["collider"].get_heightmap_viewport_tex())
