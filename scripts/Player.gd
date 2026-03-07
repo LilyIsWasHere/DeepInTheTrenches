@@ -3,11 +3,13 @@ class_name Player
 
 @export var terrain: Terrain
 @export var player_id: int = 0
-
+@export var Camera: Camera3D
 #var Units: Array[Unit]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	GlobalPlayerManager.register_player(self)
+	
 	$Camera3D/SculptBrush.terrain = terrain
 	pass # Replace with function body.
 

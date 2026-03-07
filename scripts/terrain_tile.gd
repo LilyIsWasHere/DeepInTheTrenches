@@ -128,7 +128,7 @@ func get_terrain_data(location: Vector3) -> Dictionary:
 	var pixel_pos: Vector2i = global_to_pixel(location)
 	var px_val: Color = heightmap_img.get_pixelv(pixel_pos)
 	var data: Dictionary
-	data["height"] = px_val.r
-	data["initial_height"] = px_val.g
+	data["height"] = px_val.r * 10.0
+	data["initial_height"] = px_val.g * 10.0
 	data["resource"] = int(px_val.b) as TerrainResource
 	return data

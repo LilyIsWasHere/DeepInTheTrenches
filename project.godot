@@ -25,6 +25,7 @@ AcerolaShaderCompiler="*res://scripts/acerola_shader_compiler.gd"
 DebugMenu="*uid://cggqb75a8w8r"
 LineOfSightManager="*uid://c46w87xe2vgki"
 GlobalTerrainManager="*uid://dtnl2gu1141o0"
+GlobalPlayerManager="*uid://csgtk153m3usp"
 
 [debug]
 

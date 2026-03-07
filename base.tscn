@@ -16,10 +16,6 @@ shader_parameter/crystal_offset = 70.0
 shader_parameter/organic_scarcity = 0.663
 shader_parameter/crystal_scarcity = 0.762
 
-[sub_resource type="BoxMesh" id="BoxMesh_8rhti"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ohhpf"]
-
 [node name="Node3D" type="Node3D" unique_id=198694909]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=531165362]
@@ -30,15 +26,6 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(10, 10)
 tile_size = 255
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=264412665]
-transform = Transform3D(0.7131177, 0.23741893, 0.6596176, 0, 0.9409071, -0.33866465, -0.7010443, 0.24150777, 0.67097753, -36.596283, 75.934204, -40.066788)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1196097143]
-mesh = SubResource("BoxMesh_8rhti")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1209543364]
-shape = SubResource("BoxShape3D_ohhpf")
 
 [node name="Player" parent="." unique_id=1877591714 node_paths=PackedStringArray("terrain") instance=ExtResource("4_ohhpf")]
 terrain = NodePath("../Terrain")

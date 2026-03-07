@@ -30,6 +30,7 @@ func _input(event: InputEvent) -> void:
 			ActivePath = null
 			
 		ActivePath = ExcavationPath.new()
+		ActivePath.owning_player = $".."
 		ActivePath.curve = Curve3D.new()
 		ActivePath.curve.bake_interval = point_distance_interval
 		add_child(ActivePath)
@@ -80,5 +81,4 @@ func _physics_process(delta: float) -> void:
 		var dist_2D: float = pos_xz.distance_to(prev_pos_xz)
 		if (dist_2D >= point_distance_interval && (dist_2D <= point_max_distance_delta || points.size() == 0)):
 			ActivePath.curve.add_point(result.position)
-			print("Adding point at " + str(result.position))
 		

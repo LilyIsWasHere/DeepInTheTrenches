@@ -6,6 +6,7 @@ const JUMP_VELOCITY = 4.5
 
 @export var LineOfSightTarget: Node3D
 @export var BodyMesh: MeshInstance3D
+@export var inventory: Inventory
 
 @export var team: int = 0:
 	set(value):

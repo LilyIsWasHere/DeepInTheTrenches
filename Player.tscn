@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="5_5ncpa"]
 [ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="6_tdg3f"]
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="7_dtqjt"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="8_5ncpa"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
 
@@ -18,8 +19,9 @@ albedo_texture = SubResource("ViewportTexture_wi0c6")
 [sub_resource type="QuadMesh" id="QuadMesh_3tkgg"]
 resource_local_to_scene = true
 
-[node name="Node3D" type="Node3D" unique_id=1877591714]
+[node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("Camera")]
 script = ExtResource("1_xhfnw")
+Camera = NodePath("Camera3D")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=254286163]
 transform = Transform3D(-0.99993616, 0.008546469, -0.0073906905, 0, 0.6541089, 0.7564004, 0.011298869, 0.7563521, -0.6540671, -0.304357, 23.854485, -15.972433)
@@ -47,7 +49,7 @@ script = ExtResource("6_tdg3f")
 [node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=2097761360]
 script = ExtResource("4_dtqjt")
 brush_radius = 30.0
-brush_height = 50.0
+brush_height = 10.0
 min_height_delta = -3.0
 max_height_delta = 3.0
 metadata/_custom_type_script = "uid://b1dxcw3moxi84"
@@ -55,3 +57,7 @@ metadata/_custom_type_script = "uid://b1dxcw3moxi84"
 [node name="ExcavationPathTool" type="Node3D" parent="." unique_id=481946414]
 top_level = true
 script = ExtResource("7_dtqjt")
+
+[node name="Inventory" type="Node3D" parent="." unique_id=1473978561]
+script = ExtResource("8_5ncpa")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
