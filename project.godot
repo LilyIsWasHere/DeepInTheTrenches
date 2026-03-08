@@ -23,9 +23,10 @@ config/icon="res://icon.svg"
 
 AcerolaShaderCompiler="*res://scripts/acerola_shader_compiler.gd"
 DebugMenu="*uid://cggqb75a8w8r"
-LineOfSightManager="*uid://c46w87xe2vgki"
-GlobalTerrainManager="*uid://dtnl2gu1141o0"
-GlobalPlayerManager="*uid://csgtk153m3usp"
+LineOfSightManager="*res://line_of_sight_manager.gd"
+GlobalTerrainManager="*res://terrain_manager.gd"
+GlobalPlayerManager="*res://global_player_manager.gd"
+Navigation="*uid://cy0mmna3ycsxr"
 
 [debug]
 
