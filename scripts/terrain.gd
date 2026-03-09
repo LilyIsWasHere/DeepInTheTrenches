@@ -136,3 +136,20 @@ func get_terrain_data(location: Vector3) -> Dictionary:
 	var tile: TerrainTile_Class = get_affected_tiles(location, 0.01)[0]
 	return tile.get_terrain_data(location)
 	
+
+
+# returns the slope in x, the slope in z, and the gradient
+func get_terrain_slope(location: Vector3) -> Array:
+	var data_p: Dictionary = get_terrain_data(location)
+	
+	var offset: float = 1.0
+	var data_x: Dictionary = get_terrain_data(location + Vector3(offset, 0, 0))
+	var data_y: Dictionary = get_terrain_data(location + Vector3(0, 0, offset))
+
+	var slope_x: float = (data_x.height - data_p.height) / offset
+	var slope_y: float = (data_y.height - data_p.height) / offset
+	
+	
+	
+	return [slope_x, slope_y, sqrt(slope_x*slope_x + slope_y*slope_y)]
+	
