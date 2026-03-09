@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://boojb2oddpj0n"]
+[gd_scene format=3 uid="uid://boojb2oddpj0n"]
 
 [ext_resource type="Script" uid="uid://bwro3nluahahc" path="res://scripts/exposure_shader.gd" id="1_pmcoo"]
 
