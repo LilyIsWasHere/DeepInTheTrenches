@@ -1,7 +1,10 @@
 extends Node
 
-const NavPlanHandle := preload("res://hendry/navigation/types/nav_plan_handle.gd")
-const NavSteeringResult := preload("res://hendry/navigation/types/nav_steering_result.gd")
+# const NavPlanHandle := preload("res://hendry/navigation/types/nav_plan_handle.gd")
+# const NavSteeringResult := preload("res://hendry/navigation/types/nav_steering_result.gd")
+
+const NavMap := preload("res://hendry/navigation/nav_map.gd")
+var _nav_map: NavMap = null
 
 # Go in the trenches, or ignore the trenches?
 enum NavProfileId {
@@ -11,6 +14,9 @@ enum NavProfileId {
 
 var _agent_properties: Dictionary = {}
 var _active_requests: Dictionary = {}
+
+func _ready() -> void:
+	_nav_map = NavMap.new()
 
 # Probably don't need this function. This is only if you want to change the agent properties mid-request.
 func set_agent_properties(
@@ -89,3 +95,16 @@ func sample_steering(
 		return steering
 
 	return steering
+
+# DEBUG
+func debug_get_nav_data(point: Vector3) -> Dictionary:
+	return _nav_map.get_nav_data(point)
+
+func debug_is_traversable(point: Vector3, agent_radius: float, agent_max_slope_degrees: float) -> bool:
+	return _nav_map.is_traversable(point, agent_radius, agent_max_slope_degrees)
+
+func debug_sample_patch(center: Vector3, half_extent_cells: int, agent_radius: float, agent_max_slope_degrees: float) -> Dictionary:
+	return _nav_map.sample_patch(center, half_extent_cells, agent_radius, agent_max_slope_degrees)
+
+func debug_find_path(start: Vector3, goal: Vector3, agent_radius: float, agent_max_slope_degrees: float) -> PackedVector3Array:
+	return _nav_map.find_path(start, goal, agent_radius, agent_max_slope_degrees)
