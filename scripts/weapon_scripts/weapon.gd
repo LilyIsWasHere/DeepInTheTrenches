@@ -6,8 +6,10 @@ extends Node3D
 
 @export var mag_size : int = 30
 @export var ammo_in_mag : int = 30
-@export var ammo_in_reserve : int = 300
 @export var ammo_per_shot : int = 1
+
+@export var ammo_in_reserve : int = 300
+@export var reserve_size : int = 1000
 
 const bullet : PackedScene = preload("res://scenes/bullet.tscn")
 
@@ -40,4 +42,10 @@ func shoot() -> void:
 			get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 		
 			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
-		
+
+func deposit_ammo(amount : int) -> bool:
+	if (amount + ammo_in_reserve) <= reserve_size:
+		ammo_in_reserve += amount
+		return true
+	else:
+		return false
