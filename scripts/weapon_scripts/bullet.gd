@@ -3,6 +3,7 @@ extends Node3D
 var curr_position : Vector3
 var target_position : Vector3
 var direction : Vector3
+var gun_range : float
 var target_area : float
 var damage : float
 var speed : float = 20.0
@@ -15,10 +16,11 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
-func shoot(start : Vector3, target : Vector3, area : float, dmg : float) -> void:
+func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg : float) -> void:
 	curr_position = start
 	target_position = target
 	target_area = area
+	gun_range = range
 	damage = dmg
 	
 	direction = (target_position - curr_position).normalized()

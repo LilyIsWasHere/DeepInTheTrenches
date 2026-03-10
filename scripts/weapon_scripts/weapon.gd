@@ -1,6 +1,7 @@
 extends Node3D
 
 @export var damage : float = 5.0
+@export var range : float = 10.0
 @export var affected_area : float = 1.0
 
 @export var ammo_per_shot : int = 1
@@ -28,8 +29,7 @@ func shoot() -> void:
 			var bullet_instance : Node3D = bullet.instantiate()
 			get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 			
-			#if (global_position + range) < global_position - target_position make a check for range before shooting
-			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO, affected_area, damage) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
+			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO, affected_area, range, damage) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
 
 func deposit_ammo(amount : int) -> int:
 	var refill_max : int = $Magazine.get_max_item_quantity("res://Inventory/InventoryItems/ammo_item.tres") - $Magazine.get_item_quantity("res://Inventory/InventoryItems/ammo_item.tres")
