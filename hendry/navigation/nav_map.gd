@@ -3,9 +3,8 @@
 
 extends RefCounted
 
-const MAX_STEP_HEIGHT := 0.35
-const FOOTPRINT_SAMPLE_COUNT := 6
-const GRID_CELL_SIZE := 0.5
+const FOOTPRINT_SAMPLE_COUNT := 4
+const GRID_CELL_SIZE := 1.0
 const A_STAR_MAX_ITERATIONS := 10000
 
 # get navigation data at a point
@@ -19,32 +18,32 @@ func get_nav_data(point: Vector3) -> Dictionary:
 	
 	# get the height and slope at the point
 	var terrain_data: Dictionary = terrain.get_terrain_data(point)
-	var slope_degrees: float = rad_to_deg(atan(terrain.get_terrain_slope(point)[2]))
+	var slope_data: Array = terrain.get_terrain_slope(point)
+	var slope_x: float = slope_data[0]
+	var slope_z: float = slope_data[1]
+	var slope_degrees: float = rad_to_deg(atan(slope_data[2]))
 
 	var nav_data: Dictionary = {
 		"height": terrain_data["height"],
-		"slope_degrees": slope_degrees,
-		"cover_depth": 0.0
+		"slope_x": slope_x,
+		"slope_z": slope_z,
+		"slope_degrees": slope_degrees
 	}
 
 	return nav_data
 
 # check if a point is traversable for a given agent information
-func is_traversable(
-	point: Vector3,
-	agent_radius: float,
-	agent_max_slope_degrees: float,
-	center_nav_data: Dictionary = {}
-) -> bool:
+# ONLY for step height and radius, slope is handled in the pathfinding code
+func is_traversable( point: Vector3, agent_config: Dictionary, center_nav_data: Dictionary = {} ) -> bool:
 	var nav_data := center_nav_data
 	if nav_data.is_empty():
 		nav_data = get_nav_data(point)
 
 	if nav_data.is_empty():
 		return false
-
-	if nav_data["slope_degrees"] > agent_max_slope_degrees:
-		return false
+	
+	var agent_radius: float = agent_config["radius"]
+	var agent_max_step_height: float = agent_config["max_step_height"]
 
 	var center_height: float = nav_data["height"]
 
@@ -57,14 +56,10 @@ func is_traversable(
 		if sample_data.is_empty():
 			return false
 
-		if sample_data["slope_degrees"] > agent_max_slope_degrees:
-			return false
-
-		if abs(sample_data["height"] - center_height) > MAX_STEP_HEIGHT:
+		if abs(sample_data["height"] - center_height) > agent_max_step_height:
 			return false
 
 	return true
-
 
 # go from world space to cell coordinates 
 func world_to_cell(point: Vector3) -> Vector2i:
@@ -91,10 +86,10 @@ func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: D
 	return point
 
 # get the navigation information for a cell
-func sample_cell(cell: Vector2i, agent_radius: float, agent_max_slope_degrees: float) -> Dictionary:
+func sample_cell(cell: Vector2i, agent_config: Dictionary) -> Dictionary:
 	var world_point := cell_to_world(cell)
 	var nav_data := get_nav_data(world_point)
-	var traversable := is_traversable(world_point, agent_radius, agent_max_slope_degrees, nav_data)
+	var traversable := is_traversable(world_point, agent_config, nav_data)
 
 	return {
 		"cell": cell,
@@ -103,39 +98,19 @@ func sample_cell(cell: Vector2i, agent_radius: float, agent_max_slope_degrees: f
 		"traversable": traversable
 	}
 
-# get the 4 cells around a cell if it is traversable
-func get_neighbors(cell: Vector2i, agent_radius: float, agent_max_slope_degrees: float) -> Array[Vector2i]:
-	var neighbors: Array[Vector2i] = []
-	var directions: Array[Vector2i] = [
-		Vector2i(1, 0),
-		Vector2i(-1, 0),
-		Vector2i(0, 1),
-		Vector2i(0, -1)
-	]
-
-	for dir in directions:
-		var neighbor_cell := cell + dir
-		var neighbor_data := sample_cell(neighbor_cell, agent_radius, agent_max_slope_degrees)
-		if neighbor_data["traversable"]:
-			neighbors.append(neighbor_cell)
-	return neighbors
-
 # https://en.wikipedia.org/wiki/A*_search_algorithm using manhattan distance as the heuristic
-func find_path(
-	start: Vector3,
-	goal: Vector3,
-	agent_radius: float,
-	agent_max_slope_degrees: float
-) -> PackedVector3Array:
+func find_path(start: Vector3, goal: Vector3,	agent_config: Dictionary,	profile: int) -> PackedVector3Array:
 	var start_cell := world_to_cell(start)
 	var goal_cell := world_to_cell(goal)
 
 	var cache: Dictionary = {}
 	var iterations: int = 0
 
-	if not _sample_cell_with_cache(start_cell, agent_radius, agent_max_slope_degrees, cache)["traversable"]:
+	if not _sample_cell_with_cache(start_cell, agent_config, cache)["traversable"]:
+		print("Start position is not traversable")
 		return PackedVector3Array()
-	if not _sample_cell_with_cache(goal_cell, agent_radius, agent_max_slope_degrees, cache)["traversable"]:
+	if not _sample_cell_with_cache(goal_cell, agent_config, cache)["traversable"]:
+		print("Goal position is not traversable")
 		return PackedVector3Array()
 
 	var open_set: Array[Vector2i] = [start_cell]
@@ -169,11 +144,16 @@ func find_path(
 		open_set.erase(current)
 		closed_set[current] = true
 
-		for neighbor in _get_neighbors_with_cache(current, agent_radius, agent_max_slope_degrees, cache):
+		# get neighbors with cache
+		for neighbor in _get_neighbors_with_cache(current, agent_config, cache):
 			if closed_set.has(neighbor):
 				continue
 
-			var tentative_g: float = g_score[current] + 1.0
+			var move_cost := _get_move_cost(current, neighbor, agent_config, profile, cache)
+			if move_cost == INF:
+				continue
+
+			var tentative_g: float = g_score[current] + move_cost
 			if tentative_g < g_score.get(neighbor, INF):
 				came_from[neighbor] = current
 				g_score[neighbor] = tentative_g
@@ -184,7 +164,6 @@ func find_path(
 
 	print("no path found")
 	return PackedVector3Array()
-
 
 # helpers
 func _get_terrain() -> Terrain:
@@ -204,34 +183,45 @@ func _is_in_bounds(point: Vector3) -> bool:
 	return local_point.x >= min_x and local_point.x < max_x and local_point.z >= min_z and local_point.z < max_z
 
 # wrap around sample_cell with a cache thrown in
-func _sample_cell_with_cache(cell: Vector2i, agent_radius: float, agent_max_slope_degrees: float, cache: Dictionary) -> Dictionary:
+func _sample_cell_with_cache(cell: Vector2i, agent_config: Dictionary, cache: Dictionary) -> Dictionary:
 	if cell in cache:
 		return cache[cell]
 	
-	var data := sample_cell(cell, agent_radius, agent_max_slope_degrees)
+	var data := sample_cell(cell, agent_config)
 	cache[cell] = data
 	return data
 
 # same as get_neighbors but with a cache thrown in
-func _get_neighbors_with_cache(cell: Vector2i, agent_radius: float, agent_max_slope_degrees: float, cache: Dictionary) -> Array[Vector2i]:
+func _get_neighbors_with_cache(cell: Vector2i, agent_config: Dictionary, cache: Dictionary) -> Array[Vector2i]:
 	var neighbors: Array[Vector2i] = []
 	var directions: Array[Vector2i] = [
 		Vector2i(1, 0),
 		Vector2i(-1, 0),
 		Vector2i(0, 1),
-		Vector2i(0, -1)
+		Vector2i(0, -1),
+		Vector2i(1, 1),
+		Vector2i(1, -1),
+		Vector2i(-1, 1),
+		Vector2i(-1, -1),
 	]
 
 	for dir in directions:
 		var neighbor := cell + dir
-		if _sample_cell_with_cache(neighbor, agent_radius, agent_max_slope_degrees, cache)["traversable"]:
-			neighbors.append(neighbor)
+		var neighbor_data := _sample_cell_with_cache(neighbor, agent_config, cache)
+		if not neighbor_data["traversable"]:
+			continue
+
+		neighbors.append(neighbor)
 
 	return neighbors
 
-# for A*
+# Euclidean for A*
 func _heuristic(cell: Vector2i, goal_cell: Vector2i) -> float:
-	return abs(cell.x - goal_cell.x) + abs(cell.y - goal_cell.y)
+	var dx: int = abs(cell.x - goal_cell.x)
+	var dy: int = abs(cell.y - goal_cell.y)
+	var diagonal: int = min(dx, dy)
+	var straight: int = max(dx, dy) - diagonal
+	return diagonal * 1.41421356 + straight
 
 # for A*
 func _find_lowest_f_score(open_set: Array[Vector2i], f_score: Dictionary, goal_cell: Vector2i) -> Vector2i:
@@ -250,17 +240,122 @@ func _find_lowest_f_score(open_set: Array[Vector2i], f_score: Dictionary, goal_c
 
 	return best
 
+# get the max slope along two cells
+func _get_edge_max_slope_degrees(from_cell: Vector2i, to_cell: Vector2i) -> float:
+	var from_point: Vector3 = cell_to_world(from_cell)
+	var to_point: Vector3 = cell_to_world(to_cell)
+
+	var max_slope: float = 0.0
+	var sample_count: int = 4
+
+	for i in range(sample_count + 1):
+		var t: float = float(i) / float(sample_count)
+		var point: Vector3 = from_point.lerp(to_point, t)
+		var nav_data: Dictionary = get_nav_data(point)
+		if nav_data.is_empty():
+			return INF
+
+		var slope_degrees: float = nav_data["slope_degrees"]
+		if slope_degrees > max_slope:
+			max_slope = slope_degrees
+
+	return max_slope
+
+func _get_height(point: Vector3) -> float:
+	var terrain := _get_terrain()
+	if terrain == null or not _is_in_bounds(point):
+		return -1
+	return terrain.get_terrain_data(point)["height"]
+
+func _get_cover_depth(point: Vector3) -> float:
+	var center_height_value := _get_height(point)
+	if center_height_value == -1:
+		return 0.0
+
+	var center_height: float = center_height_value
+	var diffs: Array[float] = []
+	var cover_radius := 1.5
+
+	for i in range(8):
+		var angle := TAU * float(i) / 8.0
+		var sample_point := point + Vector3(cos(angle), 0.0, sin(angle)) * cover_radius
+		var sample_height_value := _get_height(sample_point)
+		if sample_height_value == -1:
+			continue
+
+		var diff: float = sample_height_value - center_height
+		if diff > 0.0:
+			diffs.append(diff)
+
+	if diffs.is_empty():
+		return 0.0
+
+	diffs.sort()
+
+	@warning_ignore("integer_division")
+	var start: int = diffs.size() / 2
+	var total := 0.0
+	for i in range(start, diffs.size()):
+		total += diffs[i]
+
+	return total / float(diffs.size() - start)
+
+# get the cost to move from one cell to another for A*
+func _get_move_cost(
+	from_cell: Vector2i,
+	to_cell: Vector2i,
+	agent_config: Dictionary,
+	profile: int,
+	cache: Dictionary
+) -> float:
+	var from_data: Dictionary = cache.get(from_cell, {})
+	var to_data: Dictionary = cache.get(to_cell, {})
+
+	if from_data.is_empty() or to_data.is_empty():
+		return INF
+	if not to_data["traversable"]:
+		return INF
+
+	var max_slope_degrees: float = agent_config["max_slope_degrees"]
+	var max_step_height: float = agent_config["max_step_height"]
+	var wall_climb_height: float = agent_config["wall_climb_height"]
+
+	var from_height: float = from_data["nav_data"]["height"]
+	var to_height: float = to_data["nav_data"]["height"]
+	var rise: float = to_height - from_height
+
+	var delta: Vector2i = to_cell - from_cell
+	var run: float = 1.41421356 if abs(delta.x) == 1 and abs(delta.y) == 1 else 1.0
+	var base_cost: float = run
+
+	if rise > 0.0:
+		var uphill_angle: float = rad_to_deg(atan(rise / run))
+
+		if uphill_angle <= max_slope_degrees:
+			pass
+		elif rise <= wall_climb_height:
+			if profile == Navigation.NavProfileId.DIRECT:
+				base_cost += 2.0
+			else:
+				return INF
+		else:
+			return INF
+
+	if rise < 0.0 and abs(rise) > max_step_height:
+		return INF
+
+	return base_cost
+
 # DEBUG
 func sample_patch(
 	center: Vector3,
 	half_extent_cells: int,
-	agent_radius: float,
-	agent_max_slope_degrees: float
+	agent_config: Dictionary
 ) -> Dictionary:
 	var cells: Dictionary = {}
 	var center_cell: Vector2i = world_to_cell(center)
 	for z in range(-half_extent_cells, half_extent_cells + 1):
 		for x in range(-half_extent_cells, half_extent_cells + 1):
 			var cell := center_cell + Vector2i(x, z)
-			cells[cell] = sample_cell(cell, agent_radius, agent_max_slope_degrees)
+			cells[cell] = sample_cell(cell, agent_config)
 	return cells

@@ -1,7 +1,11 @@
 extends Node3D
 
-@export var test_agent_radius := 0.2
-@export var test_agent_max_slope_degrees := 45.0
+@export var test_agent_radius := 0.1
+@export var test_agent_height := 1.7
+@export var test_agent_max_slope_degrees := 30.0
+@export var test_agent_max_step_height := 0.5
+@export var test_agent_wall_climb_height := 1.7
+@export var test_nav_profile := Navigation.NavProfileId.SAFE
 
 @onready var camera := $"../Player/Camera3D"
 
@@ -57,6 +61,16 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 
 	point_b = hit_position
 	has_point_b = true
-	current_path = Navigation.debug_find_path(point_a, point_b, test_agent_radius, test_agent_max_slope_degrees)
 	print("Set B:", point_b)
+
+	var agent_config := {
+		"radius": test_agent_radius,
+		"height": test_agent_height,
+		"max_speed": 5.0,
+		"max_slope_degrees": test_agent_max_slope_degrees,
+		"max_step_height": test_agent_max_step_height,
+		"wall_climb_height": test_agent_wall_climb_height,
+	}
+
+	current_path = Navigation.debug_find_path(point_a, point_b, agent_config, test_nav_profile)
 	print("Path points:", current_path.size())

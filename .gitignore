@@ -5,3 +5,4 @@
 # VSCode
 .vscode/
 *.md
+*.tmp
