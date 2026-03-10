@@ -1,15 +1,9 @@
 extends Node3D
 
-@export var range : float = 10.0
 @export var damage : float = 5.0
 @export var affected_area : float = 1.0
 
-@export var mag_size : int = 30
-@export var ammo_in_mag : int = 30
 @export var ammo_per_shot : int = 1
-
-@export var ammo_in_reserve : int = 300
-@export var reserve_size : int = 1000
 
 const bullet : PackedScene = preload("res://scenes/bullet.tscn")
 
@@ -22,30 +16,21 @@ func _process(delta: float) -> void:
 	pass
 
 func reload() -> void:
-	var refill_amt : int = mag_size - ammo_in_mag
-	
-	# refills either the entire mag or as much as possible if there is not enough ammo in storage
-	if ammo_in_reserve >= refill_amt:
-		ammo_in_reserve -= refill_amt
-		ammo_in_mag += refill_amt
-	else:
-		refill_amt = ammo_in_reserve
-		ammo_in_reserve -= refill_amt
-		ammo_in_mag += refill_amt
+	var refill_amt : int = $Magazine.get_max_item_quantity("res://scenes/weapon.tscn::Resource_xrduv") - $Magazine.get_item_quantity("res://scenes/weapon.tscn::Resource_xrduv")
+	var missing_ammo : int = $Magazine.remove_items("res://scenes/weapon.tscn::Resource_8fp1k", refill_amt)
+	$Magazine.add_items("res://scenes/weapon.tscn::Resource_xrduv", refill_amt - missing_ammo)
 		
 func shoot() -> void:
-	if ammo_in_mag >= ammo_per_shot:
-		ammo_in_mag -= ammo_per_shot
+	if $Magazine.get_item_quantity("res://scenes/weapon.tscn::Resource_8fp1k") >= ammo_per_shot:
+		var missing_shots : int = $Magazine.remove_items("res://scenes/weapon.tscn::Resource_8fp1k", ammo_per_shot)
 		
-		for i in range(ammo_per_shot):
+		for i in range(ammo_per_shot - missing_shots):
 			var bullet_instance : Node3D = bullet.instantiate()
 			get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
-		
-			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
+			
+			#if (global_position + range) < global_position - target_position make a check for range before shooting
+			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO, affected_area, damage) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
 
-func deposit_ammo(amount : int) -> bool:
-	if (amount + ammo_in_reserve) <= reserve_size:
-		ammo_in_reserve += amount
-		return true
-	else:
-		return false
+func deposit_ammo(amount : int) -> int:
+	var refill_max : int = $Magazine.get_max_item_quantity("res://scenes/weapon.tscn::Resource_8fp1k") - $Magazine.get_item_quantity("res://scenes/weapon.tscn::Resource_8fp1k")
+	return $Magazine.add_items("res://scenes/weapon.tscn::Resource_8fp1k", amount - refill_max)

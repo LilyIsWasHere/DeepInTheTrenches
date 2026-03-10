@@ -1,6 +1,35 @@
 [gd_scene format=3 uid="uid://dadylshewj041"]
 
 [ext_resource type="Script" uid="uid://c0lnv7r2n72dn" path="res://scripts/weapon_scripts/weapon.gd" id="1_xasec"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_8fp1k"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="2_uxn4k"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_cjr6y"]
+
+[sub_resource type="Resource" id="Resource_xrduv"]
+script = ExtResource("4_cjr6y")
+name = "Magazine"
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_5csnh"]
+script = ExtResource("2_uxn4k")
+item = SubResource("Resource_xrduv")
+max_num = 30
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="Resource" id="Resource_8fp1k"]
+script = ExtResource("4_cjr6y")
+name = "Ammo"
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_cjr6y"]
+script = ExtResource("2_uxn4k")
+item = SubResource("Resource_8fp1k")
+max_num = 300
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [node name="Weapon" type="Node3D" unique_id=687748021]
 script = ExtResource("1_xasec")
+
+[node name="Magazine" type="Node" parent="." unique_id=837491278]
+script = ExtResource("2_8fp1k")
+slots = Array[ExtResource("2_uxn4k")]([SubResource("Resource_5csnh"), SubResource("Resource_cjr6y")])

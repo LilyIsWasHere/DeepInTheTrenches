@@ -4,6 +4,7 @@ var curr_position : Vector3
 var target_position : Vector3
 var direction : Vector3
 var target_area : float
+var damage : float
 var speed : float = 20.0
 
 # Called when the node enters the scene tree for the first time.
@@ -14,9 +15,11 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
-func shoot(start : Vector3, target : Vector3) -> void:
+func shoot(start : Vector3, target : Vector3, area : float, dmg : float) -> void:
 	curr_position = start
 	target_position = target
+	target_area = area
+	damage = dmg
 	
 	direction = (target_position - curr_position).normalized()
 	
