@@ -46,11 +46,11 @@ func initialze() -> void:
 
 	
 	
-func sculpt_terrain(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2) -> void:
+func sculpt_terrain(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2, resource_extractor: ResourceExtractor) -> void:
 	var affected_tiles: Array[TerrainTile_Class] = get_affected_tiles(global_pos, radius)
 	
 	for tile in affected_tiles:
-		tile.sculpt_tile(global_pos, radius, height, min_max_height_delta)
+		tile.sculpt_tile(global_pos, radius, height, min_max_height_delta, resource_extractor)
 	
 	
 	
