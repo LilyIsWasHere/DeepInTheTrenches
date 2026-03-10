@@ -15,7 +15,6 @@ const bullet : PackedScene = preload("res://scenes/bullet.tscn")
 func _ready() -> void:
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
@@ -38,7 +37,7 @@ func shoot() -> void:
 		
 		for i in range(ammo_per_shot):
 			var bullet_instance : Node3D = bullet.instantiate()
-			get_tree().current_scene.add_child(bullet_instance)
+			get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 		
-			#bullet_instance.shoot($Weapon.global_position, target_position)
+			bullet_instance.shoot($Weapon.global_position, Vector3.ZERO) # calls the shooting function for the bullet scene, will need to change the Vector3.ZERO to the target position
 		
