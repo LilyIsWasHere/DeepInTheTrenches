@@ -2,28 +2,21 @@
 
 
 layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
-layout(r32ui, set = 0, binding = 1) uniform uimage2D _UnitResourceData; 
 
- 
-layout(binding = 2) uniform UniformBufferObject {
+layout(binding = 1) uniform UniformBufferObject {
 	vec4 _LocationRadiusHeight;
     float _Time; 
     float _MinHeightDelta;
-    float _MaxHeightDelta;   
-};   
-
-
-
-
+    float _MaxHeightDelta;
+};  
  
+
 layout(push_constant, std430) uniform Params {
 	vec2 raster_size;
 };
 
 const float PI = 3.14159265;
 const float E = 2.71828;
-
-const float resource_value_multiplier = 1000.0;
  
 
 float weight_function(float x, float sigma) {
@@ -104,14 +97,6 @@ void EditHeightmap() {
 
     }
 
-    float true_height_delta = prev_height - new_height;   
 
-    vec2 resource_delta = vec2(0.0, 0.0);
-
-    // Do not write for resource_id 0 (regular terrain)
-    if (true_height_delta > 0.0 && height_data.z > 0) {
-        imageAtomicAdd(_UnitResourceData, ivec2(int(height_data.z), 0), uint(resource_value_multiplier * abs(true_height_delta)));
-    }
- 
-	imageStore(_RenderTarget, uv, vec4(new_height, init_height, height_data.z, 1.0));  
+	imageStore(_RenderTarget, uv, vec4(new_height, init_height, height_data.z, 1.0));
 }

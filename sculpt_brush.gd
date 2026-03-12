@@ -3,7 +3,6 @@ class_name SculptBrush
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	resource_extractor.resource_items_extracted.connect(on_resource_items_acquired)
 	pass # Replace with function body.
 
 const RAY_LENGTH: float = 3000.0
@@ -17,8 +16,6 @@ const RAY_LENGTH: float = 3000.0
 @export var max_height_delta: float = 9999
 
 @export var continuous: bool = true
-
-@export var resource_extractor: ResourceExtractor
 
 var terrain: Terrain
 
@@ -47,11 +44,9 @@ func _physics_process(delta: float) -> void:
 		if result.is_empty():
 			return
 		
-		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height, Vector2(min_height_delta, max_height_delta), resource_extractor)
+		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height, Vector2(min_height_delta, max_height_delta))
 		
 		if result["collider"].has_method("get_heightmap_viewport_tex"):
 			$"../HeightmapDBGMesh".set_heightmap(result["collider"].get_heightmap_viewport_tex())
 	
-func on_resource_items_acquired(item: InventoryItem, quantity: int) -> void:
-	print("Acquired " + str(quantity) + " " + item.name)
 	
