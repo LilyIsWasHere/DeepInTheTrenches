@@ -66,7 +66,6 @@ func readback_heightmap_data() -> void:
 	heightmap_img_rf.convert(Image.FORMAT_RF)
 	heightmap_collision.update_map_data_from_image(heightmap_img_rf, 0, terrain_height)
 
-	
 
 func global_to_pixel(global_pos: Vector3) -> Vector2i:
 	var world_to_local: Transform3D = global_transform.inverse()
@@ -75,21 +74,21 @@ func global_to_pixel(global_pos: Vector3) -> Vector2i:
 	var pixel_pos: Vector3 = ((local_pos / (0.1 * global_scale)) + Vector3(0.5, 0.5, 0.5)) * float(size)
 	return Vector2i(pixel_pos.x, pixel_pos.z)
 	
-func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2) -> void:
+func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_height_delta: Vector2, resource_extractor: ResourceExtractor) -> void:
 
 	var scaled_min_max_height_delta: Vector2 = (min_max_height_delta * 10.0) / Vector2(terrain_height, terrain_height)
 
 	var pixel_pos: Vector2i = global_to_pixel(global_pos)
-	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta)
+	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta, resource_extractor)
 
 func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:
 
 	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
 	
-	_update_edit_heightmap_compositor(Vector2(size/2, size/2), radius, height, Vector2(-9999, 9999))
+	_update_edit_heightmap_compositor(Vector2(size/2, size/2), radius, height, Vector2(-9999, 9999), null)
 
 
-func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float, min_max_height_delta: Vector2) -> void:
+func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float, min_max_height_delta: Vector2, resource_extractor: ResourceExtractor) -> void:
 	var compositor_effect: HeightmapEditCompositorEffect = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects[0]
 	
 	
@@ -97,7 +96,8 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 	compositor_effect.radius = radius
 	compositor_effect.height = height
 	compositor_effect.min_max_height_delta = min_max_height_delta
-	
+	if (resource_extractor != null):
+		compositor_effect.resource_data_tex = resource_extractor.get_resource_tex() 
 	
 	$HeightMapGenViewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	
@@ -105,7 +105,10 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 		$HeightMapGenViewport/HeightMapGenColorRect.queue_free()
 		first_heightmap_update = false
 		
-	GlobalTerrainManager.queue_for_readback(self)
+	if (resource_extractor != null):
+		GlobalTerrainManager.queue_for_readback_with_resources(self, resource_extractor)
+	else:
+		GlobalTerrainManager.queue_for_readback(self)
 
 	
 
