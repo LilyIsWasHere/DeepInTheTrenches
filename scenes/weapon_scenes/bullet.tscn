@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bc103q6d7uwa2"]
 
-[ext_resource type="Script" path="res://scripts/weapon_scripts/bullet.gd" id="1_mkf8s"]
+[ext_resource type="Script" uid="uid://bw3tg1ifdtsmj" path="res://scripts/weapon_scripts/bullet.gd" id="1_ogpfp"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_mkf8s"]
 
@@ -12,7 +12,7 @@ metallic_specular = 0.51
 [sub_resource type="SphereShape3D" id="SphereShape3D_l5glv"]
 
 [node name="Bullet" type="Node3D" unique_id=700248503]
-script = ExtResource("1_mkf8s")
+script = ExtResource("1_ogpfp")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1866330244]
 continuous_cd = true

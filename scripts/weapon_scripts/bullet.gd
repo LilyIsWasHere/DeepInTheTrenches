@@ -1,6 +1,6 @@
 extends Node3D
 
-var curr_position : Vector3
+var start_position : Vector3
 var target_position : Vector3
 var direction : Vector3
 var gun_range : float
@@ -14,16 +14,18 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	# should make the bullet die if it has moved further than it's range
+	if $RigidBody3D.global_position.distance_to(start_position) >= gun_range:
+		queue_free()
 	
 func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg : float) -> void:
-	curr_position = start
+	start_position = start
 	target_position = target
 	target_area = area
 	gun_range = range
 	damage = dmg
 	
-	direction = (target_position - curr_position).normalized()
+	direction = (target_position - start_position).normalized()
 	
 	$RigidBody3D.linear_velocity = direction * speed
 
