@@ -1,13 +1,17 @@
 [gd_scene format=3 uid="uid://dpgp3e6f2xmk5"]
 
-[ext_resource type="Script" uid="uid://bkjdinmrtk6my" path="res://scripts/player.gd" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://c1fvl8hj3yucv" path="res://scripts/player.gd" id="1_xhfnw"]
 [ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="2_cxr5p"]
 [ext_resource type="Script" uid="uid://bsouf48aos0dn" path="res://scripts/label_3d.gd" id="3_tdg3f"]
 [ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="4_dtqjt"]
 [ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="5_5ncpa"]
 [ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="6_tdg3f"]
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="7_dtqjt"]
+[ext_resource type="Script" uid="uid://c8kyg434ywwc7" path="res://resource_extractor.gd" id="7_wi0c6"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="8_5ncpa"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="10_l6ohk"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="11_oudfo"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="12_d6rpx"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
 
@@ -18,6 +22,18 @@ albedo_texture = SubResource("ViewportTexture_wi0c6")
 
 [sub_resource type="QuadMesh" id="QuadMesh_3tkgg"]
 resource_local_to_scene = true
+
+[sub_resource type="Resource" id="Resource_r3kul"]
+script = ExtResource("10_l6ohk")
+item = ExtResource("11_oudfo")
+max_num = 256
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="Resource" id="Resource_jatw7"]
+script = ExtResource("10_l6ohk")
+item = ExtResource("12_d6rpx")
+max_num = 512
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("Camera")]
 script = ExtResource("1_xhfnw")
@@ -46,13 +62,20 @@ script = ExtResource("5_5ncpa")
 [node name="UnitSpawner" type="Node3D" parent="Camera3D" unique_id=1871115205]
 script = ExtResource("6_tdg3f")
 
-[node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=2097761360]
+[node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=2097761360 node_paths=PackedStringArray("resource_extractor")]
 script = ExtResource("4_dtqjt")
 brush_radius = 30.0
-brush_height = 10.0
+brush_height = 100.0
 min_height_delta = -3.0
 max_height_delta = 3.0
+continuous = false
+resource_extractor = NodePath("ResourceExtractor")
 metadata/_custom_type_script = "uid://b1dxcw3moxi84"
+
+[node name="ResourceExtractor" type="Node3D" parent="Camera3D/SculptBrush" unique_id=1067841416 node_paths=PackedStringArray("inventory_connection")]
+script = ExtResource("7_wi0c6")
+inventory_connection = NodePath("../../../Inventory")
+metadata/_custom_type_script = "uid://c8kyg434ywwc7"
 
 [node name="ExcavationPathTool" type="Node3D" parent="." unique_id=481946414]
 top_level = true
@@ -60,4 +83,5 @@ script = ExtResource("7_dtqjt")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1473978561]
 script = ExtResource("8_5ncpa")
+slots = Array[ExtResource("10_l6ohk")]([SubResource("Resource_r3kul"), SubResource("Resource_jatw7")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
