@@ -59,10 +59,9 @@ func set_debug_mesh_visibility(isVisible : bool) -> void:
 func get_selected_units() -> Array:
 	return selectedUnits
 
-
 func _on_area_entered(area: Area3D) -> void:
-	selectedUnits.push_back(area)
+	selectedUnits.push_back(area.get_parent())
 
 
 func _on_area_exited(area: Area3D) -> void:
-	selectedUnits.erase(area)
+	selectedUnits.erase(area.get_parent())

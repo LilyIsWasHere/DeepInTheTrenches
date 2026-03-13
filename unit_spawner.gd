@@ -30,6 +30,6 @@ func _physics_process(_delta: float) -> void:
 			unit.team = unit_team
 			
 			var attach_node: Node3D = $"../..".get_parent_node_3d()
+			unit.targetPos = result.position
 			attach_node.add_child(unit)
 			unit.global_position = result.position
-			

@@ -11,13 +11,25 @@ var offset : Vector2 = Vector2(50,0)
 var inDropdown : bool = false
 
 var selectedUnits : Array = []
+var isMoving : bool = false
+
+var targetCursor : Texture2D = preload("res://Nick/target (1).png")
+var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 
 func _ready() -> void:
+	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
 
 func _physics_process(_delta: float) -> void:
 	#if we're in dropdown, don't process select
 	if inDropdown:
+		return
+	
+	if Input.is_action_just_pressed("ToolClick") && isMoving:
+		var pos : Vector3 = get_world_pos()
+		for unit : Unit in selectedUnits:
+			unit.move_to_point(pos)
+		handle_movement(false)
 		return
 	
 	#have to put these methods in process in order to get persistent updates
@@ -48,17 +60,19 @@ func _physics_process(_delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ToolAltClick"):
+		print("1")
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = !inDropdown
+		
+		var mousePos : Vector2 = get_viewport().get_mouse_position()
+		actionsDropdown.position = mousePos + offset
 		
 		#debug (ensure the selected units are effected by dropdown)
 		if inDropdown:
 			print(selectedUnits)
-		
-		var mousePos : Vector2 = get_viewport().get_mouse_position()
-		actionsDropdown.position = mousePos + offset
 	
 	if event.is_action_released("ToolClick") && inDropdown:
+		print("3")
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = false
 
@@ -92,3 +106,10 @@ func update_selected_units(units : Array) -> void:
 	
 	#for unit in selectedUnits:
 	#	unit.set_selected(true)
+
+func handle_movement(moving : bool) -> void:
+	isMoving = moving
+	if moving:
+		Input.set_custom_mouse_cursor(targetCursor, Input.CURSOR_ARROW, Vector2(16, 16))
+	else:
+		Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
