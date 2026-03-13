@@ -7,6 +7,7 @@ const JUMP_VELOCITY = 4.5
 @export var LineOfSightTarget: Node3D
 @export var BodyMesh: MeshInstance3D
 @export var inventory: Inventory
+@export var selectableArea : Area3D
 
 @export var team: int = 0:
 	set(value):
@@ -18,8 +19,10 @@ const JUMP_VELOCITY = 4.5
 		
 		if (team == 0):
 			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
+			selectableArea.collision_layer = 2
 		else:
 			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
+			selectableArea.process_mode = Node.PROCESS_MODE_DISABLED
 		
 
 @export var velocity: Vector3 = Vector3(1.0, 0.0, 1.0)
