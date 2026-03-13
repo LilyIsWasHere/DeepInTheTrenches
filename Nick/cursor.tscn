@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c72wk1hhnxv5b"]
+
+[ext_resource type="Script" uid="uid://bdhhe6jwtnsak" path="res://Nick/cursor.gd" id="1_uo7cp"]
+[ext_resource type="PackedScene" path="res://Nick/actionsDropdown.tscn" id="2_itexh"]
+
+[node name="Cursor" type="Node3D" unique_id=1597200158]
+script = ExtResource("1_uo7cp")
+
+[node name="Actions" parent="." unique_id=2079239339 instance=ExtResource("2_itexh")]

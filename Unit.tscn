@@ -39,6 +39,8 @@ item = SubResource("Resource_f1vr2")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]
+
 [node name="Unit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("LineOfSightTarget", "BodyMesh", "inventory")]
 collision_layer = 0
 collision_mask = 0
@@ -69,3 +71,11 @@ mesh = SubResource("SphereMesh_ypl2c")
 script = ExtResource("2_ypl2c")
 slots = Array[ExtResource("3_d172s")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0188318, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
+shape = SubResource("CapsuleShape3D_lvdn7")

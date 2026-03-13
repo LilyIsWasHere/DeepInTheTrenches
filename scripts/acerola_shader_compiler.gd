@@ -197,7 +197,7 @@ func _init() -> void:
 		compile_compute_shader(file_path)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Compare current shader code with cached shader code and recompile if changed
 	for file_path: String in compute_shader_file_paths:
 		if shader_code_cache[file_path] != FileAccess.open(file_path, FileAccess.READ).get_as_text():
