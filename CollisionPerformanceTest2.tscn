@@ -1,0 +1,324 @@
+[gd_scene format=3 uid="uid://drwaxwyoolygx"]
+
+[ext_resource type="PackedScene" uid="uid://dppxivdfp3lpx" path="res://Unit.tscn" id="1_7b043"]
+
+[node name="Node3D" type="Node3D" unique_id=994536824]
+
+[node name="Node3D" parent="." unique_id=1494502536 instance=ExtResource("1_7b043")]
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D2" parent="." unique_id=146499758 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D3" parent="." unique_id=200012866 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D4" parent="." unique_id=219102931 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D5" parent="." unique_id=501749906 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D6" parent="." unique_id=1309134048 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D7" parent="." unique_id=1030156139 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D8" parent="." unique_id=1894262758 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, 0)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D9" parent="." unique_id=403467158 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D10" parent="." unique_id=889952235 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D11" parent="." unique_id=1095938838 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D12" parent="." unique_id=276085145 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D13" parent="." unique_id=406649891 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D14" parent="." unique_id=1308225620 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D15" parent="." unique_id=1968441087 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D16" parent="." unique_id=548141271 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -1.8465137)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D17" parent="." unique_id=124944801 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D18" parent="." unique_id=1040815473 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D19" parent="." unique_id=1852851339 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D20" parent="." unique_id=284483382 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D21" parent="." unique_id=2045824168 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D22" parent="." unique_id=2141509335 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D23" parent="." unique_id=975537412 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D24" parent="." unique_id=1135499184 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -3.549796)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D25" parent="." unique_id=812520347 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D26" parent="." unique_id=1075728875 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D27" parent="." unique_id=1236327954 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D28" parent="." unique_id=1039263089 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D29" parent="." unique_id=768060174 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D30" parent="." unique_id=51099107 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D31" parent="." unique_id=1048429894 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D32" parent="." unique_id=1995903116 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -5.39631)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D33" parent="." unique_id=843994915 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D34" parent="." unique_id=1424753482 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D35" parent="." unique_id=2146456471 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D36" parent="." unique_id=1038052926 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D37" parent="." unique_id=1881294147 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D38" parent="." unique_id=530714260 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D39" parent="." unique_id=1610833457 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D40" parent="." unique_id=713646638 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -6.8791986)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D41" parent="." unique_id=1384317451 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D42" parent="." unique_id=1822827044 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D43" parent="." unique_id=1233833829 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D44" parent="." unique_id=981489666 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D45" parent="." unique_id=680678959 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D46" parent="." unique_id=2049830679 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D47" parent="." unique_id=2113515794 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D48" parent="." unique_id=380978221 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -8.725712)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D49" parent="." unique_id=176819345 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D50" parent="." unique_id=106157579 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D51" parent="." unique_id=1775095653 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D52" parent="." unique_id=1468697543 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D53" parent="." unique_id=1660662969 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D54" parent="." unique_id=1601047542 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D55" parent="." unique_id=1836125989 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D56" parent="." unique_id=890924519 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -10.428995)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D57" parent="." unique_id=2125575868 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D58" parent="." unique_id=1004538789 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37275, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D59" parent="." unique_id=614478729 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7673643, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D60" parent="." unique_id=2031822781 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1401143, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D61" parent="." unique_id=1525786471 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.642082, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D62" parent="." unique_id=2071073234 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0148325, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D63" parent="." unique_id=227021220 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.409447, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)
+
+[node name="Node3D64" parent="." unique_id=1029786990 instance=ExtResource("1_7b043")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.782196, 0, -12.275509)
+team = 1
+velocity = Vector3(0, 0, 0)

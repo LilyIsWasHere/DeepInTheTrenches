@@ -1,0 +1,33 @@
+#kernel TerrainEdit
+
+layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
+
+
+layout(binding = 1) uniform UniformBufferObject {
+	vec4 _LocationRadiusHeight;
+};
+
+layout(rgba16f, set = 0, binding = 2) uniform image2D _Heightmap;
+
+
+layout(push_constant, std430) uniform Params {
+	vec2 raster_size;
+};
+
+[numthreads(8, 8, 1)]
+void TerrainEdit() {
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 size = ivec2(raster_size);
+	
+	if (uv.x >= size.x || uv.y >= size.y) return;
+
+    vec2 location = _LocationRadiusHeight.xy;
+    float radius = _LocationRadiusHeight.z;
+    float height = _LocationRadiusHeight.w;
+	
+    if (distance(vec2(float(uv.x), float(uv.y)), location) > radius) return;
+
+    vec3 color = imageLoad(_RenderTarget uv,).rgb + height;
+	
+	imageStore(_RenderTarget, uv, vec4(color, 1.0));
+}

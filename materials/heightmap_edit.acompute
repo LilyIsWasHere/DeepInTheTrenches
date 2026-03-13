@@ -1,0 +1,117 @@
+#kernel EditHeightmap
+
+
+layout(rgba16f, set = 0, binding = 0) uniform image2D _RenderTarget;
+layout(r32ui, set = 0, binding = 1) uniform uimage2D _UnitResourceData; 
+
+ 
+layout(binding = 2) uniform UniformBufferObject {
+	vec4 _LocationRadiusHeight;
+    float _Time; 
+    float _MinHeightDelta;
+    float _MaxHeightDelta;   
+};   
+
+
+
+
+ 
+layout(push_constant, std430) uniform Params {
+	vec2 raster_size;
+};
+
+const float PI = 3.14159265;
+const float E = 2.71828;
+
+const float resource_value_multiplier = 1000.0;
+ 
+
+float weight_function(float x, float sigma) {
+
+    return 1.0/(sigma * sqrt(2 * PI)) * exp((-1.0 * (x*x)) / 2*sigma*sigma);
+}
+
+float calculate_weight(float distance, float brush_radius) {
+    // Map the distance to [0, 1] so we can more easily fit a weight function
+    float max_distance = brush_radius;
+    float distance_ratio = min(1.0, distance / max_distance);
+
+    float sigma = 4.0 + sin(_Time * 0.1);
+
+    return weight_function(distance_ratio, sigma);
+}
+
+ivec2 scale_uv_by_center(ivec2 uv, vec2 scale) {
+    return ivec2((vec2(uv) - (vec2(raster_size)/2.0) * scale) + vec2(raster_size)/2.0); 
+}
+
+[numthreads(8, 8, 1)]
+void EditHeightmap() { 
+	ivec2 uv = ivec2(gl_GlobalInvocationID.xy); 
+
+	// vec2 scale_adj = (1.0 / raster_size);
+	// uv = scale_uv_by_center(uv, 1.0 - scale_adj);
+
+
+	ivec2 size = ivec2(raster_size);
+	
+    // if (uv.x < size.x/2) uv.x -= 1;
+    // else uv.x +=1;
+
+    // if (uv.y < size.y/2) uv.y -= 1;
+    // else uv.y +=1;
+
+
+	if (uv.x >= size.x || uv.y >= size.y) return;
+
+
+
+    vec2 location = _LocationRadiusHeight.xy;
+    float radius = _LocationRadiusHeight.z;
+    float height_delta = _LocationRadiusHeight.w;
+
+    vec2 mod_dir = vec2(sin(_Time * .1), cos(_Time * .1)) * radius/15.0;
+
+    // location += mod_dir;
+	
+    float dist = distance(vec2(float(uv.x), float(uv.y)), location);
+
+    if (dist > radius) return;
+
+    vec4 height_data = imageLoad(_RenderTarget, uv);
+
+    float prev_height = height_data.r;
+    float init_height = height_data.g;
+
+    float diff = abs(init_height - prev_height);
+
+
+    float a = 100.0;
+    height_delta = height_delta / (a * diff * diff + 1);
+
+    float weight = calculate_weight(dist, radius);
+    float new_height = prev_height + height_delta * weight;
+	
+    if (weight > 0.001) {
+        if ((new_height - init_height) < _MinHeightDelta && sign(height_delta) < 0.0) {
+            if ((prev_height - init_height) >= _MinHeightDelta) new_height =  init_height + _MinHeightDelta;
+            else new_height = prev_height;
+        }
+        if ((new_height - init_height) > _MaxHeightDelta && sign(height_delta) > 0.0) {
+            if ((prev_height - init_height) <= _MaxHeightDelta) new_height = init_height + _MaxHeightDelta;
+            else new_height = prev_height;
+        }
+
+    }
+
+    float true_height_delta = prev_height - new_height;   
+
+    vec2 resource_delta = vec2(0.0, 0.0);
+
+    // Do not write for resource_id 0 (regular terrain)
+    if (true_height_delta > 0.0 && height_data.z > 0) {
+        imageAtomicAdd(_UnitResourceData, ivec2(int(height_data.z), 0), uint(resource_value_multiplier * abs(true_height_delta)));
+    }
+ 
+	imageStore(_RenderTarget, uv, vec4(new_height, init_height, height_data.z, 1.0));  
+}

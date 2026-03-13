@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bdpqctxu1kcrp"]
+
+[ext_resource type="Shader" uid="uid://clpcrx3w1xj7o" path="res://materials/heightmap_terrain.gdshader" id="1_k2ogf"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="2_chrba"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_gfytj"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k2ogf"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_k2ogf")
+shader_parameter/heightmap = SubResource("ViewportTexture_gfytj")
+shader_parameter/vertical_scale = 41.39
+shader_parameter/band_thickness = 0.14
+shader_parameter/band_height = 1.245
+shader_parameter/antialiasing = true
+shader_parameter/aa_opacity = true
+shader_parameter/display_aa_bands = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gfytj"]
+size = Vector2(500, 500)
+subdivide_width = 255
+subdivide_depth = 255
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nrd8o"]
+resource_local_to_scene = true
+shader = ExtResource("2_chrba")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 255
+shader_parameter/frequency_scale = 4.745
+
+[node name="Node3D" type="Node3D" unique_id=133328600]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=556631193]
+material_override = SubResource("ShaderMaterial_k2ogf")
+mesh = SubResource("PlaneMesh_gfytj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=205046094]
+transform = Transform3D(-0.08103611, -0.17561163, 0.9811186, 0, 0.984356, 0.1761911, -0.9967112, 0.014277841, -0.07976838, 113.285324, 84.826035, 30.299145)
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1538541771]
+disable_3d = true
+own_world_3d = true
+size = Vector2i(500, 500)
+
+[node name="ColorRect" type="ColorRect" parent="SubViewport" unique_id=263116049]
+material = SubResource("ShaderMaterial_nrd8o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

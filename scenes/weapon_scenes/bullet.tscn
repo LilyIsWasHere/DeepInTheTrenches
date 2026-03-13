@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bc103q6d7uwa2"]
+
+[ext_resource type="Script" uid="uid://bw3tg1ifdtsmj" path="res://scripts/weapon_scripts/bullet.gd" id="1_ogpfp"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mkf8s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y25gk"]
+albedo_color = Color(0.41598046, 0.41598043, 0.4159804, 1)
+metallic = 1.0
+metallic_specular = 0.51
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_l5glv"]
+
+[node name="Bullet" type="Node3D" unique_id=700248503]
+script = ExtResource("1_ogpfp")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1866330244]
+continuous_cd = true
+
+[node name="BulletMesh" type="MeshInstance3D" parent="RigidBody3D" unique_id=1068440411]
+mesh = SubResource("SphereMesh_mkf8s")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_y25gk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=783984459]
+shape = SubResource("SphereShape3D_l5glv")
+
+[connection signal="body_entered" from="RigidBody3D" to="." method="_on_rigid_body_3d_body_entered"]

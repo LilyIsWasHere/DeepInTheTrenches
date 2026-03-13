@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="InventoryItem" format=3 uid="uid://b6jjubhfcai3n"]
+
+[ext_resource type="Texture2D" uid="uid://ctew5dwjoqg3g" path="res://resources/CompactedOrganicMaterialIcon.png" id="1_8dbqw"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="1_bn2me"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hs85m"]
+cull_mode = 2
+albedo_color = Color(0.53866535, 0, 0.16641894, 1)
+metallic_specular = 1.0
+roughness = 0.7
+clearcoat_enabled = true
+clearcoat = 0.85
+clearcoat_roughness = 0.9
+subsurf_scatter_strength = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_hdacp"]
+material = SubResource("StandardMaterial3D_hs85m")
+
+[resource]
+script = ExtResource("1_bn2me")
+name = "Compacted Organic Material"
+display_mesh = SubResource("BoxMesh_hdacp")
+display_icon = ExtResource("1_8dbqw")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b4msqubryiixn"]
+
+[ext_resource type="Script" uid="uid://5filkk14vj13" path="res://scripts/terrain.gd" id="1_po3o5"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="2_nrd8o"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nrd8o"]
+resource_local_to_scene = true
+shader = ExtResource("2_nrd8o")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 255
+shader_parameter/heightmap_frequency_scale = 1.0
+shader_parameter/organic_frequency_scale = 0.515
+shader_parameter/crystal_frequency_scale = 0.49
+shader_parameter/organic_offset = 50.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.75
+shader_parameter/crystal_scarcity = 0.595
+
+[node name="Terrain" type="Node3D" unique_id=1718280512]
+script = ExtResource("1_po3o5")
+num_tiles = Vector2i(4, 4)
+tile_size = 100
+heightmap_gen_material = SubResource("ShaderMaterial_nrd8o")
