@@ -51,7 +51,7 @@ func shoot(target_pos : Vector3) -> void:
 			for i in range(ammo_per_shot - missing_shots):
 				var bullet_instance : Node3D = bullet.instantiate()
 				get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
-				
+				bullet_instance.global_position = global_position
 				# MISSING: spray pattern calculation for target position, before sending it to the bullet
 				bullet_instance.shoot(global_position, target_pos, affected_area, range, damage) # calls the shooting function for the bullet scene
 				
