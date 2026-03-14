@@ -21,6 +21,7 @@ const RAY_LENGTH: float = 3000.0
 @export var resource_extractor: ResourceExtractor
 
 var terrain: Terrain
+var player_id: int = 0
 
 func _physics_process(delta: float) -> void:
 	
@@ -47,7 +48,9 @@ func _physics_process(delta: float) -> void:
 		if result.is_empty():
 			return
 		
-		terrain.sculpt_terrain(result["position"], brush_radius, sculpt_height, Vector2(min_height_delta, max_height_delta), resource_extractor)
+		var hit_position: Vector3 = result["position"]
+		terrain.sculpt_terrain(hit_position, brush_radius, sculpt_height, Vector2(min_height_delta, max_height_delta), resource_extractor)
+		Navigation.record_terrain_edit(player_id, hit_position, brush_radius, sculpt_height)
 		
 		if result["collider"].has_method("get_heightmap_viewport_tex"):
 			$"../HeightmapDBGMesh".set_heightmap(result["collider"].get_heightmap_viewport_tex())

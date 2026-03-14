@@ -10,8 +10,9 @@ class_name Player
 func _ready() -> void:
 	GlobalPlayerManager.register_player(self)
 	
-	$Camera3D/SculptBrush.terrain = terrain
-	pass # Replace with function body.
+	var sculpt_brush: SculptBrush = $Camera3D/SculptBrush
+	sculpt_brush.terrain = terrain
+	sculpt_brush.player_id = player_id
 
 
 

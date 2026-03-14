@@ -1,5 +1,5 @@
 extends Node
-
+const Player := preload("res://scripts/Player.gd")
 
 var players: Dictionary[int, Player]
 
