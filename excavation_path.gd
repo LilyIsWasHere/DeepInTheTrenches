@@ -3,7 +3,7 @@ class_name ExcavationPath
 
 var height_delta: float = -1.0
 
-var owning_player: Player
+var owning_camera: Camera3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,7 +17,7 @@ func _process(_delta: float) -> void:
 	if (points.size() > 0):
 		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 64, Color(1, 1, 0))
 	
-	var closest_unexcavated_to_player: Array = get_closest_unexcavated_point(owning_player.Camera.global_position)
+	var closest_unexcavated_to_player: Array = get_closest_unexcavated_point(owning_camera.global_position)
 	var closest_idx: int = closest_unexcavated_to_player[0]
 	
 	var idx: int = 0

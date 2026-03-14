@@ -30,7 +30,7 @@ func _input(event: InputEvent) -> void:
 			ActivePath = null
 			
 		ActivePath = ExcavationPath.new()
-		ActivePath.owning_player = $".."
+		ActivePath.owning_camera = $"../Camera3D"
 		ActivePath.curve = Curve3D.new()
 		ActivePath.curve.bake_interval = point_distance_interval
 		add_child(ActivePath)

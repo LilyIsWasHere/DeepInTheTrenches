@@ -6,6 +6,10 @@ extends RefCounted
 const FOOTPRINT_SAMPLE_COUNT := 4
 const GRID_CELL_SIZE := 1.0
 const A_STAR_MAX_ITERATIONS := 10000
+const SEARCH_PADDING_CELLS := 24
+
+func get_cell_size() -> float:
+	return GRID_CELL_SIZE
 
 # get navigation data at a point
 func get_nav_data(point: Vector3) -> Dictionary:
@@ -98,10 +102,34 @@ func sample_cell(cell: Vector2i, agent_config: Dictionary) -> Dictionary:
 		"traversable": traversable
 	}
 
-# https://en.wikipedia.org/wiki/A*_search_algorithm using manhattan distance as the heuristic
-func find_path(start: Vector3, goal: Vector3,	agent_config: Dictionary,	profile: int) -> PackedVector3Array:
+# get a modified score for a cell based on how safe it is for the agent, taking into account terrain modifications by players
+func get_effective_safe_score(_cell: Vector2i, _agent_config: Dictionary, raw_player_score: float) -> float:
+	return max(0.0, raw_player_score)
+
+# https://en.wikipedia.org/wiki/A*_search_algorithm using euclidean distance as the heuristic
+func find_path(
+	start: Vector3,
+	goal: Vector3,
+	agent_config: Dictionary,
+	profile: int,
+	terrain_scores: Dictionary = {}
+) -> PackedVector3Array:
+	return _find_direct_path(start, goal, agent_config, profile, terrain_scores)
+
+func _find_direct_path(
+	start: Vector3,
+	goal: Vector3,
+	agent_config: Dictionary,
+	profile: int,
+	terrain_scores: Dictionary = {}
+) -> PackedVector3Array:
 	var start_cell := world_to_cell(start)
 	var goal_cell := world_to_cell(goal)
+
+	var min_x: int = min(start_cell.x, goal_cell.x) - SEARCH_PADDING_CELLS
+	var max_x: int = max(start_cell.x, goal_cell.x) + SEARCH_PADDING_CELLS
+	var min_y: int = min(start_cell.y, goal_cell.y) - SEARCH_PADDING_CELLS
+	var max_y: int = max(start_cell.y, goal_cell.y) + SEARCH_PADDING_CELLS
 
 	var cache: Dictionary = {}
 	var iterations: int = 0
@@ -144,12 +172,14 @@ func find_path(start: Vector3, goal: Vector3,	agent_config: Dictionary,	profile:
 		open_set.erase(current)
 		closed_set[current] = true
 
-		# get neighbors with cache
 		for neighbor in _get_neighbors_with_cache(current, agent_config, cache):
+			if not _is_cell_within_search_bounds(neighbor, min_x, max_x, min_y, max_y):
+				continue
+
 			if closed_set.has(neighbor):
 				continue
 
-			var move_cost := _get_move_cost(current, neighbor, agent_config, profile, cache)
+			var move_cost: float = _get_move_cost(current, neighbor, agent_config, profile, cache, terrain_scores)
 			if move_cost == INF:
 				continue
 
@@ -190,6 +220,16 @@ func _sample_cell_with_cache(cell: Vector2i, agent_config: Dictionary, cache: Di
 	var data := sample_cell(cell, agent_config)
 	cache[cell] = data
 	return data
+
+# check if a cell is within the search bounds defined by the start and goal cells plus some padding, to avoid searching the entire map for distant goals
+func _is_cell_within_search_bounds(
+	cell: Vector2i,
+	min_x: int,
+	max_x: int,
+	min_y: int,
+	max_y: int
+) -> bool:
+	return cell.x >= min_x and cell.x <= max_x and cell.y >= min_y and cell.y <= max_y
 
 # same as get_neighbors but with a cache thrown in
 func _get_neighbors_with_cache(cell: Vector2i, agent_config: Dictionary, cache: Dictionary) -> Array[Vector2i]:
@@ -241,25 +281,22 @@ func _find_lowest_f_score(open_set: Array[Vector2i], f_score: Dictionary, goal_c
 	return best
 
 # get the max slope along two cells
-func _get_edge_max_slope_degrees(from_cell: Vector2i, to_cell: Vector2i) -> float:
-	var from_point: Vector3 = cell_to_world(from_cell)
-	var to_point: Vector3 = cell_to_world(to_cell)
+func _get_edge_max_slope_degrees(
+	from_cell: Vector2i,
+	to_cell: Vector2i,
+	from_data: Dictionary,
+	to_data: Dictionary
+) -> float:
+	var from_slope: float = float(from_data["nav_data"]["slope_degrees"])
+	var to_slope: float = float(to_data["nav_data"]["slope_degrees"])
 
-	var max_slope: float = 0.0
-	var sample_count: int = 4
+	var midpoint: Vector3 = cell_to_world(from_cell).lerp(cell_to_world(to_cell), 0.5)
+	var midpoint_data: Dictionary = get_nav_data(midpoint)
+	if midpoint_data.is_empty():
+		return INF
 
-	for i in range(sample_count + 1):
-		var t: float = float(i) / float(sample_count)
-		var point: Vector3 = from_point.lerp(to_point, t)
-		var nav_data: Dictionary = get_nav_data(point)
-		if nav_data.is_empty():
-			return INF
-
-		var slope_degrees: float = nav_data["slope_degrees"]
-		if slope_degrees > max_slope:
-			max_slope = slope_degrees
-
-	return max_slope
+	var midpoint_slope: float = float(midpoint_data["slope_degrees"])
+	return max(from_slope, max(midpoint_slope, to_slope))
 
 func _get_height(point: Vector3) -> float:
 	var terrain := _get_terrain()
@@ -267,38 +304,89 @@ func _get_height(point: Vector3) -> float:
 		return -1
 	return terrain.get_terrain_data(point)["height"]
 
-func _get_cover_depth(point: Vector3) -> float:
-	var center_height_value := _get_height(point)
-	if center_height_value == -1:
+# figure out if a point is in a trench and how bad it is
+func _get_safe_trench_score(point: Vector3, agent_config: Dictionary) -> float:
+	var center_height: float = _get_height(point)
+	if center_height < 0.0:
 		return 0.0
 
-	var center_height: float = center_height_value
-	var diffs: Array[float] = []
-	var cover_radius := 1.5
+	var agent_radius: float = agent_config["radius"]
+	var agent_height: float = agent_config["height"]
 
+	var wall_height_threshold: float = agent_config["wall_climb_height"]
+	var max_trench_depth: float = agent_height * 2.0
+	var max_trench_width: float = agent_radius * 8.0
+	var probe_step: float = max(GRID_CELL_SIZE * 0.5, agent_radius * 0.5)
+
+	var wall_distances: Array[float] = []
+	var wall_heights: Array[float] = []
+	wall_distances.resize(8)
+	wall_heights.resize(8)
+
+	# probe in 8 directions around the point to find walls and measure their distance and height relative to the center point
 	for i in range(8):
-		var angle := TAU * float(i) / 8.0
-		var sample_point := point + Vector3(cos(angle), 0.0, sin(angle)) * cover_radius
-		var sample_height_value := _get_height(sample_point)
-		if sample_height_value == -1:
-			continue
+		wall_distances[i] = INF
+		wall_heights[i] = 0.0
 
-		var diff: float = sample_height_value - center_height
-		if diff > 0.0:
-			diffs.append(diff)
+		var angle: float = TAU * float(i) / 8.0
+		var direction: Vector3 = Vector3(cos(angle), 0.0, sin(angle))
+		var distance: float = probe_step
 
-	if diffs.is_empty():
+		while distance <= max_trench_width:
+			var sample_height: float = _get_height(point + direction * distance)
+			if sample_height < 0.0:
+				break
+
+			var wall_height: float = sample_height - center_height
+			if wall_height >= wall_height_threshold:
+				wall_distances[i] = distance
+				wall_heights[i] = wall_height
+				break
+
+			distance += probe_step
+
+	var wall_hit_count: int = 0
+	for i in range(8):
+		if wall_distances[i] != INF:
+			wall_hit_count += 1
+
+	# if there are too few or too many walls, it's not a trench
+	if wall_hit_count < 2:
 		return 0.0
 
-	diffs.sort()
+	var best_score: float = 0.0
 
-	@warning_ignore("integer_division")
-	var start: int = diffs.size() / 2
-	var total := 0.0
-	for i in range(start, diffs.size()):
-		total += diffs[i]
+	# score trenches based on how close and high the walls are, with a preference for narrower trenches
+	for i in range(8):
+		for j in range(i + 1, 8):
+			var separation_steps: int = j - i
+			separation_steps = min(separation_steps, 8 - separation_steps)
 
-	return total / float(diffs.size() - start)
+			if separation_steps < 3:
+				continue
+
+			var wall_a_distance: float = wall_distances[i]
+			var wall_b_distance: float = wall_distances[j]
+
+			if wall_a_distance == INF or wall_b_distance == INF:
+				continue
+
+			var wall_to_wall_width: float = wall_a_distance + wall_b_distance
+			if wall_to_wall_width > max_trench_width:
+				continue
+
+			var effective_depth: float = min(wall_heights[i], wall_heights[j])
+			if effective_depth > max_trench_depth:
+				continue
+
+			var depth_ratio: float = min(effective_depth / agent_height, 1.0)
+			var width_ratio: float = 1.0 - (wall_to_wall_width / max_trench_width)
+			var trench_score: float = depth_ratio + width_ratio
+
+			if trench_score > best_score:
+				best_score = trench_score
+
+	return best_score
 
 # get the cost to move from one cell to another for A*
 func _get_move_cost(
@@ -306,7 +394,8 @@ func _get_move_cost(
 	to_cell: Vector2i,
 	agent_config: Dictionary,
 	profile: int,
-	cache: Dictionary
+	cache: Dictionary,
+	terrain_scores: Dictionary = {}
 ) -> float:
 	var from_data: Dictionary = cache.get(from_cell, {})
 	var to_data: Dictionary = cache.get(to_cell, {})
@@ -327,11 +416,13 @@ func _get_move_cost(
 	var delta: Vector2i = to_cell - from_cell
 	var run: float = 1.41421356 if abs(delta.x) == 1 and abs(delta.y) == 1 else 1.0
 	var base_cost: float = run
+	var edge_max_slope_degrees: float = _get_edge_max_slope_degrees(from_cell, to_cell, from_data, to_data)
+
+	if edge_max_slope_degrees == INF:
+		return INF
 
 	if rise > 0.0:
-		var uphill_angle: float = rad_to_deg(atan(rise / run))
-
-		if uphill_angle <= max_slope_degrees:
+		if edge_max_slope_degrees <= max_slope_degrees:
 			pass
 		elif rise <= wall_climb_height:
 			if profile == Navigation.NavProfileId.DIRECT:
@@ -341,8 +432,14 @@ func _get_move_cost(
 		else:
 			return INF
 
+
 	if rise < 0.0 and abs(rise) > max_step_height:
 		return INF
+
+	if profile == Navigation.NavProfileId.SAFE:
+		var terrain_score: float = float(terrain_scores.get(to_cell, 0.0))
+		if terrain_score > 0.0:
+			base_cost = 0.05
 
 	return base_cost
 
@@ -359,3 +456,98 @@ func sample_patch(
 			var cell := center_cell + Vector2i(x, z)
 			cells[cell] = sample_cell(cell, agent_config)
 	return cells
+
+func debug_get_safe_trench_info(cell: Vector2i, agent_config: Dictionary) -> Dictionary:
+	var point: Vector3 = cell_to_world(cell)
+	var center_height: float = _get_height(point)
+	if center_height < 0.0:
+		return {
+			"valid": false,
+			"score": 0.0,
+		}
+
+	var agent_radius: float = agent_config["radius"]
+	var agent_height: float = agent_config["height"]
+
+	var wall_height_threshold: float = agent_config["wall_climb_height"]
+	var max_trench_depth: float = agent_height * 2.0
+	var max_trench_width: float = agent_radius * 8.0
+	var probe_step: float = max(GRID_CELL_SIZE * 0.5, agent_radius * 0.5)
+
+	var wall_distances: Array[float] = []
+	var wall_heights: Array[float] = []
+	wall_distances.resize(8)
+	wall_heights.resize(8)
+
+	for i in range(8):
+		wall_distances[i] = INF
+		wall_heights[i] = 0.0
+
+		var angle: float = TAU * float(i) / 8.0
+		var direction: Vector3 = Vector3(cos(angle), 0.0, sin(angle))
+		var distance: float = probe_step
+
+		while distance <= max_trench_width:
+			var sample_height: float = _get_height(point + direction * distance)
+			if sample_height < 0.0:
+				break
+
+			var wall_height: float = sample_height - center_height
+			if wall_height >= wall_height_threshold:
+				wall_distances[i] = distance
+				wall_heights[i] = wall_height
+				break
+
+			distance += probe_step
+
+	var wall_hit_count: int = 0
+	for i in range(8):
+		if wall_distances[i] != INF:
+			wall_hit_count += 1
+
+	var best_score: float = 0.0
+	var best_pair: Vector2i = Vector2i(-1, -1)
+
+	for i in range(8):
+		for j in range(i + 1, 8):
+			var separation_steps: int = j - i
+			separation_steps = min(separation_steps, 8 - separation_steps)
+
+			if separation_steps < 3:
+				continue
+
+			var wall_a_distance: float = wall_distances[i]
+			var wall_b_distance: float = wall_distances[j]
+
+			if wall_a_distance == INF or wall_b_distance == INF:
+				continue
+
+			var wall_to_wall_width: float = wall_a_distance + wall_b_distance
+			if wall_to_wall_width > max_trench_width:
+				continue
+
+			var effective_depth: float = min(wall_heights[i], wall_heights[j])
+			if effective_depth > max_trench_depth:
+				continue
+
+			var depth_ratio: float = min(effective_depth / agent_height, 1.0)
+			var width_ratio: float = 1.0 - (wall_to_wall_width / max_trench_width)
+			var trench_score: float = depth_ratio + width_ratio
+
+			if trench_score > best_score:
+				best_score = trench_score
+				best_pair = Vector2i(i, j)
+
+	return {
+		"valid": true,
+		"score": best_score,
+		"center_height": center_height,
+		"wall_height_threshold": wall_height_threshold,
+		"max_trench_depth": max_trench_depth,
+		"max_trench_width": max_trench_width,
+		"probe_step": probe_step,
+		"wall_hit_count": wall_hit_count,
+		"wall_distances": wall_distances,
+		"wall_heights": wall_heights,
+		"best_pair": best_pair,
+	}

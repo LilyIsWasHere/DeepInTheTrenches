@@ -16,5 +16,6 @@ enum NavRequestStatus {
 var status: NavRequestStatus = NavRequestStatus.PENDING
 var target: Vector3 = Vector3.ZERO
 var profile: int = 0
+var player_id: int = 0
 var waypoints: PackedVector3Array = PackedVector3Array()
 var failure_reason: String = ""
