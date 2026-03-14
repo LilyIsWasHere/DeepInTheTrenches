@@ -67,7 +67,7 @@ material_override = SubResource("StandardMaterial3D_ypl2c")
 mesh = SubResource("CapsuleMesh_c58w5")
 
 [node name="LineOfSightTarget" type="Node3D" parent="." unique_id=1813088803]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0760012, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.879803, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
