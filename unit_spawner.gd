@@ -1,7 +1,7 @@
 extends Node3D
 
 var RAY_LENGTH: float = 3000
-var unit_scene := preload("res://Unit.tscn")
+var unit_scene := preload("res://FootUnit.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

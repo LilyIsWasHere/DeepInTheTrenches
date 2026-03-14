@@ -8,6 +8,7 @@ const JUMP_VELOCITY = 4.5
 @export var BodyMesh: MeshInstance3D
 @export var inventory: Inventory
 @export var selectableArea : Area3D
+@export var weapon : Weapon
 
 @export var team: int = 0:
 	set(value):
@@ -92,3 +93,6 @@ func set_hidden(hidden: bool) -> void:
 
 func move_to_point(point : Vector3) -> void:
 	targetPos = point
+
+func shoot_at_point(point : Vector3) -> void:
+	weapon.shoot(point)
