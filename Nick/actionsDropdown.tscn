@@ -30,7 +30,6 @@ layout_mode = 2
 text = "Move"
 
 [node name="Attack" type="Button" parent="PanelContainer/Options" unique_id=1747657094]
-visible = false
 layout_mode = 2
 text = "Attack"
 
