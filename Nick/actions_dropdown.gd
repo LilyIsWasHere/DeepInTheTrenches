@@ -19,3 +19,12 @@ func enable_all() -> void:
 func disable_all() -> void:
 	for button : Button in buttons:
 		button.visible = false
+
+func disable_button(buttonName : String) -> void:
+	match buttonName:
+		"move":
+			buttons[0].hide()
+		"attack":
+			buttons[1].hide()
+		"dig":
+			buttons[2].hide()

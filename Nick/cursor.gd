@@ -106,7 +106,12 @@ func update_action_buttons() -> void:
 	if selectedUnits.is_empty() == false:
 		actionsDropdown.enable_all()
 	for unit : Unit in selectedUnits:
-		pass
+		if !(unit.is_in_group("can_move")):
+			actionsDropdown.disable_button("move")
+		if !(unit.is_in_group("can_attack")):
+			actionsDropdown.disable_button("attack")
+		if !(unit.is_in_group("can_dig")):
+			actionsDropdown.disable_button("dig")
 
 func handle_movement(moving : bool) -> void:
 	isMoving = moving

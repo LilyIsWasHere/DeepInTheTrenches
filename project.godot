@@ -47,6 +47,12 @@ window/vsync/vsync_mode=0
 
 enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg")
 
+[global_group]
+
+can_move=""
+can_dig=""
+can_attack=""
+
 [input]
 
 AddMaterial={

@@ -8,6 +8,7 @@ var arrived : bool = true
 func _ready() -> void:
 	super()
 	targetPos = global_position
+	add_to_group("can_move")
 
 func _physics_process(delta: float) -> void:
 	super(delta)
