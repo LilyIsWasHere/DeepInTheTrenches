@@ -20,6 +20,7 @@ var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
+	update_action_buttons()
 
 func _physics_process(_delta: float) -> void:
 	#if we're in dropdown, don't process select
@@ -72,10 +73,6 @@ func _input(event: InputEvent) -> void:
 		
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
 		actionsDropdown.position = mousePos + offset
-		
-		#debug (ensure the selected units are effected by dropdown)
-		if inDropdown:
-			print(selectedUnits)
 	
 	if event.is_action_released("ToolClick") && inDropdown:
 		actionsDropdown.visible = !actionsDropdown.visible
@@ -101,16 +98,15 @@ func get_world_pos() -> Vector3:
 		return Vector3.ZERO
 
 func update_selected_units(units : Array) -> void:
-	#commented lines were for letting the unit know they were selected
-	#(so that they can activate a highlight shader or however we wanna indicate it)
-	
-	#for unit in selectedUnits:
-	#	unit.set_selected(false)
-	
 	selectedUnits = units.duplicate()
-	
-	#for unit in selectedUnits:
-	#	unit.set_selected(true)
+	update_action_buttons()
+
+func update_action_buttons() -> void:
+	actionsDropdown.disable_all()
+	if selectedUnits.is_empty() == false:
+		actionsDropdown.enable_all()
+	for unit : Unit in selectedUnits:
+		pass
 
 func handle_movement(moving : bool) -> void:
 	isMoving = moving

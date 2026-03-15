@@ -29,10 +29,6 @@ const JUMP_VELOCITY = 4.5
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
-var targetPos : Vector3
-var arrived : bool = false
-@export var unitSpeed : float = 10.5
-
 func _ready() -> void:
 	if (team == 0):
 		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)
@@ -46,16 +42,6 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	
 	move_along_terrain(delta)
-	
-	debug_movement(delta)
-
-func debug_movement(delta : float) -> void:
-	if global_position.distance_to(targetPos) > 0.5:
-		global_position = global_position.move_toward(targetPos, unitSpeed * delta)
-		arrived = false
-	elif !arrived:
-		print("arrived!")
-		arrived = true
 
 func get_slope_velocity_multiplier(normal: Vector3, vel_dir: Vector3) -> float:
 	if (!on_floor): 

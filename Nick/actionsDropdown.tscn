@@ -25,19 +25,22 @@ layout_mode = 2
 text = "Actions"
 horizontal_alignment = 1
 
-[node name="Move" type="Button" parent="PanelContainer/Options" unique_id=996915208]
+[node name="Buttons" type="VBoxContainer" parent="PanelContainer/Options" unique_id=342084660]
+layout_mode = 2
+
+[node name="Move" type="Button" parent="PanelContainer/Options/Buttons" unique_id=996915208]
 layout_mode = 2
 text = "Move"
 
-[node name="Attack" type="Button" parent="PanelContainer/Options" unique_id=1747657094]
+[node name="Attack" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1747657094]
 layout_mode = 2
 text = "Attack"
 
-[node name="Dig" type="Button" parent="PanelContainer/Options" unique_id=1225912520]
+[node name="Dig" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1225912520]
 visible = false
 layout_mode = 2
 text = "Dig"
 
-[connection signal="button_down" from="PanelContainer/Options/Move" to="." method="_on_move_button_down"]
-[connection signal="button_down" from="PanelContainer/Options/Attack" to="." method="_on_attack_button_down"]
-[connection signal="button_down" from="PanelContainer/Options/Dig" to="." method="_on_dig_button_down"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Move" to="." method="_on_move_button_down"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Attack" to="." method="_on_attack_button_down"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Dig" to="." method="_on_dig_button_down"]
