@@ -1,10 +1,13 @@
 extends Node3D
 
 var RAY_LENGTH: float = 3000
-var unit_scene := preload("res://FootUnit.tscn")
+#spawnable unit is footUnit by default
+var unit_scene : PackedScene
+var footUnit := preload("res://Units/FootUnit.tscn")
+var mortarUnit := preload("res://Units/MortarUnit.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	unit_scene = footUnit
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,12 +27,17 @@ func _physics_process(_delta: float) -> void:
 			return
 			
 		else:
-			
-			
 			var unit: Unit = unit_scene.instantiate()
 			unit.team = unit_team
 			
 			var attach_node: Node3D = $"../..".get_parent_node_3d()
 			attach_node.add_child(unit)
 			unit.global_position = result.position
-			unit.targetPos = result.position
+			if unit.is_in_group("can_move"):
+				unit.targetPos = result.position
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("1"):
+		unit_scene = footUnit
+	elif event.is_action_pressed("2"):
+		unit_scene = mortarUnit

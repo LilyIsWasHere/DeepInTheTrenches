@@ -29,6 +29,7 @@ tile_size = 255
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
 
 [node name="Player" parent="." unique_id=1877591714 node_paths=PackedStringArray("terrain") instance=ExtResource("4_ohhpf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110, 0, 50)
 terrain = NodePath("../Terrain")
 
 [node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("4_21bcp")]

@@ -1,9 +1,11 @@
-[gd_scene format=3 uid="uid://dppxivdfp3lpx"]
+[gd_scene format=3 uid="uid://d3go7jkhu7b7d"]
 
-[ext_resource type="Script" uid="uid://gbq002ywenap" path="res://unit.gd" id="1_c58w5"]
-[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_ypl2c"]
-[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_d172s"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_lvdn7"]
+[ext_resource type="Script" uid="uid://ci8h600jjf0kr" path="res://Units/mortar_unit.gd" id="1_3ooov"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_3ooov"]
+[ext_resource type="PackedScene" uid="uid://cfjqneqmh7gqf" path="res://Nick/Assets/Ready Assets/mortar.tscn" id="2_ft3yy"]
+[ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="2_x5o4g"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_ft3yy"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_x5o4g"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -20,43 +22,50 @@ albedo_color = Color(0.68235296, 0, 1, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_ypl2c"]
 
 [sub_resource type="Resource" id="Resource_d172s"]
-script = ExtResource("4_lvdn7")
+script = ExtResource("4_x5o4g")
 metadata/_custom_type_script = "uid://ijy22e1e2kgk"
 
 [sub_resource type="Resource" id="Resource_i4nis"]
-script = ExtResource("3_d172s")
+script = ExtResource("3_ft3yy")
 item = SubResource("Resource_d172s")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="Resource" id="Resource_f1vr2"]
-script = ExtResource("4_lvdn7")
+script = ExtResource("4_x5o4g")
 metadata/_custom_type_script = "uid://ijy22e1e2kgk"
 
 [sub_resource type="Resource" id="Resource_y23oe"]
-script = ExtResource("3_d172s")
+script = ExtResource("3_ft3yy")
 item = SubResource("Resource_f1vr2")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]
 
-[node name="Unit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
-script = ExtResource("1_c58w5")
+script = ExtResource("1_3ooov")
+weapon = NodePath("Weapon")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
 selectableArea = NodePath("Selectable")
 velocity = Vector3(0, 0, 0)
 
+[node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("2_x5o4g")]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_pl1pi")
 
+[node name="Mortar" parent="." unique_id=839369625 instance=ExtResource("2_ft3yy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15086862)
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138292857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_ypl2c")
 mesh = SubResource("CapsuleMesh_c58w5")
 
@@ -69,8 +78,8 @@ material_override = SubResource("StandardMaterial3D_c58w5")
 mesh = SubResource("SphereMesh_ypl2c")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
-script = ExtResource("2_ypl2c")
-slots = Array[ExtResource("3_d172s")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe")])
+script = ExtResource("2_3ooov")
+slots = Array[ExtResource("3_ft3yy")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 
 [node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
