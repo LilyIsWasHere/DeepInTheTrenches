@@ -5,6 +5,8 @@ var RAY_LENGTH: float = 3000
 var unit_scene : PackedScene
 var footUnit := preload("res://Units/FootUnit.tscn")
 var mortarUnit := preload("res://Units/MortarUnit.tscn")
+var turretUnit := preload("res://Units/TurretUnit.tscn")
+var productionUnit := preload("res://Units/ProductionUnit.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	unit_scene = footUnit
@@ -41,3 +43,7 @@ func _input(event: InputEvent) -> void:
 		unit_scene = footUnit
 	elif event.is_action_pressed("2"):
 		unit_scene = mortarUnit
+	elif event.is_action_pressed("3"):
+		unit_scene = turretUnit
+	elif event.is_action_pressed("4"):
+		unit_scene = productionUnit

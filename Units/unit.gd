@@ -24,7 +24,7 @@ const JUMP_VELOCITY = 4.5
 			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
 			selectableArea.process_mode = Node.PROCESS_MODE_DISABLED
 
-@export var velocity: Vector3 = Vector3(1.0, 0.0, 1.0)
+@export var velocity: Vector3 = Vector3(0.0, 0.0, 0.0)
 
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
