@@ -68,7 +68,6 @@ brush_radius = 30.0
 brush_height = 100.0
 min_height_delta = -3.0
 max_height_delta = 3.0
-continuous = false
 resource_extractor = NodePath("ResourceExtractor")
 metadata/_custom_type_script = "uid://b1dxcw3moxi84"
 

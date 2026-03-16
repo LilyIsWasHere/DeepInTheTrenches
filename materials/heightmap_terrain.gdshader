@@ -1,5 +1,4 @@
 shader_type spatial;
-render_mode unshaded;
 
 uniform sampler2D heightmap: repeat_disable, filter_nearest;
 uniform float vertical_scale = 100;

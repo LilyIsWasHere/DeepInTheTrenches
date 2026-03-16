@@ -19,7 +19,8 @@ shader_parameter/crystal_scarcity = 0.762
 [node name="Node3D" type="Node3D" unique_id=198694909]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=531165362]
-transform = Transform3D(-0.67469615, 0.3339157, -0.65824425, 0, 0.89181435, 0.45240167, 0.7380956, 0.30523363, -0.60170364, -165.5405, 138.63272, 283.12396)
+transform = Transform3D(-0.72961056, 0.38139787, -0.56763023, 0, 0.8300352, 0.557711, 0.68386286, 0.40691182, -0.60560244, -20.049286, 54.485455, -22.650867)
+shadow_enabled = true
 
 [node name="Terrain" parent="." unique_id=1045056070 instance=ExtResource("3_ohhpf")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
