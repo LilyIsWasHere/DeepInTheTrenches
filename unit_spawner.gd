@@ -1,14 +1,19 @@
 extends Node3D
 
 var RAY_LENGTH: float = 3000
-var unit_scene := preload("res://Unit.tscn")
+#spawnable unit is footUnit by default
+var unit_scene : PackedScene
+var footUnit := preload("res://Units/FootUnit.tscn")
+var mortarUnit := preload("res://Units/MortarUnit.tscn")
+var turretUnit := preload("res://Units/TurretUnit.tscn")
+var productionUnit := preload("res://Units/ProductionUnit.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	unit_scene = footUnit
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if (Input.is_action_just_pressed("SpawnPlayerUnit") || Input.is_action_just_pressed("SpawnEnemyUnit")):
 		var unit_team: int = 0 if Input.is_action_pressed("SpawnPlayerUnit") else 1
 		
@@ -24,12 +29,21 @@ func _physics_process(delta: float) -> void:
 			return
 			
 		else:
-			
-			
 			var unit: Unit = unit_scene.instantiate()
 			unit.team = unit_team
 			
 			var attach_node: Node3D = $"../..".get_parent_node_3d()
 			attach_node.add_child(unit)
 			unit.global_position = result.position
-			
+			if unit.is_in_group("can_move"):
+				unit.targetPos = result.position
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("1"):
+		unit_scene = footUnit
+	elif event.is_action_pressed("2"):
+		unit_scene = mortarUnit
+	elif event.is_action_pressed("3"):
+		unit_scene = turretUnit
+	elif event.is_action_pressed("4"):
+		unit_scene = productionUnit

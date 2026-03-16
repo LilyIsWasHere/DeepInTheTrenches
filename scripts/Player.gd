@@ -10,12 +10,13 @@ class_name Player
 func _ready() -> void:
 	GlobalPlayerManager.register_player(self)
 	
-	$Camera3D/SculptBrush.terrain = terrain
-	pass # Replace with function body.
+	var sculpt_brush: SculptBrush = $Camera3D/SculptBrush
+	sculpt_brush.terrain = terrain
+	sculpt_brush.player_id = player_id
 
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Update visibility of enemy units
 	LineOfSightManager.set_unit_vis_from_los(player_id)

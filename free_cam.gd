@@ -28,23 +28,26 @@ var _e := false
 var _shift := false
 var _alt := false
 
+@export var freeCamActive : bool = false
+
 func _input(event: InputEvent)-> void:
-	# Receives mouse motion
-	if event is InputEventMouseMotion:
-		_mouse_position = event.relative
+	# Only handle mouse capture if free cam is active
+	if freeCamActive:
+		# Receives mouse motion
+		if event is InputEventMouseMotion:
+			_mouse_position = event.relative
+		
+		# Receives mouse button input
+		if event is InputEventMouseButton:
+			match event.button_index:
+				MOUSE_BUTTON_RIGHT: # Only allows rotation if right click down
+					if !Input.is_key_pressed(KEY_SHIFT) && !Input.is_key_pressed(KEY_ALT):
+						Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if event.pressed else Input.MOUSE_MODE_VISIBLE)
+				MOUSE_BUTTON_WHEEL_UP: # Increases max velocity
+					_vel_multiplier = clamp(_vel_multiplier * 1.1, 0.2, 50)
+				MOUSE_BUTTON_WHEEL_DOWN: # Decereases max velocity
+					_vel_multiplier = clamp(_vel_multiplier / 1.1, 0.2, 50)
 	
-	# Receives mouse button input
-	if event is InputEventMouseButton:
-		match event.button_index:
-			MOUSE_BUTTON_RIGHT: # Only allows rotation if right click down
-				if !Input.is_key_pressed(KEY_SHIFT) && !Input.is_key_pressed(KEY_ALT):
-					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED if event.pressed else Input.MOUSE_MODE_VISIBLE)
-			MOUSE_BUTTON_WHEEL_UP: # Increases max velocity
-				_vel_multiplier = clamp(_vel_multiplier * 1.1, 0.2, 50)
-			MOUSE_BUTTON_WHEEL_DOWN: # Decereases max velocity
-				_vel_multiplier = clamp(_vel_multiplier / 1.1, 0.2, 50)
-
-
 	# Receives key input
 	if event is InputEventKey:
 		match event.keycode:
@@ -67,7 +70,8 @@ func _input(event: InputEvent)-> void:
 
 # Updates mouselook and movement every frame
 func _process(delta: float) -> void:
-	_update_mouselook()
+	if freeCamActive:
+		_update_mouselook()
 	_update_movement(delta)
 
 # Updates camera movement
@@ -99,8 +103,11 @@ func _update_movement(delta: float) -> void:
 		_velocity.x = clamp(_velocity.x + offset.x, -_vel_multiplier, _vel_multiplier)
 		_velocity.y = clamp(_velocity.y + offset.y, -_vel_multiplier, _vel_multiplier)
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
-	
-		translate(_velocity * delta * speed_multi)
+		if freeCamActive:
+			translate(_velocity * delta * speed_multi)
+		else:
+			#not the best way to do this (isn't as smooth as freeCam) but works
+			global_position -= _velocity*0.1*speed_multi
 
 # Updates mouse look 
 func _update_mouselook() -> void:

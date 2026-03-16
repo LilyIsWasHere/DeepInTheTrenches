@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bwvlxdwcpdifo"]
+
+[ext_resource type="Script" uid="uid://cmiuh488qtiml" path="res://scripts/weapon_scripts/weapon.gd" id="1_v53xh"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_b5rk6"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_kyrca"]
+[ext_resource type="Resource" uid="uid://dt3t4ws4pich7" path="res://Inventory/InventoryItems/magazine_item.tres" id="4_o1k0b"]
+[ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="5_uiixo"]
+
+[sub_resource type="Resource" id="Resource_5csnh"]
+script = ExtResource("3_kyrca")
+item = ExtResource("4_o1k0b")
+num = 30
+max_num = 30
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="Resource" id="Resource_cjr6y"]
+script = ExtResource("3_kyrca")
+item = ExtResource("5_uiixo")
+num = 300
+max_num = 300
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[node name="Weapon" type="Node3D" unique_id=687748021]
+script = ExtResource("1_v53xh")
+
+[node name="Magazine" type="Node3D" parent="." unique_id=1170183349]
+script = ExtResource("2_b5rk6")
+slots = Array[ExtResource("3_kyrca")]([SubResource("Resource_5csnh"), SubResource("Resource_cjr6y")])
+
+[node name="ReloadTime" type="Timer" parent="." unique_id=627210623]
+wait_time = 2.0
+
+[connection signal="timeout" from="ReloadTime" to="." method="_on_reload_time_timeout"]

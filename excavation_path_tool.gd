@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
@@ -30,7 +30,7 @@ func _input(event: InputEvent) -> void:
 			ActivePath = null
 			
 		ActivePath = ExcavationPath.new()
-		ActivePath.owning_player = $".."
+		ActivePath.owning_camera = $"../Camera3D"
 		ActivePath.curve = Curve3D.new()
 		ActivePath.curve.bake_interval = point_distance_interval
 		add_child(ActivePath)
@@ -55,7 +55,7 @@ func _input(event: InputEvent) -> void:
 		ActivePath.height_delta -= scroll_delta_amt
 		
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if (tool_active && Input.is_action_pressed("ToolClick")):
 		
 		

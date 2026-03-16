@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://do61744dw60p3"]
+
+[ext_resource type="Script" uid="uid://d34g24qgwep6x" path="res://Units/production_unit.gd" id="1_4cfdc"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_l434h"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_x534k"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_7rf52"]
+[ext_resource type="PackedScene" uid="uid://clwcgg34hnqlt" path="res://Nick/Assets/Ready Assets/productionTent.tscn" id="5_l434h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l434h"]
+size = Vector3(6.110718, 3.899643, 7.4463196)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypl2c"]
+resource_local_to_scene = true
+transparency = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c58w5"]
+resource_local_to_scene = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c58w5"]
+albedo_color = Color(0.68235296, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ypl2c"]
+
+[sub_resource type="Resource" id="Resource_d172s"]
+script = ExtResource("4_7rf52")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_i4nis"]
+script = ExtResource("3_x534k")
+item = SubResource("Resource_d172s")
+max_num = 10
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="Resource" id="Resource_f1vr2"]
+script = ExtResource("4_7rf52")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_y23oe"]
+script = ExtResource("3_x534k")
+item = SubResource("Resource_f1vr2")
+max_num = 10
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x534k"]
+size = Vector3(6.110718, 3.371521, 7.4463196)
+
+[node name="ProductionUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_4cfdc")
+LineOfSightTarget = NodePath("LineOfSightTarget")
+BodyMesh = NodePath("MeshInstance3D")
+inventory = NodePath("Inventory")
+selectableArea = NodePath("Selectable")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9210968, 0)
+shape = SubResource("BoxShape3D_l434h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138292857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_ypl2c")
+mesh = SubResource("CapsuleMesh_c58w5")
+
+[node name="LineOfSightTarget" type="Node3D" parent="." unique_id=1813088803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9877052, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_c58w5")
+mesh = SubResource("SphereMesh_ypl2c")
+
+[node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
+script = ExtResource("2_l434h")
+slots = Array[ExtResource("3_x534k")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe")])
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0188318, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.085876465, 1.1857604, 0.010299683)
+shape = SubResource("BoxShape3D_x534k")
+
+[node name="ProductionTent" parent="." unique_id=2083272342 instance=ExtResource("5_l434h")]

@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dpgp3e6f2xmk5"]
 
-[ext_resource type="Script" uid="uid://c1fvl8hj3yucv" path="res://scripts/player.gd" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://wv8qughyk7t2" path="res://scripts/Player.gd" id="1_xhfnw"]
 [ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="2_cxr5p"]
 [ext_resource type="Script" uid="uid://bsouf48aos0dn" path="res://scripts/label_3d.gd" id="3_tdg3f"]
-[ext_resource type="Script" uid="uid://b1dxcw3moxi84" path="res://sculpt_brush.gd" id="4_dtqjt"]
+[ext_resource type="Script" uid="uid://csyt8r0gbu2hd" path="res://sculpt_brush.gd" id="4_dtqjt"]
 [ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="5_5ncpa"]
 [ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="6_tdg3f"]
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="7_dtqjt"]
@@ -69,7 +69,6 @@ brush_height = 100.0
 min_height_delta = -3.0
 max_height_delta = 3.0
 resource_extractor = NodePath("ResourceExtractor")
-metadata/_custom_type_script = "uid://b1dxcw3moxi84"
 
 [node name="ResourceExtractor" type="Node3D" parent="Camera3D/SculptBrush" unique_id=1067841416 node_paths=PackedStringArray("inventory_connection")]
 script = ExtResource("7_wi0c6")

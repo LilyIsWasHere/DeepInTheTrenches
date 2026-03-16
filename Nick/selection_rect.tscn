@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bfhiw2xb30llw"]
+
+[ext_resource type="Script" uid="uid://bbgawln5e7hhp" path="res://Nick/selection_rect.gd" id="1_r13xf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r13xf"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.21568628)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r13xf"]
+material = SubResource("StandardMaterial3D_r13xf")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ileev"]
+
+[node name="SelectionRect" type="Area3D" unique_id=1148547057]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_r13xf")
+selectablesLayer = 2
+minimumHeight = 10.0
+
+[node name="DebugMesh" type="MeshInstance3D" parent="." unique_id=1341573749]
+mesh = SubResource("BoxMesh_r13xf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=292321501]
+shape = SubResource("BoxShape3D_ileev")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

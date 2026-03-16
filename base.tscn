@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
+[ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://dpgp3e6f2xmk5" path="res://Player.tscn" id="4_ohhpf"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 
@@ -29,4 +30,8 @@ tile_size = 255
 heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
 
 [node name="Player" parent="." unique_id=1877591714 node_paths=PackedStringArray("terrain") instance=ExtResource("4_ohhpf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110, 0, 50)
 terrain = NodePath("../Terrain")
+
+[node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("4_21bcp")]
+visibleDebugMesh = true
