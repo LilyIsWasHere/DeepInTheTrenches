@@ -5,6 +5,8 @@
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="3_hp1fw"]
 [ext_resource type="Script" uid="uid://hb05se8utxgu" path="res://terrain_tile_static_body_3d.gd" id="3_rg4wi"]
 [ext_resource type="Script" uid="uid://dsejgw4f86mnh" path="res://heightmap_edit_shader.gd" id="4_cfsic"]
+[ext_resource type="Texture2D" uid="uid://cbx2gh4068iii" path="res://resources/energy_crystal_texture.png" id="5_lrlw4"]
+[ext_resource type="Texture2D" uid="uid://b5j4svfxhnohp" path="res://resources/organic_texture.png" id="6_68x4c"]
 
 [sub_resource type="Environment" id="Environment_hp1fw"]
 resource_local_to_scene = true
@@ -52,6 +54,13 @@ shader_parameter/heightmap = SubResource("ViewportTexture_68x4c")
 shader_parameter/vertical_scale = 100.0
 shader_parameter/organic_colour = Color(0.32156864, 0.09019608, 0.16078432, 0.7058824)
 shader_parameter/crystal_colour = Color(1.0229881, 0.61819834, 0, 0.4117647)
+shader_parameter/crystal_albedo_texture = ExtResource("5_lrlw4")
+shader_parameter/crystal_tex_scale = 12.685
+shader_parameter/organic_albedo_texture = ExtResource("6_68x4c")
+shader_parameter/organic_tex_scale = 17.715
+shader_parameter/organic_diffuse = 0.0
+shader_parameter/organic_specular = 0.0
+shader_parameter/organic_clearcoat = 0.0
 shader_parameter/band_thickness = 0.15
 shader_parameter/band_height = 0.5
 shader_parameter/antialiasing = true

@@ -11,6 +11,15 @@ varying vec3 world_normal;
 uniform vec4 organic_colour: source_color = vec4(1,0,0,1);
 uniform vec4 crystal_colour: source_color = vec4(0.5,0,0,1);
 
+uniform sampler2D crystal_albedo_texture;
+uniform float crystal_tex_scale;
+
+uniform sampler2D organic_albedo_texture: source_color;
+uniform float organic_tex_scale;
+
+uniform float organic_diffuse;
+uniform float organic_specular;
+uniform float organic_clearcoat;
 
 // Returns the weights for a cubic spline interpolation.
 // This function is called by textureBicubic()
@@ -18,8 +27,8 @@ uniform vec4 crystal_colour: source_color = vec4(0.5,0,0,1);
 // References:
 //  https://stackoverflow.com/questions/13501081/efficient-bicubic-filtering-code-in-glsl
 //  http://www.java-gaming.org/index.php?topic=35123.0
-vec4
-cubic_spline_weights(float v)
+
+vec4 cubic_spline_weights(float v)
 {
     vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
     vec4 s = n * n * n;
@@ -215,12 +224,18 @@ void fragment() {
 	vec3 color = mix(dirt_color, flat_colour, flatness);
 
 
+	vec3 crystal_tex_val = texture(crystal_albedo_texture, crystal_tex_scale*UV).rgb;
+	vec3 organic_tex_val = texture(organic_albedo_texture, organic_tex_scale*UV).rgb;
+	
 	switch(resource_data) {
 		case 1:
-			color = mix(color, organic_colour.rgb, organic_colour.a);
+			color = organic_tex_val;
+			SPECULAR = organic_specular;
+			ROUGHNESS = organic_diffuse;
+			CLEARCOAT = organic_clearcoat;
 			break;
 		case 2:
-			color = mix(color, crystal_colour.rgb, crystal_colour.a);
+			color = crystal_tex_val.rgb;
 			break;
 
 	}
