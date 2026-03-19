@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://83ma02sna5w1"]
+
+[ext_resource type="PackedScene" uid="uid://dppxivdfp3lpx" path="res://Units/Unit.tscn" id="1_jhgbr"]
+[ext_resource type="Script" uid="uid://d3j4pyju05fqs" path="res://Units/ai_controller_example_unit.gd" id="2_5of50"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5of50"]
+resource_local_to_scene = true
+transparency = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ydkah"]
+resource_local_to_scene = true
+
+[node name="Unit" unique_id=1494502536 instance=ExtResource("1_jhgbr")]
+script = ExtResource("2_5of50")
+unitSpeed = 10.5
+
+[node name="MeshInstance3D" parent="." index="1" unique_id=1138292857]
+material_override = SubResource("StandardMaterial3D_5of50")
+mesh = SubResource("CapsuleMesh_ydkah")

@@ -14,7 +14,7 @@ var unit_arrs: Array[Array] = []
 var unit_last_seen_by: Dictionary[Unit, Unit]
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func _init() -> void:
 	var arr0: Array[Unit]
 	var arr1: Array[Unit]
 	unit_arrs.append(arr0)

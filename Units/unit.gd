@@ -8,6 +8,7 @@ const JUMP_VELOCITY = 4.5
 @export var BodyMesh: MeshInstance3D
 @export var inventory: Inventory
 @export var selectableArea : Area3D
+var ai_controller: AIController
 
 @export var team: int = 0:
 	set(value):
@@ -29,7 +30,14 @@ const JUMP_VELOCITY = 4.5
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
+
+func _init() -> void:
+	ai_controller = AIController.new()
+	
+
 func _ready() -> void:
+	add_child(ai_controller)
+	
 	if (team == 0):
 		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)
 	else:

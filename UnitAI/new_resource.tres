@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TestSelector" format=3 uid="uid://buirxf8pgqek"]
+
+[ext_resource type="Script" uid="uid://boe8becql87bw" path="res://UnitAI/ResourceSelectorTest.gd" id="1_wfxsc"]
+
+[resource]
+script = ExtResource("1_wfxsc")
+test_callable = null
+metadata/_custom_type_script = "uid://boe8becql87bw"
