@@ -13,7 +13,7 @@ func set_base_state(_base_state: AIState) -> void:
 
 	
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if (base_state):
 		base_state.state_tick()
 

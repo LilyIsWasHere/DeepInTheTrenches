@@ -43,7 +43,7 @@ func init_ai_states() -> void:
 	
 		# States are created with a name
 	var base_state := AIState.create("base")
-	# In order for anthing to happen, you must set the base state of the ai_controller
+	# In order for anything to happen, you must set the base state of the ai_controller
 	ai_controller.set_base_state(base_state)
 	
 	# This is a heirarchical finite state machine system. States can have child states
@@ -128,22 +128,35 @@ func init_ai_states() -> void:
 func shoot_at_point(point : Vector3) -> void:
 	weapon.shoot(point)
 
-
 func attack_enemy_tick_fn() -> void:
-	pass	
+	pass
+
+var visible_enemies : Array = []
 
 func can_see_enemy() -> bool:
-	return false
+	var enemies : Array[Array] = LineOfSightManager.get_enemy_unit_visibility(team)
+	visible_enemies = enemies[0]
+	
+	if(visible_enemies.size() > 0):
+		return true
+	else:
+		return false
 	
 func on_see_enemy() -> void:
-	print("ENEMY IN SIGHT!")
+	print("ENEMY IN SIGHT!") # change to attack state or hide?
 	
 func on_enemy_gone() -> void:
-	print("Must've been the wind")
+	print("Must've been the wind") # return to previous state/task?
 	
 
 func attack_order_tick_fn() -> void:
-	pass 
+	if $Weapon.can_shoot() and can_see_enemy():
+		var closest : Node3D = visible_enemies[0]
+		for i : Node3D in visible_enemies:
+			if global_position.distance_to(i.global_position) < global_position.distance_to(closest.global_position):
+				closest = i
+		shoot_at_point(closest.global_position)
+		
 	
 func hold_tick_fn() -> void:
 	pass

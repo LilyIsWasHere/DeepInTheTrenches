@@ -13,7 +13,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# should make the bullet die if it has moved further than it's range
 	if $RigidBody3D.global_position.distance_to(start_position) >= gun_range:
 		queue_free()
@@ -29,7 +29,7 @@ func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg :
 	
 	$RigidBody3D.linear_velocity = direction * speed
 
-func _on_rigid_body_3d_body_entered(body: Node) -> void:
+func _on_rigid_body_3d_body_entered(_body: Node) -> void:
 	if target_area > 1.0:
 		pass
 		# find all targets and deal damage to each

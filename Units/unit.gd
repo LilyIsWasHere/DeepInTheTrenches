@@ -55,7 +55,7 @@ func _physics_process(delta: float) -> void:
 		
 	move_along_terrain()
 
-func get_slope_velocity_multiplier(normal: Vector3, vel_dir: Vector3) -> float:
+func get_slope_velocity_multiplier(_normal: Vector3, _vel_dir: Vector3) -> float:
 	if (!on_floor): 
 		return 1.0
 		

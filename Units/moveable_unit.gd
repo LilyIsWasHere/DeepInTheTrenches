@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	#velocity.x = 0
 	#velocity.z = 0
 	should_move = false
