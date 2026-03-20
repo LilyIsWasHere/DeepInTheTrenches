@@ -35,8 +35,8 @@ func _physics_process(_delta: float) -> void:
 			var attach_node: Node3D = $"../..".get_parent_node_3d()
 			attach_node.add_child(unit)
 			unit.global_position = result.position
-			if unit.is_in_group("can_move"):
-				unit.targetPos = result.position
+			#if unit.is_in_group("can_move"):
+				#unit.move_target_pos = result.position
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("1"):

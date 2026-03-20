@@ -4,6 +4,7 @@ class_name Player
 @export var terrain: Terrain
 @export var player_id: int = 0
 @export var Camera: Camera3D
+@export var excavation_path_tool: ExcavationPathTool
 #var Units: Array[Unit]
 
 # Called when the node enters the scene tree for the first time.

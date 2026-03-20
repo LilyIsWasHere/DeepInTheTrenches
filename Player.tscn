@@ -35,9 +35,10 @@ item = ExtResource("12_d6rpx")
 max_num = 512
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
-[node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("Camera")]
+[node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("Camera", "excavation_path_tool")]
 script = ExtResource("1_xhfnw")
 Camera = NodePath("Camera3D")
+excavation_path_tool = NodePath("ExcavationPathTool")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=254286163]
 transform = Transform3D(-0.99993616, 0.008546469, -0.0073906905, 0, 0.6541089, 0.7564004, 0.011298869, 0.7563521, -0.6540671, -0.304357, 23.854485, -15.972433)

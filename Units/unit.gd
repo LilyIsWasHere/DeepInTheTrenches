@@ -9,6 +9,9 @@ const JUMP_VELOCITY = 4.5
 @export var inventory: Inventory
 @export var selectableArea : Area3D
 var ai_controller: AIController
+var resource_extractor: ResourceExtractor
+
+var should_move: bool = false
 
 @export var team: int = 0:
 	set(value):
@@ -33,10 +36,11 @@ var on_floor: bool = false
 
 func _init() -> void:
 	ai_controller = AIController.new()
-	
+	resource_extractor = ResourceExtractor.new()
 
 func _ready() -> void:
 	add_child(ai_controller)
+	add_child(resource_extractor)
 	
 	if (team == 0):
 		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)
@@ -48,8 +52,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if !on_floor:
 		velocity += get_gravity() * delta
-	
-	move_along_terrain(delta)
+		
+	move_along_terrain()
 
 func get_slope_velocity_multiplier(normal: Vector3, vel_dir: Vector3) -> float:
 	if (!on_floor): 
@@ -57,13 +61,13 @@ func get_slope_velocity_multiplier(normal: Vector3, vel_dir: Vector3) -> float:
 		
 	return 1.0
 
-func move_along_terrain(delta: float) -> void:
-	
+func move_along_terrain() -> void:
+	var delta: float = get_physics_process_delta_time()
 	
 	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 	
 	var future_pos: Vector3 = global_position + velocity * delta * get_slope_velocity_multiplier(slope_normal, velocity.normalized())
-	
+	if (!should_move): future_pos = global_position + (velocity * Vector3(0, 1, 0)) * delta * get_slope_velocity_multiplier(slope_normal, velocity.normalized())
 	
 	var neg_offset: float = 1.0 + velocity.y * delta
 	var query := PhysicsRayQueryParameters3D.create(Vector3(future_pos.x, global_position.y + 5.0, future_pos.z), Vector3(future_pos.x, global_position.y - neg_offset, future_pos.z))
@@ -71,6 +75,7 @@ func move_along_terrain(delta: float) -> void:
 	
 	if(result.is_empty()):
 		global_position = future_pos
+		on_floor = false
 		
 	else:
 		global_position = result["position"]

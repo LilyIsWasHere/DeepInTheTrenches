@@ -1,6 +1,7 @@
 class_name AIState
 extends Node
 
+static var dbg_print: bool = true
 
 var state_name: String
 var tick_function: Callable = Callable()
@@ -32,7 +33,7 @@ func state_tick() -> void:
 		if (!default_child_state):
 			default_child_state = child_states[0]
 		if (!active_child_state):
-			active_child_state = default_child_state
+			_transition_state(default_child_state)
 			
 		active_child_state.state_tick()
 			
@@ -119,7 +120,8 @@ func check_transition() -> Dictionary:
 	
 	
 func _transition_state(to_state: AIState) -> void:
-	if (active_child_state.exit_function.is_valid()):
+	print((active_child_state.state_name if active_child_state else "unset") + " -> " + to_state.state_name)
+	if (active_child_state && active_child_state.exit_function.is_valid()):
 		active_child_state.exit_function.call()
 		
 	if (to_state.enter_function.is_valid()):

@@ -4,6 +4,7 @@ class_name ExcavationPathTool
 const ExcavationPath  = preload("res://excavation_path.gd")
 
 var ActivePath: ExcavationPath = null
+var CreatedPaths: Array[ExcavationPath]
 
 @export var scroll_delta_amt: float = 0.3
 @export var point_distance_interval: float = 1.0
@@ -12,6 +13,28 @@ var ActivePath: ExcavationPath = null
 
 
 var tool_active: bool = false
+
+func get_closest_unexcavated_path_point(position: Vector3) -> Dictionary:
+	var closest: Vector3 = Vector3(9999, 9999, 9999)
+	var path_of_closest: ExcavationPath = null
+	var exists: bool = false
+	for path in CreatedPaths:
+		var path_closest: Vector3 = path.get_closest_unexcavated_point(position)[1]
+		if (position.distance_to(path_closest) < position.distance_to(closest)):
+			closest = path_closest
+			path_of_closest = path
+			exists = true
+			
+			
+	var dig_point_info: Dictionary 
+	dig_point_info["exists"] = exists
+	dig_point_info["location"] = closest
+	dig_point_info["height_delta"] = path_of_closest.height_delta if path_of_closest else null
+	return dig_point_info
+		
+	
+	
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -46,7 +69,9 @@ func _input(event: InputEvent) -> void:
 		
 	if (event.is_action_pressed("CommitTool")):
 		tool_active = false
+		CreatedPaths.append(ActivePath)
 		ActivePath = null
+		
 
 	
 	if (event.is_action_pressed("ScrollUp")):
