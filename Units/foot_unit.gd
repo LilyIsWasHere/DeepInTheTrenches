@@ -26,7 +26,7 @@ var dig_timer: Timer = Timer.new()
 const dig_point_range: float = 0.5
 const dig_amount: float = 3
 const dig_radius: float = 15
-const dig_delay: float = 0.25
+const dig_delay: float = 1
 
 
 func _ready() -> void:
@@ -118,10 +118,12 @@ func init_ai_states() -> void:
 	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
 		.set_tick_function(set_destination_to_nearest_dig_point_if_exists)
 		
-	move_to_dig_point_state.add_transition(dig_at_point_state, within_range_of_dig_point)
+	move_to_dig_point_state.add_transition(dig_at_point_state, get_arrived)
+	dig_at_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
 	dig_at_point_state.add_transition(move_to_dig_point_state, is_dig_point_fully_excavated)
 	
 	move_to_dig_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
+	move_to_dig_point_state.add_transition(dig_idle_state, func()-> bool: return nav_plan_handle.status == NavPlanHandle.NavRequestStatus.FAILED)
 	dig_idle_state.add_transition(move_to_dig_point_state, func()->bool: return dig_point_info["exists"])
 	
 
@@ -159,22 +161,20 @@ func fetch_nearest_dig_point_info() -> void:
 func set_destination_to_nearest_dig_point_if_exists() -> void:
 	fetch_nearest_dig_point_info()
 	if (dig_point_info["exists"]):
-		move_target_pos = dig_point_info["location"]
+		set_destination_point(dig_point_info["location"])
 
 func dig_at_point_tick_fn() -> void:
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
+	if (!dig_point_info["exists"]): return
 	var height_delta: float = dig_point_info["height_delta"]
 	
 	if (dig_timer.is_stopped()):
 		terrain.sculpt_terrain(dig_point_info["location"], dig_radius, dig_amount * sign(height_delta), Vector2(min(height_delta, 0), abs(height_delta)), resource_extractor)
 		dig_timer.start(dig_delay)
 
-func within_range_of_dig_point() -> bool:
-	var pos: Vector3 = global_position
-	var distance: float = Vector2(dig_point_info["location"].x, dig_point_info["location"].z).distance_to(Vector2(pos.x, pos.z)) 
-	return distance <= dig_point_range
 	
 func is_dig_point_fully_excavated() -> bool:
+	
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
 	var point: Vector3 = dig_point_info["location"]
 	

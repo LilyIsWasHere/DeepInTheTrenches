@@ -4,8 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://cgou24ramlrsq" path="res://Nick/Assets/Ready Assets/soldier.tscn" id="2_c0xtx"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="3_plcxh"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="4_vrshb"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="5_7a5sw"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="5_jt7ji"]
 [ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="6_c0xtx"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_qvlg4"]
 [ext_resource type="PackedScene" uid="uid://b22wpxxf0i1nw" path="res://Nick/Assets/Ready Assets/machineGun.tscn" id="7_im02j"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
@@ -22,23 +23,15 @@ albedo_color = Color(0.68235296, 0, 1, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_ypl2c"]
 
-[sub_resource type="Resource" id="Resource_d172s"]
-script = ExtResource("5_7a5sw")
-metadata/_custom_type_script = "uid://ijy22e1e2kgk"
-
 [sub_resource type="Resource" id="Resource_i4nis"]
 script = ExtResource("4_vrshb")
-item = SubResource("Resource_d172s")
+item = ExtResource("5_jt7ji")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
-[sub_resource type="Resource" id="Resource_f1vr2"]
-script = ExtResource("5_7a5sw")
-metadata/_custom_type_script = "uid://ijy22e1e2kgk"
-
 [sub_resource type="Resource" id="Resource_y23oe"]
 script = ExtResource("4_vrshb")
-item = SubResource("Resource_f1vr2")
+item = ExtResource("6_qvlg4")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
