@@ -4,6 +4,7 @@ class_name MoveableUnit
 var move_target_pos : Vector3
 var arrived : bool = true
 @export var unitSpeed : float = 4
+@export var nav_agent_config: NavAgentConfig
 
 func _ready() -> void:
 	super()
@@ -38,3 +39,6 @@ func debug_movement(delta : float) -> void:
 
 func move_to_point(point : Vector3) -> void:
 	move_target_pos = point
+
+func get_nav_agent_config() -> NavAgentConfig:
+	return nav_agent_config

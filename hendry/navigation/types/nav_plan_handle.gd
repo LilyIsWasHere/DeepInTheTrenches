@@ -15,7 +15,8 @@ enum NavRequestStatus {
 
 var status: NavRequestStatus = NavRequestStatus.PENDING
 var target: Vector3 = Vector3.ZERO
-var profile: int = 0
-var player_id: int = 0
+var agent: Node3D = null
+var agent_config: NavAgentConfig = null
+var agent_context: Dictionary = {}
 var waypoints: PackedVector3Array = PackedVector3Array()
 var failure_reason: String = ""

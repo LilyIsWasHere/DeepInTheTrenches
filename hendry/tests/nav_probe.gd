@@ -5,9 +5,7 @@ extends Node3D
 @export var test_agent_max_slope_degrees := 40.0
 @export var test_agent_max_step_height := 0.35
 @export var test_agent_wall_climb_height := 0.25
-@export var test_nav_profile := Navigation.NavProfileId.SAFE
-@export var test_player_id: int = 0
-@export var test_use_terrain_scores: bool = true
+@export var team: int = 0
 
 @onready var camera := $"../Player/Camera3D"
 
@@ -70,28 +68,24 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 	has_point_b = true
 	print("Set B:", point_b)
 
-	var agent_config := {
-		"radius": test_agent_radius,
-		"height": test_agent_height,
-		"max_speed": 5.0,
-		"max_slope_degrees": test_agent_max_slope_degrees,
-		"max_step_height": test_agent_max_step_height,
-		"wall_climb_height": test_agent_wall_climb_height,
-	}
+	var agent_config := NavAgentConfig.new()
+	agent_config.radius = test_agent_radius
+	agent_config.height = test_agent_height
+	agent_config.max_speed = 5.0
+	agent_config.max_slope_degrees = test_agent_max_slope_degrees
+	agent_config.max_step_height = test_agent_max_step_height
+	agent_config.wall_climb_height = test_agent_wall_climb_height
 
-	var point_a_score_info: Dictionary = Navigation.debug_get_score_info(point_a, agent_config, test_player_id)
+	var point_a_score_info: Dictionary = Navigation.debug_get_score_info(point_a, agent_config, team, &"terrain")
 	print("A score info:", point_a_score_info)
-	var point_b_score_info: Dictionary = Navigation.debug_get_score_info(point_b, agent_config, test_player_id)
+	var point_b_score_info: Dictionary = Navigation.debug_get_score_info(point_b, agent_config, team, &"terrain")
 	print("B score info:", point_b_score_info)
-
 
 	current_path = Navigation.debug_find_path(
 		point_a,
 		point_b,
-		agent_config,
-		test_player_id,
-		test_nav_profile,
-		test_use_terrain_scores
+		self,
+		agent_config
 	)
 
 	print("Path points:", current_path.size())
