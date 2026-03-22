@@ -1,6 +1,3 @@
-# https://www.gamedeveloper.com/programming/creating-natural-paths-on-terrains-using-pathfinding
-# https://howtorts.github.io/2014/01/04/basic-flow-fields.html
-
 extends RefCounted
 
 const FOOTPRINT_SAMPLE_COUNT := 4
@@ -11,6 +8,7 @@ var _cached_cell_nav_data: Dictionary = {}
 var _cached_point_nav_data: Dictionary = {}
 var _terrain_snapshot: NavTerrainSnapshot = null
 
+# get the size of a grid cell in world units
 func get_cell_size() -> float:
 	return GRID_CELL_SIZE
 
@@ -45,7 +43,6 @@ func get_nav_data(point: Vector3) -> Dictionary:
 	}
 
 # check if a point is traversable for a given agent information
-# ONLY for step height and radius, slope is handled in the pathfinding code
 func is_traversable(point: Vector3, agent_config: NavAgentConfig, center_nav_data: Dictionary = {}) -> bool:
 	var nav_data := center_nav_data
 	if nav_data.is_empty():
@@ -136,6 +133,7 @@ func find_path(
 	var g_score: Dictionary = {start_cell: 0.0}
 	var f_score: Dictionary = {start_cell: _heuristic(start_cell, goal_cell)}
 
+	# main A* loop
 	while not open_set.is_empty():
 		iterations += 1
 		if iterations > A_STAR_MAX_ITERATIONS:
@@ -161,6 +159,7 @@ func find_path(
 		open_set.erase(current)
 		closed_set[current] = true
 
+		# loop through the neighbors of current
 		for neighbor in _get_neighbors_with_cache(current, agent_config, cache):
 			if closed_set.has(neighbor):
 				continue
@@ -220,7 +219,7 @@ func _get_cached_cell_nav_data(cell: Vector2i) -> Dictionary:
 	_cached_cell_nav_data[cell] = nav_data
 	return nav_data
 
-# wrap around sample_cell with a cache thrown in
+# for A*, wrap around sample_cell with a cache thrown in
 func _sample_cell_with_cache(cell: Vector2i, agent_config: NavAgentConfig, cache: Dictionary) -> Dictionary:
 	if cell in cache:
 		return cache[cell]
@@ -229,7 +228,7 @@ func _sample_cell_with_cache(cell: Vector2i, agent_config: NavAgentConfig, cache
 	cache[cell] = data
 	return data
 
-# same as get_neighbors but with a cache thrown in
+# for A*, same as get_neighbors but with a cache thrown in
 func _get_neighbors_with_cache(cell: Vector2i, agent_config: NavAgentConfig, cache: Dictionary) -> Array[Vector2i]:
 	var neighbors: Array[Vector2i] = []
 	var directions: Array[Vector2i] = [
@@ -261,7 +260,7 @@ func _heuristic(cell: Vector2i, goal_cell: Vector2i) -> float:
 	var straight: int = max(dx, dy) - diagonal
 	return diagonal * 1.41421356 + straight
 
-# for A*
+# for A*, find the cell in open_set with the lowest f_score, and use h_score as a tiebreaker
 func _find_lowest_f_score(open_set: Array[Vector2i], f_score: Dictionary, goal_cell: Vector2i) -> Vector2i:
 	var best: Vector2i = open_set[0]
 	var best_f: float = f_score.get(best, INF)

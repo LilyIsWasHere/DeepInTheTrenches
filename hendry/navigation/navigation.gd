@@ -28,7 +28,7 @@ func _ready() -> void:
 	_nav_map = NavMap.new()
 
 func _process(_delta: float) -> void:
-	_pump_plan_thread()
+	_process_navigation_plan()
 
 # should probably avoid hanging threads
 func _exit_tree() -> void:
@@ -53,6 +53,7 @@ func request_move(
 	if not agent is Node3D:
 		return null
 
+	# before doing anything, make sure the terrain snapshot is up to date
 	_ensure_terrain_snapshot()
 	var existing_handle: NavPlanHandle = _active_requests.get(agent, null)
 	if existing_handle != null:
@@ -65,10 +66,10 @@ func request_move(
 	if handle.agent_config == null:
 		return null
 
+	# give the agent the stuff it needs to know beforehand
 	handle.agent_context = _build_agent_context(agent, handle.agent_config)
 
 	_active_requests[agent] = handle
-
 	var agent_node: Node3D = agent
 	_plan_request(agent_node, handle)
 
@@ -94,6 +95,74 @@ func cancel_request(handle: NavPlanHandle) -> void:
 		return
 
 	handle.status = NavPlanHandle.NavRequestStatus.CANCELLED
+
+# Call this function to ask where the agent should go next. Returns a NavSteeringResult with all the info you need.
+func sample_steering(
+	agent: Node,
+	handle: NavPlanHandle,
+	_delta: float,
+) -> NavSteeringResult:
+	var steering := NavSteeringResult.new()
+
+	if agent == null or handle == null:
+		return steering
+
+	if not agent is Node3D:
+		return steering
+
+	if handle.status != NavPlanHandle.NavRequestStatus.READY:
+		return steering
+
+	if handle.waypoints.is_empty():
+		steering.arrived = true
+		steering.next_waypoint = handle.target
+		return steering
+
+	var agent_node: Node3D = agent
+	var current_position: Vector3 = agent_node.global_position
+	var agent_config: NavAgentConfig = handle.agent_config
+
+	var waypoint_tolerance: float = DEFAULT_AGENT_RADIUS
+	var max_speed: float = DEFAULT_AGENT_MAX_SPEED
+
+	if agent_config != null:
+		waypoint_tolerance = agent_config.radius
+		max_speed = agent_config.max_speed
+
+
+	while not handle.waypoints.is_empty():
+		var first_waypoint: Vector3 = handle.waypoints[0]
+		if current_position.distance_to(first_waypoint) > waypoint_tolerance:
+			break
+
+		handle.waypoints.remove_at(0)
+		handle.updated.emit()
+
+	if handle.waypoints.is_empty():
+		steering.arrived = true
+		steering.next_waypoint = handle.target
+		steering.remaining_distance = 0.0
+		steering.desired_velocity = Vector3.ZERO
+		return steering
+
+	var next_waypoint: Vector3 = handle.waypoints[0]
+	steering.next_waypoint = next_waypoint
+
+	var remaining_distance: float = current_position.distance_to(next_waypoint)
+	for i in range(handle.waypoints.size() - 1):
+		remaining_distance += handle.waypoints[i].distance_to(handle.waypoints[i + 1])
+
+	steering.remaining_distance = remaining_distance
+
+	var to_waypoint: Vector3 = next_waypoint - current_position
+	var distance_to_waypoint: float = to_waypoint.length()
+
+	if distance_to_waypoint <= waypoint_tolerance:
+		steering.desired_velocity = Vector3.ZERO
+	else:
+		steering.desired_velocity = to_waypoint.normalized() * max_speed
+
+	return steering
 
 # Call this function to mark terrain tiles as dirty, so that the next time it's sampled, it will be updated.
 func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
@@ -285,10 +354,10 @@ func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> vo
 	item.snapshot = snapshot
 
 	_queued_plan_items.append(item)
-	_pump_plan_thread()
+	_process_navigation_plan()
 
 # queue manager
-func _pump_plan_thread() -> void:
+func _process_navigation_plan() -> void:
 
 	# check if the current thread is done, and if so, publish the result and free it up
 	if _plan_thread != null and not _plan_thread.is_alive():
@@ -325,6 +394,7 @@ func _pump_plan_thread() -> void:
 		_running_handle = handle
 		_plan_thread = Thread.new()
 
+		# https://docs.godotengine.org/en/stable/classes/class_thread.html
 		var err: Error = _plan_thread.start(Callable(self, "_solve_plan_snapshot").bind(snapshot))
 		if err != OK:
 			_plan_thread = null
@@ -361,74 +431,6 @@ func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> vo
 	handle.failure_reason = ""
 	handle.waypoints = path
 	handle.ready.emit()
-
-# Call this function to ask where the agent should go next. Returns a NavSteeringResult with all the info you need.
-func sample_steering(
-	agent: Node,
-	handle: NavPlanHandle,
-	_delta: float,
-) -> NavSteeringResult:
-	var steering := NavSteeringResult.new()
-
-	if agent == null or handle == null:
-		return steering
-
-	if not agent is Node3D:
-		return steering
-
-	if handle.status != NavPlanHandle.NavRequestStatus.READY:
-		return steering
-
-	if handle.waypoints.is_empty():
-		steering.arrived = true
-		steering.next_waypoint = handle.target
-		return steering
-
-	var agent_node: Node3D = agent
-	var current_position: Vector3 = agent_node.global_position
-	var agent_config: NavAgentConfig = handle.agent_config
-
-	var waypoint_tolerance: float = DEFAULT_AGENT_RADIUS
-	var max_speed: float = DEFAULT_AGENT_MAX_SPEED
-
-	if agent_config != null:
-		waypoint_tolerance = agent_config.radius
-		max_speed = agent_config.max_speed
-
-
-	while not handle.waypoints.is_empty():
-		var first_waypoint: Vector3 = handle.waypoints[0]
-		if current_position.distance_to(first_waypoint) > waypoint_tolerance:
-			break
-
-		handle.waypoints.remove_at(0)
-		handle.updated.emit()
-
-	if handle.waypoints.is_empty():
-		steering.arrived = true
-		steering.next_waypoint = handle.target
-		steering.remaining_distance = 0.0
-		steering.desired_velocity = Vector3.ZERO
-		return steering
-
-	var next_waypoint: Vector3 = handle.waypoints[0]
-	steering.next_waypoint = next_waypoint
-
-	var remaining_distance: float = current_position.distance_to(next_waypoint)
-	for i in range(handle.waypoints.size() - 1):
-		remaining_distance += handle.waypoints[i].distance_to(handle.waypoints[i + 1])
-
-	steering.remaining_distance = remaining_distance
-
-	var to_waypoint: Vector3 = next_waypoint - current_position
-	var distance_to_waypoint: float = to_waypoint.length()
-
-	if distance_to_waypoint <= waypoint_tolerance:
-		steering.desired_velocity = Vector3.ZERO
-	else:
-		steering.desired_velocity = to_waypoint.normalized() * max_speed
-
-	return steering
 
 # DEBUG
 func debug_request_path(
