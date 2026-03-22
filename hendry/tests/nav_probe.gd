@@ -75,7 +75,7 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 		print("Set A:", point_a)
 		return
 
-
+	# do the debug pathfinding request
 	point_b = hit_position
 	has_point_b = true
 	print("Set B:", point_b)
