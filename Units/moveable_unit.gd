@@ -7,6 +7,7 @@ func get_arrived()->bool:
 	return arrived
 
 @export var unitSpeed : float = 4
+@export var nav_agent_config: NavAgentConfig
 
 var nav_plan_handle: NavPlanHandle
 
@@ -53,3 +54,7 @@ func debug_movement(delta : float) -> void:
 
 func move_to_point(point : Vector3) -> void:
 	move_target_pos = point
+
+# TODO: this is where the navigation agent config should be stored 
+func get_nav_agent_config() -> NavAgentConfig:
+	return nav_agent_config
