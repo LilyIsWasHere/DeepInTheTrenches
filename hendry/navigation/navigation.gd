@@ -11,28 +11,66 @@ const DEFAULT_AGENT_MAX_STEP_HEIGHT := 1.0
 const DEFAULT_AGENT_WALL_CLIMB_HEIGHT := 1.7
 const TERRAIN_SNAPSHOT_MIN_REFRESH_MS := 100
 
+# active requests for agents, mapping from the agent Node to their NavPlanHandle
 var _active_requests: Dictionary = {}
+
+# arbitrary score layers for each player to put in for whatever reason
 var _player_score_layers: Dictionary = {}
+
+# take a snapshot of the terrain data for pathfinding on a separate thread, updating the tiles marked dirty
 var _terrain_snapshot: NavTerrainSnapshot = null
 var _terrain_snapshot_dirty: bool = true
 var _terrain_snapshot_refresh_after_ms: int = 0
 var _dirty_terrain_tiles: Dictionary = {}
+
+# navigation worker thread
 var _plan_thread: Thread = null
+
+# the plan queue is where the main thread pushes NavPlanSnapshots for the worker to solve
+# each NavPlanQueueItem combines the snapshot (for the worker) and the handle (for the main thread and the rest of the game)
+var _plan_queue_mutex: Mutex = Mutex.new()
+var _plan_queue_semaphore: Semaphore = Semaphore.new()
 var _queued_plan_items: Array[NavPlanQueueItem] = []
-var _running_handle: NavPlanHandle = null
+
+# same goes for the completed queue, where the worker pushes completed NavPlanQueueItems for the main thread to publish
+var _completed_queue_mutex: Mutex = Mutex.new()
+var _completed_plan_items: Array[NavPlanQueueItem] = []
+
+# signal the worker to exit when the game is closing
+var _worker_exit_requested: bool = false
 
 func _ready() -> void:
 	_nav_map = NavMap.new()
+	_start_navigation_worker()
 
-# keep the threads going
+# check the completed queue for any finished items and publish their results
 func _process(_delta: float) -> void:
-	_process_navigation_plan()
+	var completed_items: Array[NavPlanQueueItem] = []
 
-# should probably avoid hanging threads
+	# duplicate the queue to the main thread and clear it on the worker side
+	_completed_queue_mutex.lock()
+	var duplicated_completed_items: Array = _completed_plan_items.duplicate()
+	_completed_plan_items.clear()
+	_completed_queue_mutex.unlock()
+
+	# do stuff with the completed items on the main thread
+	for i in range(duplicated_completed_items.size()):
+		var item: NavPlanQueueItem = duplicated_completed_items[i]
+		completed_items.append(item)
+
+	for i in range(completed_items.size()):
+		var item: NavPlanQueueItem = completed_items[i]
+		_publish_plan_result(item.handle, item.path)
+
+# should probably avoid hanging threads and such when exiting
+# https://docs.godotengine.org/en/stable/tutorials/performance/using_multiple_threads.html#using-multiple-threads
 func _exit_tree() -> void:
 	if _plan_thread != null and _plan_thread.is_alive():
+		_worker_exit_requested = true
+		_plan_queue_semaphore.post()
 		_plan_thread.wait_to_finish()
 
+# API
 # Call this function to remove an agent from the navigation system. This will cancel any active requests for that agent and free up resources.
 func remove_agent(agent: Node) -> void:
 	if agent == null:
@@ -162,9 +200,13 @@ func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
 	_terrain_snapshot_refresh_after_ms = Time.get_ticks_msec() + TERRAIN_SNAPSHOT_MIN_REFRESH_MS
 
 	for tile in tiles:
+		var tile_coord := Vector2i(
+			int(tile.position.x / tile.size),
+			int(tile.position.z / tile.size)
+		)
+
 		_dirty_terrain_tiles[tile.get_instance_id()] = {
-			"position": tile.global_position,
-			"size": tile.size,
+			"tile_coord": tile_coord,
 		}
 
 # Apply a score stamp to a player's score layer by name.
@@ -247,6 +289,7 @@ func clear_all_score_layers(layer_name: StringName) -> void:
 		var player_id: int = player_ids[i]
 		clear_player_score_layer(player_id, layer_name)
 
+# HELPERS
 # helper to get the agent config for an agent
 func _get_agent_config(agent: Node) -> NavAgentConfig:
 	if agent != null and agent.has_method("get_nav_agent_config"):
@@ -282,7 +325,7 @@ func _ensure_terrain_snapshot() -> void:
 	if Time.get_ticks_msec() < _terrain_snapshot_refresh_after_ms:
 		return
 
-	_terrain_snapshot.refresh_dirty_tiles_from_terrain(terrain, _dirty_terrain_tiles)
+	_terrain_snapshot = _terrain_snapshot.create_refreshed_copy(terrain, _dirty_terrain_tiles)
 	_terrain_snapshot_dirty = false
 	_dirty_terrain_tiles.clear()
 
@@ -310,9 +353,11 @@ func _build_plan_snapshot(agent: Node3D, handle: NavPlanHandle) -> NavPlanSnapsh
 
 	return snapshot
 
-# helper to solve a nav plan snapshot
-# this is where the actual pathfinding happens 
-func _solve_plan_snapshot(snapshot: NavPlanSnapshot) -> PackedVector3Array:
+# helper to solve a nav plan snapshot with a worker-owned nav map
+func _solve_plan_with_nav_map(nav_map: NavMap, snapshot: NavPlanSnapshot) -> PackedVector3Array:
+	if nav_map == null:
+		return PackedVector3Array()
+
 	if snapshot == null:
 		return PackedVector3Array()
 
@@ -322,7 +367,6 @@ func _solve_plan_snapshot(snapshot: NavPlanSnapshot) -> PackedVector3Array:
 	if snapshot.terrain_snapshot == null:
 		return PackedVector3Array()
 
-	var nav_map: NavMap = NavMap.new()
 	nav_map.set_terrain_snapshot(snapshot.terrain_snapshot)
 
 	return nav_map.find_path(
@@ -334,63 +378,24 @@ func _solve_plan_snapshot(snapshot: NavPlanSnapshot) -> PackedVector3Array:
 
 # helper that pushes one request snapshot into the nav queue, then calls the manager
 func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> void:
+	_start_navigation_worker()
+	if _plan_thread == null:
+		handle.status = NavPlanHandle.NavRequestStatus.FAILED
+		handle.failure_reason = "Failed to start nav worker thread"
+		handle.waypoints = PackedVector3Array()
+		handle.failed.emit()
+		return
+
+	# we have a worker thread, so we can queue the request
 	var item := NavPlanQueueItem.new()
 	item.handle = handle
 	item.snapshot = snapshot
 
+	# horrors of COMP 3000 haunts me still
+	_plan_queue_mutex.lock()
 	_queued_plan_items.append(item)
-	_process_navigation_plan()
-
-# helper that is a queue manager
-func _process_navigation_plan() -> void:
-	# check if the current thread is done, and if so, publish the result and free it up
-	if _plan_thread != null and not _plan_thread.is_alive():
-		var path_variant: Variant = _plan_thread.wait_to_finish()
-		var path: PackedVector3Array = path_variant
-		var finished_handle: NavPlanHandle = _running_handle
-
-		_plan_thread = null
-		_running_handle = null
-
-		_publish_plan_result(finished_handle, path)
-
-	if _plan_thread != null:
-		return
-
-	# if there are any queued requests, start the next one
-	while not _queued_plan_items.is_empty():
-		var item: NavPlanQueueItem = _queued_plan_items[0]
-		_queued_plan_items.remove_at(0)
-
-		var handle: NavPlanHandle = item.handle
-		var snapshot: NavPlanSnapshot = item.snapshot
-
-		if handle == null:
-			continue
-
-		if handle.status == NavPlanHandle.NavRequestStatus.CANCELLED:
-			continue
-
-		var active_handle: NavPlanHandle = _active_requests.get(handle.agent, null)
-		if active_handle != handle:
-			continue
-
-		_running_handle = handle
-		_plan_thread = Thread.new()
-
-		# https://docs.godotengine.org/en/stable/classes/class_thread.html
-		var err: Error = _plan_thread.start(Callable(self , "_solve_plan_snapshot").bind(snapshot))
-		if err != OK:
-			_plan_thread = null
-			_running_handle = null
-
-			handle.status = NavPlanHandle.NavRequestStatus.FAILED
-			handle.failure_reason = "Failed to start nav thread"
-			handle.waypoints = PackedVector3Array()
-			handle.failed.emit()
-			continue
-
-		break
+	_plan_queue_mutex.unlock()
+	_plan_queue_semaphore.post()
 
 # helper that applies a finished path to the handle if it's valid
 func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> void:
@@ -416,6 +421,53 @@ func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> vo
 	handle.waypoints = path
 	handle.ready.emit()
 
+# helper that starts the navigation worker thread if it's not already running
+# if it is already running, does nothing
+func _start_navigation_worker() -> void:
+
+	# if there is already a worker thread, do nothing
+	if _plan_thread != null and _plan_thread.is_alive():
+		return
+
+	# otherwise, start a new worker thread (should only happen once per game)
+	_worker_exit_requested = false
+	_plan_thread = Thread.new()
+	var err: Error = _plan_thread.start(Callable(self, "_run_navigation_worker"))
+	if err != OK:
+		push_error("Failed to start navigation worker thread")
+		_plan_thread = null
+
+# helper that runs on the worker thread
+# waits for items to be added to the plan queue, solves them, then adds them to the completed queue
+func _run_navigation_worker() -> void:
+	var worker_nav_map := NavMap.new()
+
+	# wait until there is something in the queue
+	while true:
+		_plan_queue_semaphore.wait()
+
+		# exit flag
+		_plan_queue_mutex.lock()
+		var should_exit: bool = _worker_exit_requested
+		var item: NavPlanQueueItem = null
+
+		# if there is something in the queue, take it out
+		if not _queued_plan_items.is_empty():
+			item = _queued_plan_items[0]
+			_queued_plan_items.remove_at(0)
+		_plan_queue_mutex.unlock()
+
+		if item == null:
+			if should_exit:
+				break
+			continue
+
+		# solve the item and put it in the completed queue
+		item.path = _solve_plan_with_nav_map(worker_nav_map, item.snapshot)
+		_completed_queue_mutex.lock()
+		_completed_plan_items.append(item)
+		_completed_queue_mutex.unlock()
+
 # DEBUG
 func debug_request_path(
 	start: Vector3,
@@ -427,6 +479,10 @@ func debug_request_path(
 		return null
 
 	_ensure_terrain_snapshot()
+
+	var existing_handle: NavPlanHandle = _active_requests.get(agent, null)
+	if existing_handle != null:
+		cancel_request(existing_handle)
 
 	var handle := NavPlanHandle.new()
 	handle.target = goal
