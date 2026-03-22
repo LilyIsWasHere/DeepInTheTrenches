@@ -17,6 +17,8 @@ var has_point_b := false
 var point_a := Vector3.ZERO
 var point_b := Vector3.ZERO
 var current_path := PackedVector3Array()
+var nav_agent_config: NavAgentConfig = null
+var nav_handle: NavPlanHandle = null
 
 const DEBUG_HEIGHT := 0.25
 
@@ -31,6 +33,16 @@ func _physics_process(_delta: float) -> void:
 			_handle_probe_click(result.position)
 
 func _process(_delta: float) -> void:
+	if nav_handle != null:
+		if nav_handle.status == NavPlanHandle.NavRequestStatus.READY:
+			current_path = nav_handle.waypoints
+			nav_handle = null
+			print("Path points:", current_path.size())
+		elif nav_handle.status == NavPlanHandle.NavRequestStatus.FAILED:
+			current_path = PackedVector3Array()
+			nav_handle = null
+			print("Path request failed")
+
 	if has_point_a:
 		DebugDraw3D.draw_text(point_a + Vector3.UP * 0.6, "A", 32, Color(0, 1, 0))
 		DebugDraw3D.draw_arrow(point_a + Vector3.UP * 0.8, point_a, Color(0, 1, 0), 0.08)
@@ -68,24 +80,16 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 	has_point_b = true
 	print("Set B:", point_b)
 
-	var agent_config := NavAgentConfig.new()
-	agent_config.radius = test_agent_radius
-	agent_config.height = test_agent_height
-	agent_config.max_speed = 5.0
-	agent_config.max_slope_degrees = test_agent_max_slope_degrees
-	agent_config.max_step_height = test_agent_max_step_height
-	agent_config.wall_climb_height = test_agent_wall_climb_height
+	nav_agent_config = NavAgentConfig.new()
+	nav_agent_config.radius = test_agent_radius
+	nav_agent_config.height = test_agent_height
+	nav_agent_config.max_speed = 5.0
+	nav_agent_config.max_slope_degrees = test_agent_max_slope_degrees
+	nav_agent_config.max_step_height = test_agent_max_step_height
+	nav_agent_config.wall_climb_height = test_agent_wall_climb_height
 
-	var point_a_score_info: Dictionary = Navigation.debug_get_score_info(point_a, agent_config, team, &"terrain")
-	print("A score info:", point_a_score_info)
-	var point_b_score_info: Dictionary = Navigation.debug_get_score_info(point_b, agent_config, team, &"terrain")
-	print("B score info:", point_b_score_info)
+	current_path = PackedVector3Array()
+	nav_handle = Navigation.debug_request_path(point_a, point_b, self, nav_agent_config)
 
-	current_path = Navigation.debug_find_path(
-		point_a,
-		point_b,
-		self,
-		agent_config
-	)
-
-	print("Path points:", current_path.size())
+func get_nav_agent_config() -> NavAgentConfig:
+	return nav_agent_config

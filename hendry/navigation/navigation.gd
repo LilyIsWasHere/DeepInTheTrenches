@@ -12,26 +12,28 @@ const DEFAULT_AGENT_MAX_SPEED := 5.0
 const DEFAULT_AGENT_MAX_SLOPE_DEGREES := 45.0
 const DEFAULT_AGENT_MAX_STEP_HEIGHT := 1.0
 const DEFAULT_AGENT_WALL_CLIMB_HEIGHT := 1.7
+const TERRAIN_SNAPSHOT_MIN_REFRESH_MS := 100
 
 var _active_requests: Dictionary = {}
 var _player_score_layers: Dictionary = {}
+var _terrain_snapshot: NavTerrainSnapshot = null
+var _terrain_snapshot_dirty: bool = true
+var _terrain_snapshot_refresh_after_ms: int = 0
+var _dirty_terrain_tiles: Dictionary = {}
+var _plan_thread: Thread = null
+var _queued_plan_items: Array[NavPlanQueueItem] = []
+var _running_handle: NavPlanHandle = null
 
 func _ready() -> void:
 	_nav_map = NavMap.new()
 
-# helper to get the agent config for an agent
-func _get_agent_config(agent: Node) -> NavAgentConfig:
-	if agent != null and agent.has_method("get_nav_agent_config"):
-		return agent.get_nav_agent_config()
+func _process(_delta: float) -> void:
+	_pump_plan_thread()
 
-	return null
-
-# helper to build the agent context for an agent
-func _build_agent_context(agent: Node, agent_config: NavAgentConfig) -> Dictionary:
-	if agent_config == null:
-		return {}
-
-	return agent_config.init_context(agent)
+# should probably avoid hanging threads
+func _exit_tree() -> void:
+	if _plan_thread != null and _plan_thread.is_alive():
+		_plan_thread.wait_to_finish()
 
 # Call this function to remove an agent from the navigation system. This will cancel any active requests for that agent and free up resources.
 func remove_agent(agent: Node) -> void:
@@ -51,6 +53,7 @@ func request_move(
 	if not agent is Node3D:
 		return null
 
+	_ensure_terrain_snapshot()
 	var existing_handle: NavPlanHandle = _active_requests.get(agent, null)
 	if existing_handle != null:
 		cancel_request(existing_handle)
@@ -70,7 +73,6 @@ func request_move(
 	_plan_request(agent_node, handle)
 
 	return handle
-
 
 # Same as above but you can do it for a bunch of agents. Returns a dict mapping each agent to their NavPlanHandle.
 func request_batch_move(
@@ -93,22 +95,19 @@ func cancel_request(handle: NavPlanHandle) -> void:
 
 	handle.status = NavPlanHandle.NavRequestStatus.CANCELLED
 
-func record_terrain_change(
-	position: Vector3,
-	radius: float,
-	height_delta: float,
-) -> void:
-	if _nav_map == null:
+# Call this function to mark terrain tiles as dirty, so that the next time it's sampled, it will be updated.
+func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
+	if tiles.is_empty():
 		return
 
-	if radius <= 0.0:
-		return
+	_terrain_snapshot_dirty = true
+	_terrain_snapshot_refresh_after_ms = Time.get_ticks_msec() + TERRAIN_SNAPSHOT_MIN_REFRESH_MS
 
-	if is_zero_approx(height_delta):
-		return
-
-	# Raw terrain-change hook only.
-	# Dirty-cell invalidation / nav-cache refresh will live here later.
+	for tile in tiles:
+		_dirty_terrain_tiles[tile.get_instance_id()] = {
+			"position": tile.global_position,
+			"size": tile.size,
+		}
 
 # Apply a score stamp to a player's score layer by name.
 func apply_player_score_stamp(
@@ -133,6 +132,7 @@ func apply_player_score_stamp(
 	var cell_size: float = _nav_map.get_cell_size()
 	var cell_radius: int = int(ceil(radius / cell_size))
 
+	# iterate over cells in the radius and apply the score delta with a falloff based on distance
 	for z in range(-cell_radius, cell_radius + 1):
 		for x in range(-cell_radius, cell_radius + 1):
 			var cell: Vector2i = center_cell + Vector2i(x, z)
@@ -195,9 +195,44 @@ func clear_all_score_layers(layer_name: StringName) -> void:
 		var player_id: int = int(player_ids[i])
 		clear_player_score_layer(player_id, layer_name)
 
-# Internal function to handle a pathfinding request. 
-# This is where the actual pathfinding logic happens. 
-# It will update the NavPlanHandle with the results and emit the appropriate signals.
+# helper to get the agent config for an agent
+func _get_agent_config(agent: Node) -> NavAgentConfig:
+	if agent != null and agent.has_method("get_nav_agent_config"):
+		return agent.get_nav_agent_config()
+
+	return null
+
+# helper to build the agent context for an agent
+func _build_agent_context(agent: Node, agent_config: NavAgentConfig) -> Dictionary:
+	if agent_config == null:
+		return {}
+
+	return agent_config.init_context(agent)
+
+# helper that make sure the terrain snapshot is up to date
+func _ensure_terrain_snapshot() -> void:
+	var terrain: Terrain = GlobalTerrainManager.get_terrain()
+	if terrain == null:
+		return
+
+	if _terrain_snapshot == null:
+		_terrain_snapshot = NavTerrainSnapshot.new()
+		_terrain_snapshot.rebuild_from_terrain(terrain)
+		_terrain_snapshot_dirty = false
+		_dirty_terrain_tiles.clear()
+		return
+
+	if not _terrain_snapshot_dirty:
+		return
+
+	if Time.get_ticks_msec() < _terrain_snapshot_refresh_after_ms:
+		return
+
+	_terrain_snapshot.refresh_dirty_tiles_from_terrain(terrain, _dirty_terrain_tiles)
+	_terrain_snapshot_dirty = false
+	_dirty_terrain_tiles.clear()
+
+# helper function to handle a pathfinding request
 func _plan_request(agent: Node3D, handle: NavPlanHandle) -> void:
 	var agent_config: NavAgentConfig = handle.agent_config
 	if agent_config == null:
@@ -207,12 +242,113 @@ func _plan_request(agent: Node3D, handle: NavPlanHandle) -> void:
 		handle.failed.emit()
 		return
 
-	var path: PackedVector3Array = _nav_map.find_path(
-		agent.global_position,
-		handle.target,
-		agent_config,
-		handle.agent_context
+	var snapshot: NavPlanSnapshot = _build_plan_snapshot(agent, handle)
+	_queue_plan_request(handle, snapshot)
+
+# helper to build a NavPlanSnapshot from an agent and NavPlanHandle
+func _build_plan_snapshot(agent: Node3D, handle: NavPlanHandle) -> NavPlanSnapshot:
+	var snapshot := NavPlanSnapshot.new()
+	snapshot.start = agent.global_position
+	snapshot.target = handle.target
+	snapshot.agent_config = handle.agent_config
+	snapshot.agent_context = handle.agent_context.duplicate(true)
+	snapshot.terrain_snapshot = _terrain_snapshot
+
+	return snapshot
+
+# helper to solve a nav plan snapshot
+# this is where the actual pathfinding happens 
+func _solve_plan_snapshot(snapshot: NavPlanSnapshot) -> PackedVector3Array:
+	if snapshot == null:
+		return PackedVector3Array()
+
+	if snapshot.agent_config == null:
+		return PackedVector3Array()
+
+	if snapshot.terrain_snapshot == null:
+		return PackedVector3Array()
+
+	var nav_map: NavMap = NavMap.new()
+	nav_map.set_terrain_snapshot(snapshot.terrain_snapshot)
+
+	return nav_map.find_path(
+		snapshot.start,
+		snapshot.target,
+		snapshot.agent_config,
+		snapshot.agent_context
 	)
+
+# pushes one request snapshot into the nav queue, then calls the manager
+func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> void:
+	var item := NavPlanQueueItem.new()
+	item.handle = handle
+	item.snapshot = snapshot
+
+	_queued_plan_items.append(item)
+	_pump_plan_thread()
+
+# queue manager
+func _pump_plan_thread() -> void:
+
+	# check if the current thread is done, and if so, publish the result and free it up
+	if _plan_thread != null and not _plan_thread.is_alive():
+		var path_variant: Variant = _plan_thread.wait_to_finish()
+		var path: PackedVector3Array = path_variant
+		var finished_handle: NavPlanHandle = _running_handle
+
+		_plan_thread = null
+		_running_handle = null
+
+		_publish_plan_result(finished_handle, path)
+
+	if _plan_thread != null:
+		return
+
+	# if there are any queued requests, start the next one
+	while not _queued_plan_items.is_empty():
+		var item: NavPlanQueueItem = _queued_plan_items[0]
+		_queued_plan_items.remove_at(0)
+
+		var handle: NavPlanHandle = item.handle
+		var snapshot: NavPlanSnapshot = item.snapshot
+
+		if handle == null:
+			continue
+
+		if handle.status == NavPlanHandle.NavRequestStatus.CANCELLED:
+			continue
+
+		var active_handle: NavPlanHandle = _active_requests.get(handle.agent, null)
+		if active_handle != handle:
+			continue
+
+		_running_handle = handle
+		_plan_thread = Thread.new()
+
+		var err: Error = _plan_thread.start(Callable(self, "_solve_plan_snapshot").bind(snapshot))
+		if err != OK:
+			_plan_thread = null
+			_running_handle = null
+
+			handle.status = NavPlanHandle.NavRequestStatus.FAILED
+			handle.failure_reason = "Failed to start nav thread"
+			handle.waypoints = PackedVector3Array()
+			handle.failed.emit()
+			continue
+
+		break
+
+# applies a finished path to the handle if it's valid
+func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> void:
+	if handle == null:
+		return
+
+	if handle.status == NavPlanHandle.NavRequestStatus.CANCELLED:
+		return
+
+	var active_handle: NavPlanHandle = _active_requests.get(handle.agent, null)
+	if active_handle != handle:
+		return
 
 	if path.is_empty():
 		handle.status = NavPlanHandle.NavRequestStatus.FAILED
@@ -295,38 +431,34 @@ func sample_steering(
 	return steering
 
 # DEBUG
-func debug_get_score_info(
-	point: Vector3,
-	agent_config: NavAgentConfig,
-	player_id: int,
-	layer_name: StringName
-) -> Dictionary:
-	var cell: Vector2i = _nav_map.world_to_cell(point)
-	var player_layer: Dictionary = get_player_score_layer(player_id, layer_name)
-	var raw_score: float = float(player_layer.get(cell, 0.0))
-	var trench_info: Dictionary = _nav_map.debug_get_safe_trench_info(cell, agent_config)
-
-	return {
-		"cell": cell,
-		"layer_name": layer_name,
-		"raw_score": raw_score,
-		"trench_info": trench_info,
-	}
-
-func debug_find_path(
+func debug_request_path(
 	start: Vector3,
 	goal: Vector3,
 	agent: Node,
 	agent_config: NavAgentConfig
-) -> PackedVector3Array:
-	print("Debug find path with agent:", agent)
-	print("Debug find path with config:", agent_config)
+) -> NavPlanHandle:
+	if agent == null:
+		return null
 
-	if agent_config == null:
-		return PackedVector3Array()	
+	_ensure_terrain_snapshot()
 
-	var agent_context: Dictionary = {}
-	if agent_config != null:
-		agent_context = agent_config.init_context(agent)
+	var handle := NavPlanHandle.new()
+	handle.target = goal
+	handle.agent = agent
+	handle.agent_config = agent_config
 
-	return _nav_map.find_path(start, goal, agent_config, agent_context)
+	if handle.agent_config == null:
+		return null
+
+	handle.agent_context = _build_agent_context(agent, handle.agent_config)
+	_active_requests[agent] = handle
+
+	var snapshot := NavPlanSnapshot.new()
+	snapshot.start = start
+	snapshot.target = goal
+	snapshot.agent_config = handle.agent_config
+	snapshot.agent_context = handle.agent_context.duplicate(true)
+	snapshot.terrain_snapshot = _terrain_snapshot
+
+	_queue_plan_request(handle, snapshot)
+	return handle

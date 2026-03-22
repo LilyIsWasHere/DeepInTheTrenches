@@ -52,8 +52,6 @@ func sculpt_terrain(global_pos: Vector3, radius: float, height: float, min_max_h
 	for tile in affected_tiles:
 		tile.sculpt_tile(global_pos, radius, height, min_max_height_delta, resource_extractor)
 	
-	Navigation.record_terrain_change(global_pos, radius, height)
-	
 	
 func dbg_sculpt_terrain(global_pos: Vector3i, radius: float, height: float) -> void:
 	var affected_tiles: Array[TerrainTile_Class]
