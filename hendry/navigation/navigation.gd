@@ -1,8 +1,5 @@
 extends Node
 
-# const NavPlanHandle := preload("res://hendry/navigation/types/nav_plan_handle.gd")
-# const NavSteeringResult := preload("res://hendry/navigation/types/nav_steering_result.gd")
-
 const NavMap := preload("res://hendry/navigation/nav_map.gd")
 var _nav_map: NavMap = null
 
@@ -27,6 +24,7 @@ var _running_handle: NavPlanHandle = null
 func _ready() -> void:
 	_nav_map = NavMap.new()
 
+# keep the threads going
 func _process(_delta: float) -> void:
 	_process_navigation_plan()
 
@@ -43,10 +41,7 @@ func remove_agent(agent: Node) -> void:
 	_active_requests.erase(agent)
 
 # Call this function to request a path to a target. Returns a NavPlanHandle that can be used to track the status of the request and sample steering results.
-func request_move(
-	agent: Node,
-	target: Vector3
-) -> NavPlanHandle:
+func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
 	if agent == null:
 		return null
 
@@ -76,10 +71,7 @@ func request_move(
 	return handle
 
 # Same as above but you can do it for a bunch of agents. Returns a dict mapping each agent to their NavPlanHandle.
-func request_batch_move(
-	agents: Array[Node],
-	target: Vector3
-) -> Dictionary:
+func request_batch_move(agents: Array[Node], target: Vector3) -> Dictionary:
 	var result: Dictionary = {}
 
 	for agent in agents:
@@ -97,11 +89,7 @@ func cancel_request(handle: NavPlanHandle) -> void:
 	handle.status = NavPlanHandle.NavRequestStatus.CANCELLED
 
 # Call this function to ask where the agent should go next. Returns a NavSteeringResult with all the info you need.
-func sample_steering(
-	agent: Node,
-	handle: NavPlanHandle,
-	_delta: float,
-) -> NavSteeringResult:
+func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavSteeringResult:
 	var steering := NavSteeringResult.new()
 
 	if agent == null or handle == null:
@@ -129,7 +117,7 @@ func sample_steering(
 		waypoint_tolerance = agent_config.radius
 		max_speed = agent_config.max_speed
 
-
+	# if we are pretty much at the next waypoint, pop it and move on to the next one
 	while not handle.waypoints.is_empty():
 		var first_waypoint: Vector3 = handle.waypoints[0]
 		if current_position.distance_to(first_waypoint) > waypoint_tolerance:
@@ -138,6 +126,7 @@ func sample_steering(
 		handle.waypoints.remove_at(0)
 		handle.updated.emit()
 
+	# if there are no more waypoints, we have arrived
 	if handle.waypoints.is_empty():
 		steering.arrived = true
 		steering.next_waypoint = handle.target
@@ -179,13 +168,7 @@ func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
 		}
 
 # Apply a score stamp to a player's score layer by name.
-func apply_player_score_stamp(
-	player_id: int,
-	layer_name: StringName,
-	position: Vector3,
-	radius: float,
-	score_delta: float,
-) -> void:
+func apply_player_score_stamp(player_id: int, layer_name: StringName, position: Vector3, radius: float, score_delta: float) -> void:
 	if _nav_map == null:
 		return
 
@@ -261,7 +244,7 @@ func clear_all_score_layers(layer_name: StringName) -> void:
 	var player_ids: Array = _player_score_layers.keys()
 
 	for i in range(player_ids.size()):
-		var player_id: int = int(player_ids[i])
+		var player_id: int = player_ids[i]
 		clear_player_score_layer(player_id, layer_name)
 
 # helper to get the agent config for an agent
@@ -284,6 +267,7 @@ func _ensure_terrain_snapshot() -> void:
 	if terrain == null:
 		return
 
+	# initialization
 	if _terrain_snapshot == null:
 		_terrain_snapshot = NavTerrainSnapshot.new()
 		_terrain_snapshot.rebuild_from_terrain(terrain)
@@ -294,6 +278,7 @@ func _ensure_terrain_snapshot() -> void:
 	if not _terrain_snapshot_dirty:
 		return
 
+	# only refresh if enough time has passed
 	if Time.get_ticks_msec() < _terrain_snapshot_refresh_after_ms:
 		return
 
@@ -347,7 +332,7 @@ func _solve_plan_snapshot(snapshot: NavPlanSnapshot) -> PackedVector3Array:
 		snapshot.agent_context
 	)
 
-# pushes one request snapshot into the nav queue, then calls the manager
+# helper that pushes one request snapshot into the nav queue, then calls the manager
 func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> void:
 	var item := NavPlanQueueItem.new()
 	item.handle = handle
@@ -356,9 +341,8 @@ func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> vo
 	_queued_plan_items.append(item)
 	_process_navigation_plan()
 
-# queue manager
+# helper that is a queue manager
 func _process_navigation_plan() -> void:
-
 	# check if the current thread is done, and if so, publish the result and free it up
 	if _plan_thread != null and not _plan_thread.is_alive():
 		var path_variant: Variant = _plan_thread.wait_to_finish()
@@ -395,7 +379,7 @@ func _process_navigation_plan() -> void:
 		_plan_thread = Thread.new()
 
 		# https://docs.godotengine.org/en/stable/classes/class_thread.html
-		var err: Error = _plan_thread.start(Callable(self, "_solve_plan_snapshot").bind(snapshot))
+		var err: Error = _plan_thread.start(Callable(self , "_solve_plan_snapshot").bind(snapshot))
 		if err != OK:
 			_plan_thread = null
 			_running_handle = null
@@ -408,7 +392,7 @@ func _process_navigation_plan() -> void:
 
 		break
 
-# applies a finished path to the handle if it's valid
+# helper that applies a finished path to the handle if it's valid
 func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> void:
 	if handle == null:
 		return

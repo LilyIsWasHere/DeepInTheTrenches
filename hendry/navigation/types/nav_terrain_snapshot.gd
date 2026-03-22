@@ -15,6 +15,7 @@ func rebuild_from_terrain(terrain: Terrain) -> void:
 	tile_size = terrain.tile_size
 	tiles.clear()
 
+	# no idea how any of this height map stuff works
 	for x in range(terrain.tile_arr.size()):
 		var column: Array = terrain.tile_arr[x]
 
