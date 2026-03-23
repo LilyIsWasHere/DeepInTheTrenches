@@ -65,7 +65,7 @@ func readback_queued_tiles() -> void:
 	
 		
 	for tile in tiles_to_readback:
-		tile.readback_heightmap_data()
+		tile.readback_heightmap_data()	
 		tile_readback_queue.erase(tile)
 		tile_in_queue_set.erase(tile.get_instance_id())
 		
@@ -75,7 +75,9 @@ func readback_queued_tiles() -> void:
 			e.readback_resource_data()
 			
 		TileAssociatedExtractors[tile].clear()
-			
+
+	if not tiles_to_readback.is_empty():
+		Navigation.record_terrain_readback_batch(tiles_to_readback)
 
 func get_or_create_resource_tex() -> RID:
 	

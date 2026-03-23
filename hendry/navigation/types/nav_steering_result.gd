@@ -1,3 +1,4 @@
+# a single result from a steering query
 extends RefCounted
 class_name NavSteeringResult
 
