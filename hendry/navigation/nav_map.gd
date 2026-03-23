@@ -21,6 +21,7 @@ var _agent_config: NavAgentConfig = null
 var _agent_context: Dictionary = {}
 
 # request-specific cell data cache with agent-specific traversability info
+# the key is the cell coordinate, and the value is a NavCellData instance
 var _grid_request_cell_data: Dictionary = {}
 
 # request-specific point data cache for sampling
@@ -56,7 +57,7 @@ func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: D
 			nav_data = _get_cached_nav_data(point)
 
 		if not nav_data.is_empty():
-			point.y = nav_data["height"]
+			point.y = float(nav_data["height"])
 
 	return point
 
@@ -75,13 +76,13 @@ func find_path(start: Vector3, goal: Vector3,	agent_config: NavAgentConfig,	agen
 	_cached_point_nav_data.clear()
 	_grid_request_cell_data.clear()
 
-	var start_data: Dictionary = _get_request_cell_data(start_cell)
-	if not start_data["traversable"]:
+	var start_data: NavCellData = _get_request_cell_data(start_cell)
+	if start_data == null or not start_data.traversable:
 		print("Start position is not traversable")
 		return PackedVector3Array()
 
-	var goal_data: Dictionary = _get_request_cell_data(goal_cell)
-	if not goal_data["traversable"]:
+	var goal_data: NavCellData = _get_request_cell_data(goal_cell)
+	if goal_data == null or not goal_data.traversable:
 		print("Goal position is not traversable")
 		return PackedVector3Array()
 
@@ -192,9 +193,12 @@ func _grid_compute_cost(from_id: Vector2i, to_id: Vector2i) -> float:
 		return INF
 
 	# basic traversability and slope checks
-	var from_data: Dictionary = _get_request_cell_data(from_id)
-	var to_data: Dictionary = _get_request_cell_data(to_id)
-	if not from_data["traversable"] or not to_data["traversable"]:
+	var from_data: NavCellData = _get_request_cell_data(from_id)
+	var to_data: NavCellData = _get_request_cell_data(to_id)
+	if from_data == null or to_data == null:
+		return INF
+
+	if not from_data.traversable or not to_data.traversable:
 		return INF
 
 	var edge_max_slope_degrees: float = _compute_edge_max_slope_degrees(from_id, to_id, from_data, to_data)
@@ -202,15 +206,13 @@ func _grid_compute_cost(from_id: Vector2i, to_id: Vector2i) -> float:
 		return INF
 
 	# then use the agent config's custom cost function
-	var move_context := {
-		"from_cell": from_id,
-		"to_cell": to_id,
-		"from_data": from_data,
-		"to_data": to_data,
-		"edge_max_slope_degrees": edge_max_slope_degrees
-	}
-	
-	
+	var move_context := NavMoveContext.new()
+	move_context.from_cell = from_id
+	move_context.to_cell = to_id
+	move_context.from_data = from_data
+	move_context.to_data = to_data
+	move_context.edge_max_slope_degrees = edge_max_slope_degrees
+
 	return _agent_config.get_nav_cost(_agent_context, move_context)
 
 # GETTERS
@@ -227,16 +229,12 @@ func _get_nav_data(point: Vector3) -> Dictionary:
 	if slope_data.is_empty():
 		return {}
 
-	var slope_x: float = float(slope_data[0])
-	var slope_z: float = float(slope_data[1])
-	var slope_degrees: float = rad_to_deg(atan(float(slope_data[2])))
-
 	return {
-		"height": terrain_data["height"],
-		"initial_height": terrain_data["initial_height"],
-		"slope_x": slope_x,
-		"slope_z": slope_z,
-		"slope_degrees": slope_degrees
+		"height": float(terrain_data["height"]),
+		"initial_height": float(terrain_data["initial_height"]),
+		"slope_x": float(slope_data[0]),
+		"slope_z": float(slope_data[1]),
+		"slope_degrees": rad_to_deg(atan(float(slope_data[2])))
 	}
 
 # get the cached navigation data for a point, or sample it if it's not cached
@@ -249,26 +247,28 @@ func _get_cached_nav_data(point: Vector3) -> Dictionary:
 	return nav_data
 
 # get request-specific data for a cell since it has agent-specific traversability stuff
-func _get_request_cell_data(cell: Vector2i) -> Dictionary:
+func _get_request_cell_data(cell: Vector2i) -> NavCellData:
 	if _grid_request_cell_data.has(cell):
 		return _grid_request_cell_data[cell]
 
-	var world_point: Vector3 = cell_to_world(cell)
-	var nav_data: Dictionary = _astar_nav_data.get(cell, {})
-	var traversable: bool = false
+	var base_data: Dictionary = _astar_nav_data.get(cell, {})
+	if base_data.is_empty():
+		_grid_request_cell_data[cell] = null
+		return null
 
-	if not nav_data.is_empty() and _agent_config != null:
-		traversable = _is_traversable(world_point, _agent_config, nav_data)
+	var nav_cell_data := NavCellData.new()
+	nav_cell_data.cell = cell
+	nav_cell_data.height = base_data["height"]
+	nav_cell_data.initial_height = base_data["initial_height"]
+	nav_cell_data.slope_x = base_data["slope_x"]
+	nav_cell_data.slope_z = base_data["slope_z"]
+	nav_cell_data.slope_degrees = base_data["slope_degrees"]
+	nav_cell_data.world_point = cell_to_world(cell, true, base_data)
+	if _agent_config != null:
+		nav_cell_data.traversable = _is_traversable(nav_cell_data.world_point, _agent_config, base_data)
 
-	var data := {
-		"cell": cell,
-		"world_point": world_point,
-		"nav_data": nav_data,
-		"traversable": traversable
-	}
-
-	_grid_request_cell_data[cell] = data
-	return data
+	_grid_request_cell_data[cell] = nav_cell_data
+	return nav_cell_data
 
 # TERRAIN UTILITY
 # TODO: maybe fold this into the agent config's cost function as well???? idk 
@@ -283,7 +283,7 @@ func _is_traversable(point: Vector3, agent_config: NavAgentConfig, center_nav_da
 
 	var agent_radius: float = agent_config.radius
 	var agent_max_step_height: float = agent_config.max_step_height
-	var center_height: float = nav_data["height"]
+	var center_height: float = float(nav_data["height"])
 
 	# go around the point in a circle
 	for i in range(FOOTPRINT_SAMPLE_COUNT):
@@ -295,15 +295,15 @@ func _is_traversable(point: Vector3, agent_config: NavAgentConfig, center_nav_da
 		if sample_data.is_empty():
 			return false
 
-		if abs(sample_data["height"] - center_height) > agent_max_step_height:
+		if abs(float(sample_data["height"]) - center_height) > agent_max_step_height:
 			return false
 
 	return true
 
 # compute the max slope along two cells
-func _compute_edge_max_slope_degrees(from_cell: Vector2i,	to_cell: Vector2i, from_data: Dictionary,	to_data: Dictionary) -> float:
-	var from_slope: float = float(from_data["nav_data"]["slope_degrees"])
-	var to_slope: float = float(to_data["nav_data"]["slope_degrees"])
+func _compute_edge_max_slope_degrees(from_cell: Vector2i,	to_cell: Vector2i, from_data: NavCellData,	to_data: NavCellData) -> float:
+	var from_slope: float = from_data.slope_degrees
+	var to_slope: float = to_data.slope_degrees
 
 	var midpoint: Vector3 = cell_to_world(from_cell).lerp(cell_to_world(to_cell), 0.5)
 	var midpoint_data: Dictionary = _get_cached_nav_data(midpoint)

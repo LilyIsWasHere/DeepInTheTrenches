@@ -24,10 +24,8 @@ func init_context(agent: Node) -> Dictionary:
 	return context
 
 # Override this, remember that this will run in a thread
-func get_nav_cost(context: Dictionary, move_context: Dictionary) -> float:
-	var from_cell: Vector2i = move_context["from_cell"]
-	var to_cell: Vector2i = move_context["to_cell"]
-	var delta: Vector2i = to_cell - from_cell
+func get_nav_cost(context: Dictionary, move_context: NavMoveContext) -> float:
+	var delta: Vector2i = move_context.to_cell - move_context.from_cell
 	var is_diagonal: bool = abs(delta.x) == 1 and abs(delta.y) == 1
 	var base_cost: float = 1.41421356 if is_diagonal else 1.0
 	return base_cost
