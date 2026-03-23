@@ -17,7 +17,9 @@ var has_point_b := false
 var point_a := Vector3.ZERO
 var point_b := Vector3.ZERO
 var current_path := PackedVector3Array()
-var nav_agent_config: NavAgentConfig = null
+
+
+@export var nav_agent_config: NavAgentConfig
 var nav_handle: NavPlanHandle = null
 
 const DEBUG_HEIGHT := 0.25
@@ -80,13 +82,13 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 	has_point_b = true
 	print("Set B:", point_b)
 
-	nav_agent_config = NavAgentConfig.new()
-	nav_agent_config.radius = test_agent_radius
-	nav_agent_config.height = test_agent_height
-	nav_agent_config.max_speed = 5.0
-	nav_agent_config.max_slope_degrees = test_agent_max_slope_degrees
-	nav_agent_config.max_step_height = test_agent_max_step_height
-	nav_agent_config.wall_climb_height = test_agent_wall_climb_height
+	#nav_agent_config = NavAgentConfig.new()
+	#nav_agent_config.radius = test_agent_radius
+	#nav_agent_config.height = test_agent_height
+	#nav_agent_config.max_speed = 5.0
+	#nav_agent_config.max_slope_degrees = test_agent_max_slope_degrees
+	#nav_agent_config.max_step_height = test_agent_max_step_height
+	#nav_agent_config.wall_climb_height = test_agent_wall_climb_height
 
 	current_path = PackedVector3Array()
 	nav_handle = Navigation.debug_request_path(point_a, point_b, self, nav_agent_config)

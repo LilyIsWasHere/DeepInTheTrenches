@@ -41,8 +41,8 @@ func move_safe_tick_fn() -> void:
 	
 
 
-func set_destination_point(destination: Vector3, safe_or_direct: Navigation.NavProfileId = Navigation.NavProfileId.SAFE) -> void:
-	nav_plan_handle = Navigation.request_move(self, team, destination, safe_or_direct)
+func set_destination_point(destination: Vector3) -> void:
+	nav_plan_handle = Navigation.request_move(self, destination)
 	move_target_pos = destination
 
 func debug_movement(delta : float) -> void:

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeightedAgentConfig" format=3 uid="uid://bvc6sqw1aom10"]
+
+[ext_resource type="Script" uid="uid://ciqnixj3alngs" path="res://hendry/navigation/agent_configs/weighted_agent_config.gd" id="1_ul8s6"]
+
+[resource]
+script = ExtResource("1_ul8s6")
+terrain_delta_weight = 1000.0
+desired_terrain_delta = -1.0
+metadata/_custom_type_script = "uid://ciqnixj3alngs"

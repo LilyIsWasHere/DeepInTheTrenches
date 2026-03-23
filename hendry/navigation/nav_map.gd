@@ -97,6 +97,7 @@ func find_path(start: Vector3, goal: Vector3,	agent_config: NavAgentConfig,	agen
 		var cell: Vector2i = id_path[i]
 		var nav_data: Dictionary = _astar_nav_data.get(cell, {})
 		path.append(cell_to_world(cell, true, nav_data))
+		
 
 	return path
 
@@ -208,6 +209,8 @@ func _grid_compute_cost(from_id: Vector2i, to_id: Vector2i) -> float:
 		"to_data": to_data,
 		"edge_max_slope_degrees": edge_max_slope_degrees
 	}
+	
+	
 	return _agent_config.get_nav_cost(_agent_context, move_context)
 
 # GETTERS
@@ -230,6 +233,7 @@ func _get_nav_data(point: Vector3) -> Dictionary:
 
 	return {
 		"height": terrain_data["height"],
+		"initial_height": terrain_data["initial_height"],
 		"slope_x": slope_x,
 		"slope_z": slope_z,
 		"slope_degrees": slope_degrees

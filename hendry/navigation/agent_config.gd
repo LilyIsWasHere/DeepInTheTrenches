@@ -43,16 +43,16 @@ func get_nav_cost(context: Dictionary, move_context: Dictionary) -> float:
 	var terrain_layer: Dictionary = score_layers.get(&"terrain", {})
 	var terrain_score: float = float(terrain_layer.get(to_cell, 0.0))
 
-	if rise > 0.0:
-		if edge_max_slope_degrees <= max_slope_degrees:
-			pass
-		elif rise <= wall_climb_height:
-			base_cost += 2.0
-		else:
-			return INF
-
-	if rise < 0.0 and abs(rise) > max_step_height:
-		return INF
+	#if rise > 0.0:
+		#if edge_max_slope_degrees <= max_slope_degrees:
+			#pass
+		#elif rise <= wall_climb_height:
+			#base_cost += 2.0
+		#else:
+			#return INF
+#
+	#if rise < 0.0 and abs(rise) > max_step_height:
+		#return INF
 
 	if terrain_score > 0.0:
 		base_cost = 0.05

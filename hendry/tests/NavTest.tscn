@@ -4,6 +4,7 @@
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="2_lnd0t"]
 [ext_resource type="PackedScene" uid="uid://dpgp3e6f2xmk5" path="res://Player.tscn" id="3_lnd0t"]
 [ext_resource type="Script" uid="uid://ds0d26gs33txv" path="res://hendry/tests/nav_probe.gd" id="3_ry6q4"]
+[ext_resource type="Resource" uid="uid://bvc6sqw1aom10" path="res://hendry/navigation/agent_configs/follow_trenches_agent_config.tres" id="5_ubqim"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ry6q4"]
 shader = ExtResource("2_lnd0t")
@@ -33,3 +34,5 @@ terrain = NodePath("../Terrain")
 
 [node name="NavProbe" type="Node3D" parent="." unique_id=14186915]
 script = ExtResource("3_ry6q4")
+test_agent_max_slope_degrees = 10.0
+nav_agent_config = ExtResource("5_ubqim")
