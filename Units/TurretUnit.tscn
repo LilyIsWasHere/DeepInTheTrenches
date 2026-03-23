@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d3bbcpxwkeb3q" path="res://Nick/Assets/Ready Assets/StationaryGun.tscn" id="3_4httk"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="4_45qro"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="5_vkisb"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="6_su3ak"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="6_su3ak"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 

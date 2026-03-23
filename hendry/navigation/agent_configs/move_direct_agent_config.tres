@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="WeightedAgentConfig" format=3 uid="uid://bge2xy2t3uec1"]
+
+[ext_resource type="Script" uid="uid://ciqnixj3alngs" path="res://hendry/navigation/agent_configs/weighted_agent_config.gd" id="1_fgh17"]
+
+[resource]
+script = ExtResource("1_fgh17")
+metadata/_custom_type_script = "uid://ciqnixj3alngs"

@@ -168,7 +168,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = fal
 		return steering
 
 	var agent_node: Node3D = agent
-	var current_position: Vector3 = agent_node.global_position
+	var current_position: Vector3 = agent_node.global_position * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 	var agent_config: NavAgentConfig = handle.agent_config
 
 	var waypoint_tolerance: float = DEFAULT_AGENT_RADIUS
@@ -195,7 +195,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = fal
 		steering.desired_velocity = Vector3.ZERO
 		return steering
 
-	var next_waypoint: Vector3 = handle.waypoints[0]
+	var next_waypoint: Vector3 = handle.waypoints[0] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 	steering.next_waypoint = next_waypoint
 
 	var remaining_distance: float = _steering_distance(current_position, next_waypoint, use_xz_only)
@@ -215,6 +215,10 @@ func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = fal
 		steering.desired_velocity = to_waypoint.normalized() * max_speed
 
 	return steering
+	
+	
+
+
 
 # Call this function to mark terrain tiles as dirty, so that the next time it's sampled, it will be updated.
 func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:

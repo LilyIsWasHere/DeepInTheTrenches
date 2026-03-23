@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="InventoryItem" format=3 uid="uid://6822t7hmmaff"]
 
 [ext_resource type="Texture2D" uid="uid://cdlc68hx3dj6q" path="res://resources/EnergyCrystalIcon.png" id="1_4id6x"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="1_nha0p"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_nha0p"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l45t3"]
 albedo_color = Color(1, 0.7137255, 0.25882354, 1)

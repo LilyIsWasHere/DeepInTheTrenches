@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d34g24qgwep6x" path="res://Units/production_unit.gd" id="1_4cfdc"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_l434h"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_x534k"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_7rf52"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="4_7rf52"]
 [ext_resource type="PackedScene" uid="uid://clwcgg34hnqlt" path="res://Nick/Assets/Ready Assets/productionTent.tscn" id="5_l434h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l434h"]
