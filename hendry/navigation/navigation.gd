@@ -79,7 +79,7 @@ func remove_agent(agent: Node) -> void:
 	_active_requests.erase(agent)
 
 # Call this function to request a path to a target. Returns a NavPlanHandle that can be used to track the status of the request and sample steering results.
-func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
+func request_move(agent: Node, target: Vector3, config: NavAgentConfig) -> NavPlanHandle:
 	if agent == null:
 		return null
 
@@ -95,7 +95,7 @@ func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
 	var handle := NavPlanHandle.new()
 	handle.target = target
 	handle.agent = agent
-	handle.agent_config = _get_agent_config(agent)
+	handle.agent_config = config
 	if handle.agent_config == null:
 		return null
 
@@ -109,11 +109,11 @@ func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
 	return handle
 
 # Same as above but you can do it for a bunch of agents. Returns a dict mapping each agent to their NavPlanHandle.
-func request_batch_move(agents: Array[Node], target: Vector3) -> Dictionary:
+func request_batch_move(agents: Array[Node], target: Vector3, config: NavAgentConfig) -> Dictionary:
 	var result: Dictionary = {}
 
 	for agent in agents:
-		var handle := request_move(agent, target)
+		var handle := request_move(agent, target, config)
 		if handle != null:
 			result[agent] = handle
 
@@ -127,7 +127,7 @@ func cancel_request(handle: NavPlanHandle) -> void:
 	handle.status = NavPlanHandle.NavRequestStatus.CANCELLED
 
 # Call this function to ask where the agent should go next. Returns a NavSteeringResult with all the info you need.
-func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavSteeringResult:
+func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float, sample_2d: bool = false) -> NavSteeringResult:
 	var steering := NavSteeringResult.new()
 
 	if agent == null or handle == null:
@@ -145,7 +145,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 		return steering
 
 	var agent_node: Node3D = agent
-	var current_position: Vector3 = agent_node.global_position
+	var current_position: Vector3 = agent_node.global_position * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 	var agent_config: NavAgentConfig = handle.agent_config
 
 	var waypoint_tolerance: float = DEFAULT_AGENT_RADIUS
@@ -157,7 +157,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 
 	# if we are pretty much at the next waypoint, pop it and move on to the next one
 	while not handle.waypoints.is_empty():
-		var first_waypoint: Vector3 = handle.waypoints[0]
+		var first_waypoint: Vector3 = handle.waypoints[0] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 		if current_position.distance_to(first_waypoint) > waypoint_tolerance:
 			break
 
@@ -172,16 +172,16 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 		steering.desired_velocity = Vector3.ZERO
 		return steering
 
-	var next_waypoint: Vector3 = handle.waypoints[0]
+	var next_waypoint: Vector3 = handle.waypoints[0] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 	steering.next_waypoint = next_waypoint
 
 	var remaining_distance: float = current_position.distance_to(next_waypoint)
 	for i in range(handle.waypoints.size() - 1):
-		remaining_distance += handle.waypoints[i].distance_to(handle.waypoints[i + 1])
+		remaining_distance += (handle.waypoints[i] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))).distance_to(handle.waypoints[i + 1] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1)))
 
 	steering.remaining_distance = remaining_distance
 
-	var to_waypoint: Vector3 = next_waypoint - current_position
+	var to_waypoint: Vector3 = (next_waypoint - current_position) * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
 	var distance_to_waypoint: float = to_waypoint.length()
 
 	if distance_to_waypoint <= waypoint_tolerance:
@@ -190,6 +190,10 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 		steering.desired_velocity = to_waypoint.normalized() * max_speed
 
 	return steering
+	
+	
+
+
 
 # Call this function to mark terrain tiles as dirty, so that the next time it's sampled, it will be updated.
 func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:

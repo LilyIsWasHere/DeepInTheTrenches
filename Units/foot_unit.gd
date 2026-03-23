@@ -103,6 +103,18 @@ func init_ai_states() -> void:
 	AIState.add_transition_to(role_states, excavate_role_state, func()->bool: return role == FootUnitRoles.EXCAVATE )
 	AIState.add_transition_to(role_states, resource_transport_role_state, func()->bool: return role == FootUnitRoles.RESOURCE_TRANSPORT )
 	
+	
+	###########################################
+	### RESOURCE_TRANSPORT ROLE CHILD STATES ##
+	###########################################
+	
+	var resource_transport_idle_state := resource_transport_role_state.add_child_state(AIState.create("resouce_transport_idle"))
+	var resource_transport_move_to_pickup := resource_transport_role_state.add_child_state(AIState.create("move_to_pickup"))
+	var resource_transport_pickup_items := resource_transport_role_state.add_child_state(AIState.create("pickup_items"))
+	var resource_transport_move_to_dropoff := resource_transport_role_state.add_child_state(AIState.create("move_to_dropoff"))
+	var resource_transport_pickup_dropoff := resource_transport_role_state.add_child_state(AIState.create("dropoff_items"))
+	
+	
 	#################################
 	### EXCAVATE ROLE CHILD STATES ##
 	#################################
@@ -161,7 +173,7 @@ func fetch_nearest_dig_point_info() -> void:
 func set_destination_to_nearest_dig_point_if_exists() -> void:
 	fetch_nearest_dig_point_info()
 	if (dig_point_info["exists"]):
-		set_destination_point(dig_point_info["location"])
+		set_destination_point_safe(dig_point_info["location"])
 
 func dig_at_point_tick_fn() -> void:
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
