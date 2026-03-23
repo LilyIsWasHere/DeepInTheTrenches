@@ -1,3 +1,5 @@
+# type for data about a cell with agent-dependent nav info
+
 extends RefCounted
 class_name NavCellData
 

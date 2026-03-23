@@ -4,6 +4,14 @@ const FOOTPRINT_SAMPLE_COUNT := 4
 const GRID_CELL_SIZE := 1.0
 const DIRTY_CELL_PADDING := 1
 
+# internal type to hold the data sampled from the terrain for a cell
+class _NavSample:
+	var height: float = 0.0
+	var initial_height: float = 0.0
+	var slope_x: float = 0.0
+	var slope_z: float = 0.0
+	var slope_degrees: float = 0.0
+
 # PERSISTENT STUFF
 # latest published terrain snapshot from the main thread
 var _terrain_snapshot: NavTerrainSnapshot = null
@@ -45,7 +53,7 @@ func world_to_cell(point: Vector3) -> Vector2i:
 	)
 
 # go from cell coordinates to world space (center of the cell)
-func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: Dictionary = {}) -> Vector3:
+func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: _NavSample = null) -> Vector3:
 	var point := Vector3(
 		(cell.x + 0.5) * GRID_CELL_SIZE,
 		0.0,
@@ -53,11 +61,11 @@ func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: D
 	)
 
 	if use_surface_height:
-		if nav_data.is_empty():
+		if nav_data == null:
 			nav_data = _get_cached_nav_data(point)
 
-		if not nav_data.is_empty():
-			point.y = float(nav_data["height"])
+		if nav_data != null:
+			point.y = nav_data.height
 
 	return point
 
@@ -96,7 +104,7 @@ func find_path(start: Vector3, goal: Vector3,	agent_config: NavAgentConfig,	agen
 	var path: PackedVector3Array = PackedVector3Array()
 	for i in range(id_path.size()):
 		var cell: Vector2i = id_path[i]
-		var nav_data: Dictionary = _astar_nav_data.get(cell, {})
+		var nav_data: _NavSample = _astar_nav_data.get(cell, null)
 		path.append(cell_to_world(cell, true, nav_data))
 		
 
@@ -179,8 +187,8 @@ func _refresh_dirty_grid_cells() -> void:
 
 # update one persistent grid cell from the current terrain snapshot.
 func _update_grid_cell(cell: Vector2i) -> void:
-	var nav_data: Dictionary = _get_nav_data(cell_to_world(cell))
-	if nav_data.is_empty():
+	var nav_data: _NavSample = _get_nav_data(cell_to_world(cell))
+	if nav_data == null:
 		_astar_nav_data.erase(cell)
 		return
 
@@ -217,32 +225,32 @@ func _grid_compute_cost(from_id: Vector2i, to_id: Vector2i) -> float:
 
 # GETTERS
 # get navigation data at a point
-func _get_nav_data(point: Vector3) -> Dictionary:
+func _get_nav_data(point: Vector3) -> _NavSample:
 	if _terrain_snapshot == null:
-		return {}
+		return null
 
 	var terrain_data: Dictionary = _terrain_snapshot.get_terrain_data(point)
 	if terrain_data.is_empty():
-		return {}
+		return null
 
 	var slope_data: Array = _terrain_snapshot.get_terrain_slope(point)
 	if slope_data.is_empty():
-		return {}
+		return null
 
-	return {
-		"height": float(terrain_data["height"]),
-		"initial_height": float(terrain_data["initial_height"]),
-		"slope_x": float(slope_data[0]),
-		"slope_z": float(slope_data[1]),
-		"slope_degrees": rad_to_deg(atan(float(slope_data[2])))
-	}
+	var nav_sample := _NavSample.new()
+	nav_sample.height = float(terrain_data["height"])
+	nav_sample.initial_height = float(terrain_data["initial_height"])
+	nav_sample.slope_x = float(slope_data[0])
+	nav_sample.slope_z = float(slope_data[1])
+	nav_sample.slope_degrees = rad_to_deg(atan(float(slope_data[2])))
+	return nav_sample
 
 # get the cached navigation data for a point, or sample it if it's not cached
-func _get_cached_nav_data(point: Vector3) -> Dictionary:
+func _get_cached_nav_data(point: Vector3) -> _NavSample:
 	if _cached_point_nav_data.has(point):
 		return _cached_point_nav_data[point]
 
-	var nav_data: Dictionary = _get_nav_data(point)
+	var nav_data: _NavSample = _get_nav_data(point)
 	_cached_point_nav_data[point] = nav_data
 	return nav_data
 
@@ -251,18 +259,18 @@ func _get_request_cell_data(cell: Vector2i) -> NavCellData:
 	if _grid_request_cell_data.has(cell):
 		return _grid_request_cell_data[cell]
 
-	var base_data: Dictionary = _astar_nav_data.get(cell, {})
-	if base_data.is_empty():
+	var base_data: _NavSample = _astar_nav_data.get(cell, null)
+	if base_data == null:
 		_grid_request_cell_data[cell] = null
 		return null
 
 	var nav_cell_data := NavCellData.new()
 	nav_cell_data.cell = cell
-	nav_cell_data.height = base_data["height"]
-	nav_cell_data.initial_height = base_data["initial_height"]
-	nav_cell_data.slope_x = base_data["slope_x"]
-	nav_cell_data.slope_z = base_data["slope_z"]
-	nav_cell_data.slope_degrees = base_data["slope_degrees"]
+	nav_cell_data.height = base_data.height
+	nav_cell_data.initial_height = base_data.initial_height
+	nav_cell_data.slope_x = base_data.slope_x
+	nav_cell_data.slope_z = base_data.slope_z
+	nav_cell_data.slope_degrees = base_data.slope_degrees
 	nav_cell_data.world_point = cell_to_world(cell, true, base_data)
 	if _agent_config != null:
 		nav_cell_data.traversable = _is_traversable(nav_cell_data.world_point, _agent_config, base_data)
@@ -273,29 +281,29 @@ func _get_request_cell_data(cell: Vector2i) -> NavCellData:
 # TERRAIN UTILITY
 # TODO: maybe fold this into the agent config's cost function as well???? idk 
 # check if a point is traversable for a given agent information
-func _is_traversable(point: Vector3, agent_config: NavAgentConfig, center_nav_data: Dictionary = {}) -> bool:
-	var nav_data: Dictionary = center_nav_data
-	if nav_data.is_empty():
+func _is_traversable(point: Vector3, agent_config: NavAgentConfig, center_nav_data: _NavSample = null) -> bool:
+	var nav_data: _NavSample = center_nav_data
+	if nav_data == null:
 		nav_data = _get_cached_nav_data(point)
 
-	if nav_data.is_empty():
+	if nav_data == null:
 		return false
 
 	var agent_radius: float = agent_config.radius
 	var agent_max_step_height: float = agent_config.max_step_height
-	var center_height: float = float(nav_data["height"])
+	var center_height: float = nav_data.height
 
 	# go around the point in a circle
 	for i in range(FOOTPRINT_SAMPLE_COUNT):
 		var angle: float = TAU * float(i) / float(FOOTPRINT_SAMPLE_COUNT)
 		var offset := Vector3(cos(angle), 0.0, sin(angle)) * agent_radius
 		var sample_point: Vector3 = point + offset
-		var sample_data: Dictionary = _get_cached_nav_data(sample_point)
+		var sample_data: _NavSample = _get_cached_nav_data(sample_point)
 
-		if sample_data.is_empty():
+		if sample_data == null:
 			return false
 
-		if abs(float(sample_data["height"]) - center_height) > agent_max_step_height:
+		if abs(sample_data.height - center_height) > agent_max_step_height:
 			return false
 
 	return true
@@ -306,9 +314,9 @@ func _compute_edge_max_slope_degrees(from_cell: Vector2i,	to_cell: Vector2i, fro
 	var to_slope: float = to_data.slope_degrees
 
 	var midpoint: Vector3 = cell_to_world(from_cell).lerp(cell_to_world(to_cell), 0.5)
-	var midpoint_data: Dictionary = _get_cached_nav_data(midpoint)
-	if midpoint_data.is_empty():
+	var midpoint_data: _NavSample = _get_cached_nav_data(midpoint)
+	if midpoint_data == null:
 		return INF
 
-	var midpoint_slope: float = float(midpoint_data["slope_degrees"])
+	var midpoint_slope: float = midpoint_data.slope_degrees
 	return max(from_slope, max(midpoint_slope, to_slope))

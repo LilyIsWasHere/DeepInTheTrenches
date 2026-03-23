@@ -230,9 +230,7 @@ func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
 			int(tile.position.z / tile.size)
 		)
 
-		_dirty_terrain_tiles[tile.get_instance_id()] = {
-			"tile_coord": tile_coord,
-		}
+		_dirty_terrain_tiles[tile.get_instance_id()] = tile_coord
 
 # Call this function to add a score delta to a player's score layer for a batch of cells.
 func update_player_score_layer(player_id: int, layer_name: StringName, cells: Array[Vector2i], score_delta: float) -> void:

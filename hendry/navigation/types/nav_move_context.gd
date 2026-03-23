@@ -1,3 +1,5 @@
+# type for agent-dependent move context from one cell to another
+
 extends RefCounted
 class_name NavMoveContext
 

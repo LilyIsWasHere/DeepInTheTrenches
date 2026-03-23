@@ -41,8 +41,7 @@ func create_refreshed_copy(terrain: Terrain, dirty_tiles: Dictionary) -> NavTerr
 	# deep copy the dirty tiles and store their coordinates in the snapshot for A* map updating
 	var dirty_tile_values: Array = dirty_tiles.values()
 	for i in range(dirty_tile_values.size()):
-		var tile_info: Dictionary = dirty_tile_values[i]
-		var tile_coord: Vector2i = tile_info["tile_coord"]
+		var tile_coord: Vector2i = dirty_tile_values[i]
 		var tile: TerrainTile_Class = terrain.tile_arr[tile_coord.x][tile_coord.y]
 		if tile == null or tile.heightmap_img == null:
 			continue
