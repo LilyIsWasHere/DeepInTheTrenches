@@ -79,11 +79,14 @@ func remove_agent(agent: Node) -> void:
 	_active_requests.erase(agent)
 
 # Call this function to request a path to a target. Returns a NavPlanHandle that can be used to track the status of the request and sample steering results.
-func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
+func request_move(agent: Node, target: Vector3, agent_config: NavAgentConfig) -> NavPlanHandle:
 	if agent == null:
 		return null
 
 	if not agent is Node3D:
+		return null
+
+	if agent_config == null:
 		return null
 
 	# before doing anything, make sure the terrain snapshot is up to date
@@ -95,9 +98,7 @@ func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
 	var handle := NavPlanHandle.new()
 	handle.target = target
 	handle.agent = agent
-	handle.agent_config = _get_agent_config(agent)
-	if handle.agent_config == null:
-		return null
+	handle.agent_config = agent_config
 
 	# give the agent the stuff it needs to know beforehand
 	handle.agent_context = _build_agent_context(agent, handle.agent_config)
@@ -109,11 +110,12 @@ func request_move(agent: Node, target: Vector3) -> NavPlanHandle:
 	return handle
 
 # Same as above but you can do it for a bunch of agents. Returns a dict mapping each agent to their NavPlanHandle.
-func request_batch_move(agents: Array[Node], target: Vector3) -> Dictionary:
+func request_batch_move(agents: Array[Node], target: Vector3, agent_configs: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
 
 	for agent in agents:
-		var handle := request_move(agent, target)
+		var agent_config: NavAgentConfig = agent_configs.get(agent, null)
+		var handle := request_move(agent, target, agent_config)
 		if handle != null:
 			result[agent] = handle
 
@@ -126,8 +128,29 @@ func cancel_request(handle: NavPlanHandle) -> void:
 
 	handle.status = NavPlanHandle.NavRequestStatus.CANCELLED
 
+# Call this function to get the size of a nav cell in world units.
+func get_nav_cell_size() -> float:
+	if _nav_map == null:
+		return 0.0
+
+	return _nav_map.get_cell_size()
+
+# Call this function to convert a point in world space to a nav cell coordinate.
+func world_to_nav_cell(point: Vector3) -> Vector2i:
+	if _nav_map == null:
+		return Vector2i.ZERO
+
+	return _nav_map.world_to_cell(point)
+
+# Call this function to convert a nav cell coordinate to a point in world space (specifically, the center of the cell).
+func nav_cell_to_world(cell: Vector2i) -> Vector3:
+	if _nav_map == null:
+		return Vector3.ZERO
+
+	return _nav_map.cell_to_world(cell)
+
 # Call this function to ask where the agent should go next. Returns a NavSteeringResult with all the info you need.
-func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavSteeringResult:
+func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = false) -> NavSteeringResult:
 	var steering := NavSteeringResult.new()
 
 	if agent == null or handle == null:
@@ -158,7 +181,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 	# if we are pretty much at the next waypoint, pop it and move on to the next one
 	while not handle.waypoints.is_empty():
 		var first_waypoint: Vector3 = handle.waypoints[0]
-		if current_position.distance_to(first_waypoint) > waypoint_tolerance:
+		if _steering_distance(current_position, first_waypoint, use_xz_only) > waypoint_tolerance:
 			break
 
 		handle.waypoints.remove_at(0)
@@ -175,13 +198,15 @@ func sample_steering(agent: Node, handle: NavPlanHandle, _delta: float,) -> NavS
 	var next_waypoint: Vector3 = handle.waypoints[0]
 	steering.next_waypoint = next_waypoint
 
-	var remaining_distance: float = current_position.distance_to(next_waypoint)
+	var remaining_distance: float = _steering_distance(current_position, next_waypoint, use_xz_only)
 	for i in range(handle.waypoints.size() - 1):
-		remaining_distance += handle.waypoints[i].distance_to(handle.waypoints[i + 1])
+		remaining_distance += _steering_distance(handle.waypoints[i], handle.waypoints[i + 1], use_xz_only)
 
 	steering.remaining_distance = remaining_distance
 
 	var to_waypoint: Vector3 = next_waypoint - current_position
+	if use_xz_only:
+		to_waypoint.y = 0.0
 	var distance_to_waypoint: float = to_waypoint.length()
 
 	if distance_to_waypoint <= waypoint_tolerance:
@@ -209,44 +234,21 @@ func record_terrain_readback_batch(tiles: Array[TerrainTile_Class]) -> void:
 			"tile_coord": tile_coord,
 		}
 
-# Apply a score stamp to a player's score layer by name.
-func apply_player_score_stamp(player_id: int, layer_name: StringName, position: Vector3, radius: float, score_delta: float) -> void:
-	if _nav_map == null:
-		return
-
-	if radius <= 0.0:
-		return
-
+# Call this function to add a score delta to a player's score layer for a batch of cells.
+func update_player_score_layer(player_id: int, layer_name: StringName, cells: Array[Vector2i], score_delta: float) -> void:
 	if is_zero_approx(score_delta):
 		return
 
-	var center_cell: Vector2i = _nav_map.world_to_cell(position)
 	var player_layer: Dictionary = create_player_score_layer(player_id, layer_name)
+	for i in range(cells.size()):
+		var cell: Vector2i = cells[i]
+		var old_score: float = float(player_layer.get(cell, 0.0))
+		var new_score: float = max(0.0, old_score + score_delta)
 
-	var cell_size: float = _nav_map.get_cell_size()
-	var cell_radius: int = int(ceil(radius / cell_size))
-
-	# iterate over cells in the radius and apply the score delta with a falloff based on distance
-	for z in range(-cell_radius, cell_radius + 1):
-		for x in range(-cell_radius, cell_radius + 1):
-			var cell: Vector2i = center_cell + Vector2i(x, z)
-			var cell_position: Vector3 = _nav_map.cell_to_world(cell)
-			var distance: float = Vector2(
-				cell_position.x - position.x,
-				cell_position.z - position.z
-			).length()
-
-			if distance > radius:
-				continue
-
-			var weight: float = 1.0 - (distance / radius)
-			var old_score: float = float(player_layer.get(cell, 0.0))
-			var new_score: float = max(0.0, old_score + score_delta * weight)
-
-			if is_zero_approx(new_score):
-				player_layer.erase(cell)
-			else:
-				player_layer[cell] = new_score
+		if is_zero_approx(new_score):
+			player_layer.erase(cell)
+		else:
+			player_layer[cell] = new_score
 
 # Get a player's score layer by name.
 func get_player_score_layer(player_id: int, layer_name: StringName) -> Dictionary:
@@ -290,12 +292,11 @@ func clear_all_score_layers(layer_name: StringName) -> void:
 		clear_player_score_layer(player_id, layer_name)
 
 # HELPERS
-# helper to get the agent config for an agent
-func _get_agent_config(agent: Node) -> NavAgentConfig:
-	if agent != null and agent.has_method("get_nav_agent_config"):
-		return agent.get_nav_agent_config()
+func _steering_distance(a: Vector3, b: Vector3, use_xz_only: bool) -> float:
+	if use_xz_only:
+		return Vector2(a.x - b.x, a.z - b.z).length()
 
-	return null
+	return a.distance_to(b)
 
 # helper to build the agent context for an agent
 func _build_agent_context(agent: Node, agent_config: NavAgentConfig) -> Dictionary:

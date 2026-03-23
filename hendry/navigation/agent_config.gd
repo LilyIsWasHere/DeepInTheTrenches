@@ -25,36 +25,9 @@ func init_context(agent: Node) -> Dictionary:
 
 # Override this, remember that this will run in a thread
 func get_nav_cost(context: Dictionary, move_context: Dictionary) -> float:
-	var from_data: Dictionary = move_context["from_data"]
-	var to_data: Dictionary = move_context["to_data"]
-
-	var from_height: float = from_data["nav_data"]["height"]
-	var to_height: float = to_data["nav_data"]["height"]
-	var rise: float = to_height - from_height
-
 	var from_cell: Vector2i = move_context["from_cell"]
 	var to_cell: Vector2i = move_context["to_cell"]
 	var delta: Vector2i = to_cell - from_cell
 	var is_diagonal: bool = abs(delta.x) == 1 and abs(delta.y) == 1
 	var base_cost: float = 1.41421356 if is_diagonal else 1.0
-
-	var edge_max_slope_degrees: float = float(move_context["edge_max_slope_degrees"])
-	var score_layers: Dictionary = context.get("score_layers", {})
-	var terrain_layer: Dictionary = score_layers.get(&"terrain", {})
-	var terrain_score: float = float(terrain_layer.get(to_cell, 0.0))
-
-	#if rise > 0.0:
-		#if edge_max_slope_degrees <= max_slope_degrees:
-			#pass
-		#elif rise <= wall_climb_height:
-			#base_cost += 2.0
-		#else:
-			#return INF
-#
-	#if rise < 0.0 and abs(rise) > max_step_height:
-		#return INF
-
-	if terrain_score > 0.0:
-		base_cost = 0.05
-
 	return base_cost

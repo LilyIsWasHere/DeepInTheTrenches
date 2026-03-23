@@ -13,7 +13,6 @@ func _ready() -> void:
 	
 	var sculpt_brush: SculptBrush = $Camera3D/SculptBrush
 	sculpt_brush.terrain = terrain
-	sculpt_brush.player_id = player_id
 
 
 
