@@ -168,7 +168,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = fal
 		return steering
 
 	var agent_node: Node3D = agent
-	var current_position: Vector3 = agent_node.global_position * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
+	var current_position: Vector3 = agent_node.global_position
 	var agent_config: NavAgentConfig = handle.agent_config
 
 	var waypoint_tolerance: float = DEFAULT_AGENT_RADIUS
@@ -195,7 +195,7 @@ func sample_steering(agent: Node, handle: NavPlanHandle, use_xz_only: bool = fal
 		steering.desired_velocity = Vector3.ZERO
 		return steering
 
-	var next_waypoint: Vector3 = handle.waypoints[0] * (Vector3(1,0,1) if sample_2d else Vector3(1,1,1))
+	var next_waypoint: Vector3 = handle.waypoints[0]
 	steering.next_waypoint = next_waypoint
 
 	var remaining_distance: float = _steering_distance(current_position, next_waypoint, use_xz_only)

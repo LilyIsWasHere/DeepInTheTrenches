@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 
 func move_direct_tick_fn() -> void:
 	should_move = true
-	var steer_result: NavSteeringResult = Navigation.sample_steering(self, nav_plan_handle, get_physics_process_delta_time(), true)
+	var steer_result: NavSteeringResult = Navigation.sample_steering(self, nav_plan_handle, true)
 	velocity.x = steer_result.desired_velocity.x
 	velocity.z = steer_result.desired_velocity.z
 	arrived = steer_result.arrived

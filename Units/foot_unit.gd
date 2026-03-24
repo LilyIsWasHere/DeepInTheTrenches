@@ -4,7 +4,7 @@ class_name FootUnit
 @export var weapon : Weapon
 
 var active_order: DirectOrders = DirectOrders.NONE
-var role: FootUnitRoles = FootUnitRoles.EXCAVATE
+var role: FootUnitRoles = FootUnitRoles.RESOURCE_TRANSPORT
 
 enum DirectOrders {
 	NONE,
@@ -27,6 +27,8 @@ const dig_point_range: float = 0.5
 const dig_amount: float = 3
 const dig_radius: float = 15
 const dig_delay: float = 1
+
+@export var item_transport_inventory: Inventory
 
 
 func _ready() -> void:
@@ -108,11 +110,34 @@ func init_ai_states() -> void:
 	### RESOURCE_TRANSPORT ROLE CHILD STATES ##
 	###########################################
 	
-	var resource_transport_idle_state := resource_transport_role_state.add_child_state(AIState.create("resouce_transport_idle"))
-	var resource_transport_move_to_pickup := resource_transport_role_state.add_child_state(AIState.create("move_to_pickup"))
-	var resource_transport_pickup_items := resource_transport_role_state.add_child_state(AIState.create("pickup_items"))
-	var resource_transport_move_to_dropoff := resource_transport_role_state.add_child_state(AIState.create("move_to_dropoff"))
-	var resource_transport_pickup_dropoff := resource_transport_role_state.add_child_state(AIState.create("dropoff_items"))
+	var resource_transport_idle_state := resource_transport_role_state.add_child_state(AIState.create("resouce_transport_idle")) \
+		.set_tick_function(try_get_transport_plan)
+		
+	var resource_transport_move_to_pickup := resource_transport_role_state.add_child_state(AIState.create("move_to_pickup")) \
+		.set_enter_function(func()->void: set_destination_point_safe(pickup_request.inventory.global_position)) \
+		.set_tick_function(move_safe_tick_fn)
+	
+	var resource_transport_pickup_items := resource_transport_role_state.add_child_state(AIState.create("pickup_items")) \
+		.set_enter_function(fulfill_pickup)
+	
+	var resource_transport_move_to_dropoff := resource_transport_role_state.add_child_state(AIState.create("move_to_dropoff")) \
+		.set_enter_function(func()->void: set_destination_point_safe(dropoff_request.inventory.global_position))\
+		.set_tick_function(move_safe_tick_fn)
+	
+	var resource_transport_dropoff_items := resource_transport_role_state.add_child_state(AIState.create("dropoff_items")) \
+		.set_enter_function(fulfill_dropoff)
+		
+		
+	resource_transport_idle_state.add_transition(resource_transport_move_to_pickup, func()->bool: return pickup_request != null && dropoff_request != null)
+	resource_transport_move_to_pickup.add_transition(resource_transport_pickup_items, get_arrived)
+	resource_transport_pickup_items.add_transition(resource_transport_move_to_dropoff, func()->bool: return pickup_request == null && dropoff_request != null)
+	resource_transport_move_to_dropoff.add_transition(resource_transport_dropoff_items, get_arrived)
+	
+	AIState.add_transition_to(
+		[resource_transport_move_to_pickup, resource_transport_pickup_items, resource_transport_move_to_dropoff, resource_transport_dropoff_items],
+		resource_transport_idle_state, 
+		func()->bool: return pickup_request == null && dropoff_request == null
+	)
 	
 	
 	#################################
@@ -195,4 +220,83 @@ func is_dig_point_fully_excavated() -> bool:
 		return data.height - data.initial_height >= dig_point_info["height_delta"] - 0.01
 	else:
 		return data.height - data.initial_height <= dig_point_info["height_delta"] + 0.01
+	
+	
+	
+######################################
+#### Resource Transport Functions ####
+######################################
+var pickup_request: ItemTransportRequest = null
+var dropoff_request: ItemTransportRequest = null
+
+func is_transport_plan_set() -> bool:
+	return (pickup_request && dropoff_request)
+	
+
+func try_get_transport_plan() -> void:
+	var pickup_dropoff: Array[ItemTransportRequest] = ItemTransportBlackboard.get_pickup_dropoff_pair(global_position)
+	
+	if (!pickup_dropoff.is_empty()):
+		pickup_request = pickup_dropoff[0]
+		dropoff_request = pickup_dropoff[1]
+	
+func fulfill_pickup() -> void:
+	var item: InventoryItem = pickup_request.item
+	
+	if (!is_instance_valid(pickup_request.inventory)):
+		pickup_request.abandon()
+		dropoff_request.unclaim()
+		pickup_request = null
+		dropoff_request = null
+		return
+	
+	
+	if (!item_transport_inventory.has_slot_for_item(item)):
+		item_transport_inventory.add_slot(item, item.default_inventory_capacity)
+		print("WARNING: item transport inventory has no slot for " + str(item.name) + ". Creating one with default capacity of " + str(item.default_inventory_capacity))
+	
+	assert(pickup_request.inventory.has_slot_for_item(item))
+	
+	if (!pickup_request.inventory.has_item(item)):
+		assert(false)
+		pickup_request.abandon()
+		pickup_request = null
+		dropoff_request.abandon()
+		dropoff_request = null
+		return
+			
+	var transfer_result: Dictionary = Inventory.transfer_items(pickup_request.inventory, item_transport_inventory, item, pickup_request.quantity)
+	
+	pickup_request.fulfill(pickup_request.quantity - transfer_result["to_overflow"])
+	pickup_request = null
+	
+	
+func fulfill_dropoff() -> void:
+	var item: InventoryItem = dropoff_request.item
+	
+	if (!is_instance_valid(dropoff_request)):
+		dropoff_request.abandon()
+		return
+	
+	assert(item_transport_inventory.has_slot_for_item(item))
+	if (!dropoff_request.inventory.has_slot_for_item(item)):
+		assert(false)
+		print("WARNING: resource transport dropoff inventory has no slot for " + str(item.name) + ". Abandoning dropoff request.")
+		dropoff_request.abandon()
+		dropoff_request = null
+		return
+		
+	var transfer_result: Dictionary = Inventory.transfer_items(item_transport_inventory, dropoff_request.inventory, item, dropoff_request.quantity)
+		
+	dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
+	dropoff_request = null
+	
+	
+	
+	
+	
+	
+	
+
+	
 	

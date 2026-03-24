@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
+[ext_resource type="PackedScene" uid="uid://b1gp6h2ygog3b" path="res://Units/ItemDepotUnit.tscn" id="3_21bcp"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://dpgp3e6f2xmk5" path="res://Player.tscn" id="4_ohhpf"]
@@ -39,3 +40,11 @@ visibleDebugMesh = true
 [node name="EnemyPlayer" parent="." unique_id=364134404 node_paths=PackedStringArray("terrain") instance=ExtResource("4_ohhpf")]
 terrain = NodePath("../Terrain")
 player_id = 1
+
+[node name="PickupDepot" parent="." unique_id=1494502536 instance=ExtResource("3_21bcp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.251925, 5.5889587, 0)
+pickup = true
+
+[node name="DropoffDepot" parent="." unique_id=47483864 instance=ExtResource("3_21bcp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.583559, 6.96961, -5.0540257)
+pickup = false

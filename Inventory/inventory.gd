@@ -16,6 +16,27 @@ func _process(_delta: float) -> void:
 	pass
 	
 	
+	
+static func transfer_items(from_inventory: Inventory, to_inventory: Inventory, item: InventoryItem, quantity: int) -> Dictionary:
+	assert(from_inventory.has_slot_for_item(item))
+	assert(to_inventory.has_slot_for_item(item))
+	var from_underflow: int = from_inventory.remove_items(item, quantity)
+	var to_overflow: int = to_inventory.add_items(item, quantity - from_underflow)
+	
+	from_inventory.add_items(item, to_overflow)
+	
+	return {"from_underflow": from_underflow, "to_overflow": to_overflow}
+	
+	
+	
+func add_slot(item: InventoryItem, max_quantity: int) -> void:
+	var slot: InventorySlot = InventorySlot.new()
+	slot.item = item
+	slot.num = 0
+	slot.max_num = max_quantity
+	slots.append(slot)
+	item_slot_dict.set(item, slot)
+	
 # adds the specified quantity of the item to the relevant inventory slot, returning any overflow above slot max_quantity
 # returns -1 if the inventory lacks a slot for the specified item type, or the quantity < 0
 func add_items(item: InventoryItem, quantity: int) -> int:
