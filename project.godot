@@ -53,6 +53,7 @@ enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg")
 can_move=""
 can_dig=""
 can_attack=""
+foot_unit=""
 
 [input]
 
