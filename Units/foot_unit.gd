@@ -4,7 +4,7 @@ class_name FootUnit
 @export var weapon : Weapon
 
 var active_order: DirectOrders = DirectOrders.NONE
-var role: FootUnitRoles = FootUnitRoles.RESOURCE_TRANSPORT
+var role: FootUnitRoles = FootUnitRoles.EXCAVATE
 
 enum DirectOrders {
 	NONE,

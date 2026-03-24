@@ -47,6 +47,7 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 [node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
+sync_to_physics = false
 script = ExtResource("1_c0xtx")
 weapon = NodePath("Weapon")
 item_transport_inventory = NodePath("ItemTransportInventory")

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cjvqyruyticw1"]
+
+[ext_resource type="Script" uid="uid://ct1nlmr44jeua" path="res://UI/item_cost_icon.gd" id="1_nd337"]
+[ext_resource type="Texture2D" uid="uid://cdlc68hx3dj6q" path="res://resources/EnergyCrystalIcon.png" id="1_twkas"]
+
+[node name="ItemCostIcon" type="Control" unique_id=1892806784]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_nd337")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=902077511]
+layout_mode = 0
+offset_right = 54.0
+offset_bottom = 23.0
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=105972553]
+layout_mode = 2
+text = "3"
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=555583486]
+layout_mode = 2
+texture = ExtResource("1_twkas")
+expand_mode = 2
