@@ -28,6 +28,7 @@ const dig_amount: float = 3
 const dig_radius: float = 15
 const dig_delay: float = 1
 
+var move_order_destination : Vector3
 
 func _ready() -> void:
 	super()
@@ -74,18 +75,25 @@ func init_ai_states() -> void:
 	### DIRECT ORDER CHILD STATES ###
 	#################################
 	# tick funciton, entry function and exit funciton can also be set in the .create constructor
-	var move_direct_order_state := direct_order_state.add_child_state(AIState.create("move_direct_order", move_direct_tick_fn)) 
-	var move_safe_order_state := direct_order_state.add_child_state(AIState.create("move_safe_order", move_safe_tick_fn)) 
+	var move_direct_order_state := direct_order_state.add_child_state(AIState.create("move_direct_order", move_direct_tick_fn)) \
+		.set_enter_function(func() -> void : set_destination_point_direct(move_order_destination))
+	var move_safe_order_state := direct_order_state.add_child_state(AIState.create("move_safe_order", move_safe_tick_fn)) \
+		.set_enter_function(func() -> void : set_destination_point_safe(move_order_destination))
 	var attack_order_state := direct_order_state.add_child_state(AIState.create("attack_order", attack_order_tick_fn))
 	var hold_order_state := direct_order_state.add_child_state(AIState.create("hold_order", hold_tick_fn))
+	var none_order_state := direct_order_state.add_child_state(AIState.create("none_order")) \
+		.set_enter_function(func() -> void : active_order = DirectOrders.NONE)
 	
 	# when many states share a transition, you can use the AIState.add_transition_to funciton to add a transition to many states at once
 	# this function will skip adding a self-transition from A->A, for ease of use
-	var order_states: Array[AIState] = [move_direct_order_state, move_safe_order_state, attack_order_state, hold_order_state]
+	var order_states: Array[AIState] = [none_order_state, move_direct_order_state, move_safe_order_state, attack_order_state, hold_order_state]
 	AIState.add_transition_to(order_states, move_direct_order_state, func()->bool:return active_order == DirectOrders.MOVE_DIRECT)
 	AIState.add_transition_to(order_states, move_safe_order_state, func()->bool:return active_order == DirectOrders.MOVE_SAFE)
 	AIState.add_transition_to(order_states, attack_order_state, func()->bool:return active_order == DirectOrders.ATTACK)
 	AIState.add_transition_to(order_states, hold_order_state, func()->bool:return active_order == DirectOrders.HOLD)
+	
+	move_direct_order_state.add_transition(none_order_state, get_arrived)
+	move_safe_order_state.add_transition(none_order_state, get_arrived)
 	
 	#################################
 	### EXECUTE ROLE CHILD STATES ###

@@ -12,6 +12,7 @@ var inDropdown : bool = false
 
 var selectedUnits : Array = []
 var isMoving : bool = false
+var moveMode : String = ""
 var isAttacking : bool = false
 
 var targetCursor : Texture2D = preload("res://Nick/target (1).png")
@@ -30,8 +31,12 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ToolClick") && isMoving:
 		var pos : Vector3 = get_world_pos()
 		for unit : Unit in selectedUnits:
-			unit.move_to_point(pos)
-		handle_movement(false)
+			unit.move_order_destination = pos
+			if moveMode == "safe":
+				unit.active_order = FootUnit.DirectOrders.MOVE_SAFE
+			elif moveMode == "direct":
+				unit.active_order = FootUnit.DirectOrders.MOVE_DIRECT
+		handle_movement(false, "")
 		return
 	elif Input.is_action_just_pressed("ToolClick") && isAttacking:
 		var pos : Vector3 = get_world_pos()
@@ -113,8 +118,9 @@ func update_action_buttons() -> void:
 		if !(unit.is_in_group("can_dig")):
 			actionsDropdown.disable_button("dig")
 
-func handle_movement(moving : bool) -> void:
+func handle_movement(moving : bool, mode : String) -> void:
 	isMoving = moving
+	moveMode = mode
 	isAttacking = false
 	if moving:
 		Input.set_custom_mouse_cursor(targetCursor, Input.CURSOR_ARROW, Vector2(16, 16))
