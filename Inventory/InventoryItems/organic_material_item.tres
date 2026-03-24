@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="InventoryItem" format=3 uid="uid://b6jjubhfcai3n"]
 
 [ext_resource type="Texture2D" uid="uid://ctew5dwjoqg3g" path="res://resources/CompactedOrganicMaterialIcon.png" id="1_8dbqw"]
-[ext_resource type="Script" path="res://Inventory/inventory_item.gd" id="1_bn2me"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_bn2me"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hs85m"]
 cull_mode = 2
