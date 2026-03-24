@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="6_c0xtx"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_qvlg4"]
 [ext_resource type="PackedScene" uid="uid://b22wpxxf0i1nw" path="res://Nick/Assets/Ready Assets/machineGun.tscn" id="7_im02j"]
+[ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="9_qvlg4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -37,11 +38,18 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]
 
-[node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[sub_resource type="Resource" id="Resource_oup3h"]
+script = ExtResource("4_vrshb")
+item = ExtResource("9_qvlg4")
+max_num = 10
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_c0xtx")
 weapon = NodePath("Weapon")
+item_transport_inventory = NodePath("ItemTransportInventory")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
@@ -84,3 +92,8 @@ shape = SubResource("CapsuleShape3D_lvdn7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2445847, 0.880491)
 
 [node name="SM_Wep_American_SubMachineGun_01" parent="Weapon" unique_id=83445828 instance=ExtResource("7_im02j")]
+
+[node name="ItemTransportInventory" type="Node3D" parent="." unique_id=337018280]
+script = ExtResource("3_plcxh")
+slots = Array[ExtResource("4_vrshb")]([SubResource("Resource_oup3h")])
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
