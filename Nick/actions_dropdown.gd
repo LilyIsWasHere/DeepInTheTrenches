@@ -3,8 +3,11 @@ extends Control
 @onready var cursor : Node3D = get_parent()
 @onready var buttons : Array = $PanelContainer/Options/Buttons.get_children()
 
-func _on_move_button_down() -> void:
-	cursor.handle_movement(true)
+func _on_move_safe_button_down() -> void:
+	cursor.handle_movement(true, "safe")
+
+func _on_move_direct_button_down() -> void:
+	cursor.handle_movement(true, "direct")
 
 func _on_attack_button_down() -> void:
 	cursor.handle_attack(true)
@@ -24,7 +27,8 @@ func disable_button(buttonName : String) -> void:
 	match buttonName:
 		"move":
 			buttons[0].hide()
-		"attack":
 			buttons[1].hide()
-		"dig":
+		"attack":
 			buttons[2].hide()
+		"dig":
+			buttons[3].hide()
