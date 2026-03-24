@@ -66,8 +66,8 @@ script = ExtResource("6_tdg3f")
 [node name="SculptBrush" type="Node3D" parent="Camera3D" unique_id=2097761360 node_paths=PackedStringArray("resource_extractor")]
 script = ExtResource("4_dtqjt")
 brush_radius = 30.0
-brush_height = 100.0
-min_height_delta = -3.0
+brush_height = 30.0
+min_height_delta = -2.0
 max_height_delta = 3.0
 resource_extractor = NodePath("ResourceExtractor")
 

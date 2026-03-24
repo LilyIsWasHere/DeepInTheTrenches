@@ -37,10 +37,13 @@ var on_floor: bool = false
 func _init() -> void:
 	ai_controller = AIController.new()
 	resource_extractor = ResourceExtractor.new()
+	
 
 func _ready() -> void:
 	add_child(ai_controller)
 	add_child(resource_extractor)
+	
+	resource_extractor.inventory_connection = inventory
 	
 	if (team == 0):
 		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cfjqneqmh7gqf" path="res://Nick/Assets/Ready Assets/mortar.tscn" id="2_ft3yy"]
 [ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="2_x5o4g"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_ft3yy"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://inventory_item.gd" id="4_x5o4g"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="4_x5o4g"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
