@@ -11,6 +11,7 @@ const JUMP_VELOCITY = 4.5
 var ai_controller: AIController
 var resource_extractor: ResourceExtractor
 
+
 var should_move: bool = false
 
 @export var team: int = 0:
@@ -37,6 +38,7 @@ var on_floor: bool = false
 func _init() -> void:
 	ai_controller = AIController.new()
 	resource_extractor = ResourceExtractor.new()
+	sync_to_physics = false
 	
 
 func _ready() -> void:

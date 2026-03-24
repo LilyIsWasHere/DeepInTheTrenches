@@ -1,19 +1,17 @@
 [gd_scene format=3 uid="uid://b1gp6h2ygog3b"]
 
 [ext_resource type="PackedScene" uid="uid://dppxivdfp3lpx" path="res://Units/Unit.tscn" id="1_5rc8e"]
-[ext_resource type="Script" uid="uid://dx24te8mmsxmv" path="res://Units/item_depot.gd" id="2_7vp2u"]
-[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="3_62wgo"]
+[ext_resource type="Script" uid="uid://dx24te8mmsxmv" path="res://Units/Buildings/item_depot.gd" id="2_7vp2u"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="4_jxqvy"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="5_5dmhn"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_m0fyl"]
 [ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="7_ysr8t"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vb2pl"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hbxkx"]
 resource_local_to_scene = true
 transparency = 1
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_7vp2u"]
-resource_local_to_scene = true
+[sub_resource type="BoxMesh" id="BoxMesh_grfpu"]
 
 [sub_resource type="Resource" id="Resource_i4nis"]
 script = ExtResource("4_jxqvy")
@@ -33,14 +31,24 @@ item = ExtResource("7_ysr8t")
 max_num = 100
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_hbxkx"]
+
 [node name="Unit" unique_id=1494502536 instance=ExtResource("1_5rc8e")]
 script = ExtResource("2_7vp2u")
-resource_requirements = Dictionary[ExtResource("3_62wgo"), int]({})
+pickup = false
+is_placed = false
 under_construction_material = null
 
 [node name="MeshInstance3D" parent="." index="1" unique_id=1138292857]
-material_override = SubResource("StandardMaterial3D_vb2pl")
-mesh = SubResource("CapsuleMesh_7vp2u")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_hbxkx")
+mesh = SubResource("BoxMesh_grfpu")
 
 [node name="Inventory" parent="." index="3" unique_id=1571323257]
 slots = Array[ExtResource("4_jxqvy")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe"), SubResource("Resource_ug0xm")])
+
+[node name="Selectable" parent="." index="4" unique_id=2106328019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CollisionShape3D" parent="Selectable" index="0" unique_id=1831588783]
+shape = SubResource("BoxShape3D_hbxkx")

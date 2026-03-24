@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ConstructableBuilding" format=3 uid="uid://by0g7oh7m86g5"]
+
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_fbyle"]
+[ext_resource type="Texture2D" uid="uid://cx4vfor1w6lyn" path="res://resources/item_depot_icon.png" id="2_htcjm"]
+[ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_m41x8"]
+[ext_resource type="PackedScene" uid="uid://b1gp6h2ygog3b" path="res://Units/Buildings/ItemDepotUnit.tscn" id="3_htcjm"]
+
+[resource]
+script = ExtResource("2_m41x8")
+name = "Item Depot"
+icon = ExtResource("2_htcjm")
+scene = ExtResource("3_htcjm")
+metadata/_custom_type_script = "uid://c60tm374tpnru"
