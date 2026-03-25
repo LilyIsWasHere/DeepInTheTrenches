@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bdhhe6jwtnsak" path="res://Nick/cursor.gd" id="1_uo7cp"]
 [ext_resource type="PackedScene" uid="uid://bqq2pgb58grur" path="res://Nick/actionsDropdown.tscn" id="2_itexh"]
+[ext_resource type="PackedScene" uid="uid://d2djp2yfellug" path="res://Nick/inventory_viewer.tscn" id="2_s4w4m"]
 [ext_resource type="PackedScene" uid="uid://cnqhirbosybsd" path="res://Nick/rolesDropdown.tscn" id="3_rmhro"]
 
 [node name="Cursor" type="Node3D" unique_id=1597200158]
 script = ExtResource("1_uo7cp")
+
+[node name="Inventory Viewer" parent="." unique_id=1151425602 instance=ExtResource("2_s4w4m")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=248705943]
 layer = 2

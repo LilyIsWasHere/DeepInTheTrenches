@@ -20,6 +20,8 @@ var isAttacking : bool = false
 var targetCursor : Texture2D = preload("res://Nick/target (1).png")
 var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 
+@onready var inventoryViewer : Control = $"Inventory Viewer"
+
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
@@ -152,6 +154,23 @@ func handle_attack(attacking : bool) -> void:
 		Input.set_custom_mouse_cursor(targetCursor, Input.CURSOR_ARROW, Vector2(16, 16))
 	else:
 		Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
+
+func handle_view_inventory() -> void:
+	var resources : Dictionary
+	var textures : Dictionary
+	for unit : Unit in selectedUnits:
+			for slot in unit.inventory.slots:
+				if slot.item.name == "":
+					pass
+				elif resources.get(slot.item.name) == null:
+					resources[slot.item.name] = slot.num
+					textures[slot.item.name] = slot.item.display_icon
+				else:
+					resources[slot.item.name] += slot.num
+	inventoryViewer.clear()
+	for key : String in resources.keys():
+		inventoryViewer.add_item(key + " x" + str(resources[key]), textures[key])
+	inventoryViewer.on_open()
 
 func handle_patrol_role() -> void:
 	for unit : FootUnit in selectedUnits:

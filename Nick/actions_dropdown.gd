@@ -12,6 +12,9 @@ func _on_move_direct_button_down() -> void:
 func _on_attack_button_down() -> void:
 	cursor.handle_attack(true)
 
+func on_view_inventory_down() -> void:
+	cursor.handle_view_inventory()
+
 func _on_dig_button_down() -> void:
 	pass # Replace with function body.
 
@@ -26,9 +29,9 @@ func disable_all() -> void:
 func disable_button(buttonName : String) -> void:
 	match buttonName:
 		"move":
-			buttons[0].hide()
 			buttons[1].hide()
-		"attack":
 			buttons[2].hide()
-		"dig":
+		"attack":
 			buttons[3].hide()
+		"dig":
+			buttons[4].hide()

@@ -55,6 +55,10 @@ can_dig=""
 can_attack=""
 foot_unit=""
 
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
 [input]
 
 AddMaterial={
