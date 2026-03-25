@@ -21,13 +21,13 @@ var should_move: bool = false
 		team = value
 		LineOfSightManager.register_unit(self, team)
 		
+		#put on selectable layer
+		selectableArea.collision_layer = 2
 		
 		if (team == 0):
 			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
-			selectableArea.collision_layer = 2
 		else:
 			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
-			selectableArea.process_mode = Node.PROCESS_MODE_DISABLED
 
 @export var velocity: Vector3 = Vector3(0.0, 0.0, 0.0)
 

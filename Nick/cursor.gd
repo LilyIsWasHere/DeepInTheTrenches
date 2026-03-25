@@ -1,4 +1,5 @@
 extends Node3D
+class_name Cursor
 
 var rayLength : int = 100
 
@@ -24,6 +25,9 @@ var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 
 var settingDigPath : bool = false
 
+var isActive: bool
+var teamID : int = 0
+
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
@@ -32,6 +36,9 @@ func _ready() -> void:
 	update_role_buttons()
 
 func _physics_process(_delta: float) -> void:
+	if !isActive:
+		return
+	
 	if inDropdown:
 		return
 	
@@ -55,6 +62,7 @@ func _physics_process(_delta: float) -> void:
 		if currentRect == null:
 			print("made rect")
 			currentRect = rectPrefab.instantiate()
+			currentRect.teamID = teamID
 			
 			currentRect.set_debug_mesh_visibility(visibleDebugMesh)
 			get_tree().current_scene.add_child(currentRect)
@@ -100,6 +108,9 @@ func _physics_process(_delta: float) -> void:
 		handle_attack(false)
 
 func _input(event: InputEvent) -> void:
+	if !isActive:
+		return
+	
 	if event.is_action_pressed("BeginExcavationPath"):
 		settingDigPath = true
 	elif event.is_action_pressed("CommitTool"):
@@ -110,6 +121,8 @@ func _input(event: InputEvent) -> void:
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = false
 
+func set_active(active : bool) -> void:
+	isActive = active
 
 #	casts a ray from the camera (in view direction)
 #	and returns the position where it first collides with an object

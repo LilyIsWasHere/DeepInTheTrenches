@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="10_l6ohk"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="11_oudfo"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="12_d6rpx"]
+[ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="13_d6rpx"]
 [ext_resource type="PackedScene" uid="uid://ctc4oo1iulc2q" path="res://UI/BuildingConstructionUI.tscn" id="13_oudfo"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
@@ -85,6 +86,9 @@ script = ExtResource("7_dtqjt")
 script = ExtResource("8_5ncpa")
 slots = Array[ExtResource("10_l6ohk")]([SubResource("Resource_r3kul"), SubResource("Resource_jatw7")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("13_d6rpx")]
+visibleDebugMesh = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1895028167]
 
