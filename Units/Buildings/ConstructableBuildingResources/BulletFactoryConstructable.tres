@@ -4,12 +4,14 @@
 [ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_6ikdp"]
 [ext_resource type="Texture2D" uid="uid://o3hfjyq0544u" path="res://resources/bullet_factory_icon.png" id="2_i7qhu"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="2_xro4j"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="3_xro4j"]
 
 [resource]
 script = ExtResource("2_6ikdp")
 name = "Bullet Factory"
 icon = ExtResource("2_i7qhu")
 construction_cost = Dictionary[ExtResource("1_basxc"), int]({
-ExtResource("2_xro4j"): 25
+ExtResource("2_xro4j"): 25,
+ExtResource("3_xro4j"): 50
 })
 metadata/_custom_type_script = "uid://c60tm374tpnru"

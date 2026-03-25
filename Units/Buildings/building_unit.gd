@@ -7,16 +7,26 @@ var is_constructed: bool = false
 
 
 @export var construction_inventory: Inventory
-@export var under_construction_material: Material
-
+var under_construction_material: Material = preload("res://materials/building_under_construction_material.tres")
 
 func _ready() -> void:
+	construction_inventory = Inventory.new()
+	add_child(construction_inventory)
+
+
+func initialize(constructiton_cost: Dictionary[InventoryItem, int]) -> void:
 	
-	if (construction_inventory == null):
-		is_constructed = true
-	else:
-		is_constructed = false
-		_set_materials_under_construction()
+	is_placed = false
+	#if (constructiton_cost.is_empty()):
+		#is_constructed = true
+	#else:
+	is_constructed = false
+	
+	for item: InventoryItem in constructiton_cost.keys():
+		construction_inventory.add_slot(item, constructiton_cost[item])
+	
+	_set_materials_under_construction()
+		
 
 	
 	
@@ -57,7 +67,8 @@ func _physics_process(delta: float) -> void:
 		
 		global_position = result["position"]
 	
-	
+
+
 func are_construction_resource_requirements_met() -> bool:
 	
 	if construction_inventory == null:
@@ -70,14 +81,28 @@ func are_construction_resource_requirements_met() -> bool:
 	
 	return true
 
+func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
+	arr.push_back(in_node)
+	for child in in_node.get_children():
+		arr = get_all_children(child,arr)
+	return arr
 
 # override me to set all the materials in this building
 func _set_materials_under_construction() -> void:
-	pass
+	var children: Array[Node] = get_all_children(self)
+	
+	for child in children:
+		if child.has_method("set_surface_override_material"):
+			child.set_surface_override_material(0, under_construction_material)
 	
 # override me to set all the materials in this building
 func _set_materials_constructed() -> void:
-	pass
+	var children: Array[Node] = get_all_children(self)
+	for child in children:
+		if child.has_method("set_surface_override_material"):
+			child.set_surface_override_material(0, null)
 	
 func on_placed() -> void:
-	pass
+	if (!is_constructed):
+		for item: InventoryItem in construction_inventory.item_slot_dict.keys():
+			ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM)

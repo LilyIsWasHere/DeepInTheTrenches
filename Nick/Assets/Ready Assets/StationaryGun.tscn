@@ -187,7 +187,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_1iy08")
 
-[node name="StationaryGun" unique_id=326441267 instance=ExtResource("1_27g5y")]
+[node name="StationaryGun" unique_id=406878598 instance=ExtResource("1_27g5y")]
 
 [node name="SM_Wep_American_HeavyMachineGun_01" parent="." index="0" unique_id=154352991]
 transform = Transform3D(150, 0, 0, 0, 150, 0, 0, 0, 150, 0, 0, 0)

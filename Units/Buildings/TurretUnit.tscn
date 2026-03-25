@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cvkpyjqo28sdl"]
 
-[ext_resource type="Script" uid="uid://4vv8hceelpck" path="res://Units/turret_unit.gd" id="1_4httk"]
+[ext_resource type="Script" uid="uid://4vv8hceelpck" path="res://Units/Buildings/turret_unit.gd" id="1_4httk"]
 [ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="2_nk5dt"]
 [ext_resource type="PackedScene" uid="uid://d3bbcpxwkeb3q" path="res://Nick/Assets/Ready Assets/StationaryGun.tscn" id="3_4httk"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="4_45qro"]

@@ -89,7 +89,3 @@ metadata/_custom_type_script = "uid://bfmh3e0len4to"
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1895028167]
 
 [node name="BuildingConstructionUi" parent="CanvasLayer" unique_id=643160159 instance=ExtResource("13_oudfo")]
-offset_left = 64.326416
-offset_top = 318.49768
-offset_right = 64.326416
-offset_bottom = 318.49768
