@@ -34,7 +34,6 @@ var should_move: bool = false
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
-
 func _init() -> void:
 	ai_controller = AIController.new()
 	resource_extractor = ResourceExtractor.new()

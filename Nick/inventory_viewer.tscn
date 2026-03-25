@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://d2djp2yfellug"]
+
+[ext_resource type="Script" uid="uid://d1l5qjrtsnr8p" path="res://Nick/inventory_viewer.gd" id="1_3psrt"]
+[ext_resource type="PackedScene" uid="uid://bowm523mgd0gu" path="res://Nick/item_ui.tscn" id="2_3psrt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13clq"]
+bg_color = Color(0.20152655, 0.20152661, 0.20152646, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_bottom_left = 10
+
+[node name="Inventory Viewer" type="Control" unique_id=1151425602]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3psrt")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=717687081]
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1445219779]
+custom_minimum_size = Vector2(150, 0)
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -96.0
+offset_bottom = 96.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_13clq")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/PanelContainer" unique_id=535328855]
+layout_mode = 2
+theme_override_constants/margin_top = 55
+theme_override_constants/margin_bottom = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/PanelContainer/MarginContainer" unique_id=1778795732]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+scroll_horizontal_custom_step = -0.47
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/PanelContainer/MarginContainer/ScrollContainer" unique_id=1637124030]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_right = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer/MarginContainer/ScrollContainer/MarginContainer" unique_id=1829585941]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 25
+
+[node name="ItemUI" parent="CanvasLayer/PanelContainer/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1574500552 instance=ExtResource("2_3psrt")]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/PanelContainer" unique_id=1309360270]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = " X "
+
+[connection signal="button_down" from="CanvasLayer/PanelContainer/CloseButton" to="." method="on_close"]

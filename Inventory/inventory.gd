@@ -15,8 +15,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 	
-	
-	
+
 static func transfer_items(from_inventory: Inventory, to_inventory: Inventory, item: InventoryItem, quantity: int) -> Dictionary:
 	assert(from_inventory.has_slot_for_item(item))
 	assert(to_inventory.has_slot_for_item(item))
