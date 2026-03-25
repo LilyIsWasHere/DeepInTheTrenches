@@ -1,6 +1,6 @@
 extends Control
 
-@onready var cursor : Node3D = get_parent()
+@onready var cursor : Node3D = get_parent().get_parent()
 @onready var buttons : Array = $PanelContainer/Options/Buttons.get_children()
 
 

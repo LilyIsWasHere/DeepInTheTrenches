@@ -7,8 +7,11 @@
 [node name="Cursor" type="Node3D" unique_id=1597200158]
 script = ExtResource("1_uo7cp")
 
-[node name="Actions" parent="." unique_id=2079239339 instance=ExtResource("2_itexh")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=248705943]
+layer = 2
 
-[node name="Roles" parent="." unique_id=1161054309 instance=ExtResource("3_rmhro")]
+[node name="Actions" parent="CanvasLayer" unique_id=2079239339 instance=ExtResource("2_itexh")]
+
+[node name="Roles" parent="CanvasLayer" unique_id=1161054309 instance=ExtResource("3_rmhro")]
 offset_left = 143.0
 offset_right = 143.0
