@@ -143,5 +143,7 @@ func set_unit_vis_from_los(player_id: int) -> void:
 
 
 func get_visible_enemy(to_unit: Unit) -> Unit:
+	if (!unit_last_seen_by.has(to_unit)):
+		return null
 	return unit_last_seen_by[to_unit]
 	
