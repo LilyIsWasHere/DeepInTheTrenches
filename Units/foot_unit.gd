@@ -179,13 +179,8 @@ func shoot_at_point(point : Vector3) -> void:
 func attack_enemy_tick_fn() -> void:
 	pass
 
-var visible_enemies : Array = []
-
 func can_see_enemy() -> bool:
-	var enemies : Array[Array] = LineOfSightManager.get_enemy_unit_visibility(team)
-	visible_enemies = enemies[0]
-	
-	if(visible_enemies.size() > 0):
+	if LineOfSightManager.get_closest_enemy_in_los($Unit) != null:
 		return true
 	else:
 		return false
@@ -198,12 +193,10 @@ func on_enemy_gone() -> void:
 	
 
 func attack_order_tick_fn() -> void:
-	if $Weapon.can_shoot() and can_see_enemy():
-		var closest : Node3D = visible_enemies[0]
-		for i : Node3D in visible_enemies:
-			if global_position.distance_to(i.global_position) < global_position.distance_to(closest.global_position):
-				closest = i
-		shoot_at_point(closest.global_position)
+	var targetEnemy: Unit = LineOfSightManager.get_closest_enemy_in_los($Unit)
+	
+	if targetEnemy != null:
+		shoot_at_point(targetEnemy.global_position)
 		
 	
 func hold_tick_fn() -> void:
