@@ -10,6 +10,8 @@ var currentRect : Area3D
 var offset : Vector2 = Vector2(50,0)
 var inDropdown : bool = false
 
+@onready var rolesDropdown : Control = $Roles
+
 var selectedUnits : Array = []
 var isMoving : bool = false
 var moveMode : String = ""
@@ -21,7 +23,9 @@ var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
+	rolesDropdown.visible = false
 	update_action_buttons()
+	update_role_buttons()
 
 func _physics_process(_delta: float) -> void:
 	#if we're in dropdown, don't process select
@@ -73,13 +77,16 @@ func _physics_process(_delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ToolAltClick"):
+		rolesDropdown.visible = !actionsDropdown.visible
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = !inDropdown
 		
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
 		actionsDropdown.position = mousePos + offset
+		rolesDropdown.position = mousePos + offset*4
 	
 	if event.is_action_released("ToolClick") && inDropdown:
+		rolesDropdown.visible = !actionsDropdown.visible
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = false
 
@@ -105,11 +112,13 @@ func get_world_pos() -> Vector3:
 func update_selected_units(units : Array) -> void:
 	selectedUnits = units.duplicate()
 	update_action_buttons()
+	update_role_buttons()
 
 func update_action_buttons() -> void:
 	actionsDropdown.disable_all()
 	if selectedUnits.is_empty() == false:
 		actionsDropdown.enable_all()
+	
 	for unit : Unit in selectedUnits:
 		if !(unit.is_in_group("can_move")):
 			actionsDropdown.disable_button("move")
@@ -117,6 +126,15 @@ func update_action_buttons() -> void:
 			actionsDropdown.disable_button("attack")
 		if !(unit.is_in_group("can_dig")):
 			actionsDropdown.disable_button("dig")
+
+func update_role_buttons() -> void:
+	rolesDropdown.disable_all()
+	if selectedUnits.is_empty() == false:
+		rolesDropdown.enable_all()
+	
+	for unit: Unit in selectedUnits:
+		if !(unit.is_in_group("foot_unit")):
+			rolesDropdown.disable_all()
 
 func handle_movement(moving : bool, mode : String) -> void:
 	isMoving = moving
@@ -134,3 +152,18 @@ func handle_attack(attacking : bool) -> void:
 		Input.set_custom_mouse_cursor(targetCursor, Input.CURSOR_ARROW, Vector2(16, 16))
 	else:
 		Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
+
+func handle_patrol_role() -> void:
+	for unit : FootUnit in selectedUnits:
+		print("Setting ", unit.name, " role to PATROL")
+		unit.role = FootUnit.FootUnitRoles.PATROL
+
+func handle_on_excavate_role() -> void:
+	for unit : FootUnit in selectedUnits:
+		print("Setting ", unit.name, " role to EXCAVATE")
+		unit.role = FootUnit.FootUnitRoles.EXCAVATE
+
+func handle_on_transport_role() -> void:
+	for unit : FootUnit in selectedUnits:
+		print("Setting ", unit.name, " role to TRANSPORT")
+		unit.role = FootUnit.FootUnitRoles.RESOURCE_TRANSPORT

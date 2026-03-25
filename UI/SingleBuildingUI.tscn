@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://ds57gq4h4smxq"]
+
+[ext_resource type="Texture2D" uid="uid://cx4vfor1w6lyn" path="res://resources/item_depot_icon.png" id="1_byscp"]
+[ext_resource type="Script" uid="uid://w3y76ajha78m" path="res://UI/single_building_ui.gd" id="1_tngwd"]
+
+[node name="SingleBuildingUi" type="HBoxContainer" unique_id=1176399886]
+custom_minimum_size = Vector2(20, 70)
+offset_right = 190.0
+offset_bottom = 70.0
+script = ExtResource("1_tngwd")
+
+[node name="Button" type="Button" parent="." unique_id=731997425]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Button" unique_id=958357831]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BuildingIcon" type="TextureRect" parent="Button/HBoxContainer" unique_id=1213380198]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("1_byscp")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Button/HBoxContainer" unique_id=1971699956]
+layout_mode = 2
+
+[node name="BuildingName" type="Label" parent="Button/HBoxContainer/VBoxContainer" unique_id=701215190]
+layout_mode = 2
+text = "Building Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Button/HBoxContainer/VBoxContainer" unique_id=1011338770]
+layout_mode = 2

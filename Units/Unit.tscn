@@ -37,6 +37,7 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 [node name="Unit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
+sync_to_physics = false
 script = ExtResource("1_c58w5")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
