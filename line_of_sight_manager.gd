@@ -142,18 +142,6 @@ func set_unit_vis_from_los(player_id: int) -> void:
 	
 
 
-func get_closest_enemy_in_los(to_unit: Unit) -> Unit:
-	
-	var enemy_arr: Array[Unit] = unit_arrs[(to_unit.team + 1) % 2]
-	var dist_sorted_enemies: Array[Unit] = enemy_arr.duplicate()
-	dist_sorted_enemies.sort_custom(func(a: Unit, b: Unit)->bool:  return to_unit.global_position.distance_to(a.global_position) < to_unit.global_position.distance_to(b.global_position))          
-	
-	for enemy in enemy_arr:
-		var los: bool = check_los(to_unit, enemy)
-		if (los):
-			unit_last_seen_by[to_unit] = enemy
-			unit_last_seen_by[enemy] = to_unit
-			return enemy
-			
-	return null	
+func get_visible_enemy(to_unit: Unit) -> Unit:
+	return unit_last_seen_by[to_unit]
 	
