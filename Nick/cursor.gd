@@ -160,7 +160,7 @@ func handle_view_inventory() -> void:
 	var textures : Dictionary
 	for unit : Unit in selectedUnits:
 			for slot in unit.inventory.slots:
-				if slot.item.name == "":
+				if slot.item.name == "" || slot.num == 0:
 					pass
 				elif resources.get(slot.item.name) == null:
 					resources[slot.item.name] = slot.num
