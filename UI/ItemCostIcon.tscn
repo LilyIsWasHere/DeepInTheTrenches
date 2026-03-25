@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cdlc68hx3dj6q" path="res://resources/EnergyCrystalIcon.png" id="1_twkas"]
 
 [node name="ItemCostIcon" type="Control" unique_id=1892806784]
+custom_minimum_size = Vector2(40, 22)
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_nd337")

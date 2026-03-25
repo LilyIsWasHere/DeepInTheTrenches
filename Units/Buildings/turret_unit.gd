@@ -1,4 +1,4 @@
-extends Unit
+extends BuildingUnit
 
 @export var weapon : Weapon
 
