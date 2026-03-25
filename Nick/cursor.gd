@@ -6,11 +6,11 @@ var currentRect : Area3D
 @onready var rectPrefab : PackedScene = preload("res://Nick/selection_rect.tscn")
 @export var visibleDebugMesh : bool = false
 
-@onready var actionsDropdown : Control = $Actions
+@onready var actionsDropdown : Control = $CanvasLayer/Actions
 var offset : Vector2 = Vector2(50,0)
 var inDropdown : bool = false
 
-@onready var rolesDropdown : Control = $Roles
+@onready var rolesDropdown : Control = $CanvasLayer/Roles
 
 var selectedUnits : Array = []
 var isMoving : bool = false
