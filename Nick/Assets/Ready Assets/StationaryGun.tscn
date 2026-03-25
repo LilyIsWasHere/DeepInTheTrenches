@@ -189,20 +189,20 @@ shadow_mesh = SubResource("ArrayMesh_1iy08")
 
 [node name="StationaryGun" unique_id=326441267 instance=ExtResource("1_27g5y")]
 
-[node name="SM_Wep_American_HeavyMachineGun_01" parent="." index="0" unique_id=1533370636]
+[node name="SM_Wep_American_HeavyMachineGun_01" parent="." index="0" unique_id=154352991]
 transform = Transform3D(150, 0, 0, 0, 150, 0, 0, 0, 150, 0, 0, 0)
 mesh = SubResource("ArrayMesh_vlqyb")
 
-[node name="SM_Wep_American_HeavyMachineGun_01_Body" parent="SM_Wep_American_HeavyMachineGun_01" index="0" unique_id=2135246839]
+[node name="SM_Wep_American_HeavyMachineGun_01_Body" parent="SM_Wep_American_HeavyMachineGun_01" index="0" unique_id=1537155197]
 mesh = SubResource("ArrayMesh_f51kp")
 
-[node name="SM_Wep_American_HeavyMachineGun_01_Trigger" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="0" unique_id=874157884]
+[node name="SM_Wep_American_HeavyMachineGun_01_Trigger" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="0" unique_id=962849204]
 mesh = SubResource("ArrayMesh_r7uky")
 
-[node name="SM_Wep_American_HeavyMachineGun_01_Slide" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="1" unique_id=154087091]
+[node name="SM_Wep_American_HeavyMachineGun_01_Slide" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="1" unique_id=1514985134]
 mesh = SubResource("ArrayMesh_ptr66")
 
-[node name="SM_Wep_American_HeavyMachineGun_01_AmmoBox" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="2" unique_id=608331827]
+[node name="SM_Wep_American_HeavyMachineGun_01_AmmoBox" parent="SM_Wep_American_HeavyMachineGun_01/SM_Wep_American_HeavyMachineGun_01_Body" index="2" unique_id=1251458157]
 mesh = SubResource("ArrayMesh_5cjxc")
 
 [node name="Tripod" parent="." index="1" unique_id=1583636367 instance=ExtResource("3_27g5y")]

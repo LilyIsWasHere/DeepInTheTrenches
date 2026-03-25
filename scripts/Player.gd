@@ -18,5 +18,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
+	pass
 	# Update visibility of enemy units
-	LineOfSightManager.set_unit_vis_from_los(player_id)
+	#LineOfSightManager.set_unit_vis_from_los(player_id)

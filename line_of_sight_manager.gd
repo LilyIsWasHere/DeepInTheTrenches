@@ -4,14 +4,16 @@ extends Node3D
 @export var max_raycasts_per_tick: int = 100
 
 var raycasts_this_tick: int = 0
-
 var last_los_idx_player: int = 0
 var last_los_idx_enemy: int = 0
-
 
 var unit_arrs: Array[Array] = []
 
 var unit_last_seen_by: Dictionary[Unit, Unit]
+
+var unit_closest_visible_enemy: Dictionary[Unit, Unit]
+
+var units_seen_this_frame: Array[Array]
 
 # Called when the node enters the scene tree for the first time.
 func _init() -> void:
@@ -19,12 +21,18 @@ func _init() -> void:
 	var arr1: Array[Unit]
 	unit_arrs.append(arr0)
 	unit_arrs.append(arr1)
+	
+	units_seen_this_frame = [[],[]]
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
 func _process(_delta: float) -> void:
 	pass
+	
+func _physics_process(delta: float) -> void:
+	get_enemy_unit_visibility(0)
+	get_enemy_unit_visibility(1)
 
 
 func register_unit(unit: Unit, player_id: int) -> void:
@@ -58,6 +66,8 @@ func check_los(a: Unit, b: Unit) -> bool:
 
 
 func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
+	
+	
 	var player_arr: Array = unit_arrs[player_id]
 	var enemy_arr: Array = unit_arrs[(player_id + 1) % 2]
 	
@@ -73,15 +83,22 @@ func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
 	var first_enemy_iter_this_tick: bool = true
 	
 	for i in range(last_los_idx_enemy, unit_arrs[1].size()):
+
+		
 		last_e = i
 		var eu: Unit = unit_arrs[1][i]
 		var is_visible: bool = false
 		
 		
 		if (unit_last_seen_by.has(eu) && unit_last_seen_by[eu] != null):
-			if (check_los(unit_last_seen_by[eu], eu)):
+			var pu: Unit = unit_last_seen_by[eu]
+			if (check_los(pu, eu)):
 				visible_units.append(eu)
 				is_visible = true
+				unit_last_seen_by[pu] = eu
+				units_seen_this_frame[player_id].append(pu)
+				units_seen_this_frame[(player_id+1)%2].append(eu)
+				
 				if (visualize_los):
 					DebugDraw3D.draw_line(unit_last_seen_by[eu].LineOfSightTarget.global_position, eu.LineOfSightTarget.global_position, Color(0,255,0), 0.2)
 				
@@ -93,6 +110,14 @@ func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
 		first_enemy_iter_this_tick = false
 		
 		for j in range(last_los_idx_player, unit_arrs[0].size()):
+			
+			if (i==0 && j==0):
+				# Reset frame visibility cache
+				update_closest_visible_enemy_dict(player_id)
+				units_seen_this_frame = [[], []]
+				
+
+			
 			last_p = j
 			var pu: Unit = unit_arrs[0][j]
 			
@@ -104,6 +129,7 @@ func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
 				visible_units.append(eu)
 				is_visible = true
 				unit_last_seen_by[eu] = pu
+				unit_last_seen_by[pu] = eu
 				if (visualize_los):
 					DebugDraw3D.draw_line(pu.LineOfSightTarget.global_position, eu.LineOfSightTarget.global_position, Color(255,0,0), 0.2)
 
@@ -126,8 +152,34 @@ func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
 		if (last_los_idx_enemy >= unit_arrs[1].size()-1):
 			last_los_idx_enemy = 0
 	
+	
+	
+	
 	return [visible_units, hidden_units]
 	
+	
+func update_closest_visible_enemy_dict(player_id: int) -> void:
+	
+	unit_closest_visible_enemy.clear()
+	
+	var seen_eus: Array = units_seen_this_frame[(player_id+1)%2].duplicate()
+	var seen_pus: Array = units_seen_this_frame[(player_id)].duplicate()
+	
+	seen_pus.sort_custom(func(a: Unit, b: Unit)->bool: return a.global_position.distance_to(Vector3(0,0,0)) < b.global_position.distance_to(Vector3(0,0,0)))
+	
+	for pu: Unit in seen_pus:
+		unit_closest_visible_enemy[pu] = null
+		seen_eus.sort_custom(func(a: Unit, b: Unit)->bool: return a.global_position.distance_to(pu.global_position) < b.global_position.distance_to(pu.global_position))
+		for eu: Unit in seen_eus:
+			if (check_los(pu, eu)):
+				unit_last_seen_by[eu] = pu
+				unit_closest_visible_enemy[pu] = eu
+				break
+				
+				
+	
+	
+
 func set_unit_vis_from_los(player_id: int) -> void:
 	var vis := get_enemy_unit_visibility(player_id)
 	
@@ -142,6 +194,6 @@ func set_unit_vis_from_los(player_id: int) -> void:
 	
 
 
-func get_visible_enemy(to_unit: Unit) -> Unit:
-	return unit_last_seen_by[to_unit]
+func get_closest_visible_enemy(to_unit: Unit) -> Unit:
+	return unit_closest_visible_enemy.get(to_unit)
 	

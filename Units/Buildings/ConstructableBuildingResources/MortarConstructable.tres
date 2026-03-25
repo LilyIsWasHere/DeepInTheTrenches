@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ConstructableBuilding" format=3 uid="uid://nvjpjq62q2ma"]
+
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_ro3u5"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_ukeiq"]
+[ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_welbh"]
+[ext_resource type="Texture2D" path="res://resources/mortar_icon.png" id="3_hkn7u"]
+[ext_resource type="PackedScene" path="res://Units/Buildings/MortarUnit.tscn" id="4_os6qb"]
+
+[resource]
+script = ExtResource("2_welbh")
+name = "Mortar"
+icon = ExtResource("3_hkn7u")
+construction_cost = Dictionary[ExtResource("1_ro3u5"), int]({
+ExtResource("2_ukeiq"): 10
+})
+scene = ExtResource("4_os6qb")
+metadata/_custom_type_script = "uid://c60tm374tpnru"
