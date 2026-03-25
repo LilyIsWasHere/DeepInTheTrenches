@@ -34,9 +34,6 @@ heightmap_gen_material = SubResource("ShaderMaterial_8rhti")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110, 0, 50)
 terrain = NodePath("../Terrain")
 
-[node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("4_21bcp")]
-visibleDebugMesh = true
-
 [node name="EnemyPlayer" parent="." unique_id=364134404 node_paths=PackedStringArray("terrain") instance=ExtResource("4_ohhpf")]
 terrain = NodePath("../Terrain")
 player_id = 1
@@ -53,3 +50,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.583559, 6.96961, -5.054025
 visible = false
 sync_to_physics = true
 is_placed = true
+
+[node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("4_21bcp")]
+visibleDebugMesh = true
