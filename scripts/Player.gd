@@ -27,9 +27,13 @@ func _ready() -> void:
 	sculpt_brush.terrain = terrain
 
 func set_active(active : bool) -> void:
+	print(name, " ", active)
 	isActive = active
 	cursor.set_active(active)
 	Camera.current = active
+	Camera.isActive = active
+	excavation_path_tool.player_active = active
+	$Camera3D/UnitSpawner.isActive = active
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
