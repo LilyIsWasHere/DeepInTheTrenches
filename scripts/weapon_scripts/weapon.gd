@@ -14,6 +14,7 @@ const magazineItem : InventoryItem = preload("res://Inventory/InventoryItems/mag
 const ammoItem : InventoryItem = preload("res://Inventory/InventoryItems/ammo_item.tres")
 
 var reloading : bool = false
+var inWeaponCooldown : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -39,7 +40,7 @@ func reload() -> void:
 		$ReloadTime.start()
 		
 func shoot(target_pos : Vector3) -> void:
-	if !reloading:
+	if !reloading and !inWeaponCooldown:
 		print("shooting")
 		# checks that the magazine has enough ammo loaded
 		if $Magazine.get_item_quantity(magazineItem) >= ammo_per_shot:
@@ -54,7 +55,9 @@ func shoot(target_pos : Vector3) -> void:
 				bullet_instance.global_position = global_position
 				# MISSING: spray pattern calculation for target position, before sending it to the bullet
 				bullet_instance.shoot(global_position, target_pos, affected_area, range, damage) # calls the shooting function for the bullet scene
-				
+			
+			$CooldownTime.start()
+			inWeaponCooldown = true
 		else:
 			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
 
@@ -72,3 +75,6 @@ func can_shoot() -> bool:
 		return true
 	else:
 		return false 
+
+func _on_cooldown_time_timeout() -> void:
+	inWeaponCooldown = false

@@ -214,13 +214,13 @@ func shoot_at_point(point : Vector3) -> void:
 	weapon.shoot(point)
 
 func attack_enemy_tick_fn() -> void:
-	var targetEnemy: Unit = LineOfSightManager.get_visible_enemy(self)
+	var targetEnemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
 	
 	if targetEnemy != null:
 		shoot_at_point(targetEnemy.global_position)
 
 func can_see_enemy() -> bool:
-	if LineOfSightManager.get_visible_enemy(self) != null:
+	if LineOfSightManager.get_closest_visible_enemy(self) != null:
 		return true
 	else:
 		return false

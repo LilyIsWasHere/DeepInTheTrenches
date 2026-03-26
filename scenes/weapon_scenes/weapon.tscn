@@ -30,4 +30,8 @@ slots = Array[ExtResource("3_kyrca")]([SubResource("Resource_5csnh"), SubResourc
 [node name="ReloadTime" type="Timer" parent="." unique_id=627210623]
 wait_time = 2.0
 
+[node name="CooldownTime" type="Timer" parent="." unique_id=490793869]
+wait_time = 0.5
+
 [connection signal="timeout" from="ReloadTime" to="." method="_on_reload_time_timeout"]
+[connection signal="timeout" from="CooldownTime" to="." method="_on_cooldown_time_timeout"]
