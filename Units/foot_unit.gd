@@ -183,7 +183,7 @@ func init_ai_states() -> void:
 	move_to_dig_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
 	move_to_dig_point_state.add_transition(dig_idle_state, func()-> bool: return nav_plan_handle.status == NavPlanHandle.NavRequestStatus.FAILED)
 	dig_idle_state.add_transition(move_to_dig_point_state, func()->bool: return dig_point_info["exists"])
-	dig_idle_state.add_transition(dig_dropoff_resources, excavation_resource_slot_not_empty)
+	dig_idle_state.add_transition(dig_dropoff_resources, should_dropoff_resources_idle)
 	
 	dig_dropoff_resources.add_transition(dig_idle_state, get_arrived)
 	
@@ -192,18 +192,24 @@ func init_ai_states() -> void:
 func excavation_resource_slot_full() -> bool:
 	return inventory.is_item_slot_full(organic_item) || inventory.is_item_slot_full(energy_crystal_item)
  
-func excavation_resource_slot_not_empty() -> bool:
+func should_dropoff_resources_idle() -> bool:
+	if (!ItemTransportBlackboard.item_dropoff_exists(organic_item) && !ItemTransportBlackboard.item_dropoff_exists(energy_crystal_item)): return false
 	return inventory.item_slot_dict[organic_item].num > 0 || inventory.item_slot_dict[energy_crystal_item].num > 0
 
 func set_excavation_item_dropoff_destination() -> void:
-	Inventory
-	var full_item: InventoryItem = null
-	if (inventory.is_item_slot_full(organic_item)): full_item = organic_item
-	elif (inventory.is_item_slot_full(energy_crystal_item)): full_item = energy_crystal_item
 	
-	if full_item == null: return
+	var fullest_item: InventoryItem = null
+	if (inventory.is_item_slot_full(organic_item)): fullest_item = organic_item
+	elif (inventory.is_item_slot_full(energy_crystal_item)): fullest_item = energy_crystal_item
+	else:
+		if (inventory.item_slot_dict[organic_item].max_num - inventory.item_slot_dict[organic_item].num < inventory.item_slot_dict[energy_crystal_item].max_num - inventory.item_slot_dict[energy_crystal_item].num):
+			fullest_item = organic_item
+		else:
+			fullest_item = energy_crystal_item
 	
-	var dropoff: ItemTransportRequest = ItemTransportBlackboard.claim_closest_item_dropoff(global_position, full_item, inventory.item_slot_dict[full_item].num)
+	if fullest_item == null: return
+	
+	var dropoff: ItemTransportRequest = ItemTransportBlackboard.claim_closest_item_dropoff(global_position, fullest_item, inventory.item_slot_dict[fullest_item].num)
 	if dropoff == null: return
 	
 	dropoff_request = dropoff

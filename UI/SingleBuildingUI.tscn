@@ -12,6 +12,7 @@ script = ExtResource("1_tngwd")
 [node name="Button" type="Button" parent="." unique_id=731997425]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Button" unique_id=958357831]
 layout_mode = 0

@@ -47,6 +47,16 @@ func claim_closest_item_dropoff(position: Vector3, item: InventoryItem, quantity
 	return closest
 	
 	
+func item_dropoff_exists(item: InventoryItem) -> bool:
+	for idx in range(ItemTransportRequest.RequestPriority.SIZE):
+		var dropoff_arr: Array = dropoff_requests[idx]
+		for dropoff: ItemTransportRequest in dropoff_arr:
+			if (dropoff.item == item && dropoff.quantity > 0):
+				return true
+				
+	return false
+				
+
 	
 
 func has_bidirecional_request(inventory: Inventory, item :InventoryItem) -> bool:
