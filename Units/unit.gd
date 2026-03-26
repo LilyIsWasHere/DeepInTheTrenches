@@ -11,6 +11,7 @@ const JUMP_VELOCITY = 4.5
 var ai_controller: AIController
 var resource_extractor: ResourceExtractor
 
+var enemy_overlay_mat: Material = preload("res://materials/enemy_overlay_material.tres")
 
 var should_move: bool = false
 
@@ -34,6 +35,12 @@ var should_move: bool = false
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
+func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
+	arr.push_back(in_node)
+	for child in in_node.get_children():
+		arr = get_all_children(child,arr)
+	return arr
+
 func _init() -> void:
 	ai_controller = AIController.new()
 	resource_extractor = ResourceExtractor.new()
@@ -47,9 +54,12 @@ func _ready() -> void:
 	resource_extractor.inventory_connection = inventory
 	
 	if (team == 0):
-		$MeshInstance3D.material_override.albedo_color = Color(0.2, 1, 0.2)
+		pass
 	else:
-		$MeshInstance3D.material_override.albedo_color = Color(1, 0.2, 0.2)
+		var children: Array[Node] = get_all_children(self)
+		for child in children:
+			if child.is_class("MeshInstance3D"):
+				child.material_overlay = enemy_overlay_mat
 	
 	LineOfSightManager.register_unit(self, team)
 

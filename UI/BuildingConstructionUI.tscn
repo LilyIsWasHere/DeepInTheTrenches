@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://drcfsbf6p2wm0" path="res://UI/building_construction_ui.gd" id="1_fj5ih"]
 [ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_8bl1r"]
 [ext_resource type="Resource" uid="uid://by0g7oh7m86g5" path="res://Units/Buildings/ConstructableBuildingResources/ItemDepotConstructable.tres" id="3_ekgkd"]
-[ext_resource type="Resource" path="res://Units/Buildings/ConstructableBuildingResources/MortarConstructable.tres" id="5_1fhj8"]
-[ext_resource type="Resource" path="res://Units/Buildings/ConstructableBuildingResources/TurretConstructable.tres" id="6_1fhj8"]
+[ext_resource type="Resource" uid="uid://nvjpjq62q2ma" path="res://Units/Buildings/ConstructableBuildingResources/MortarConstructable.tres" id="5_1fhj8"]
+[ext_resource type="Resource" uid="uid://da2ll7bdwolxx" path="res://Units/Buildings/ConstructableBuildingResources/TurretConstructable.tres" id="6_1fhj8"]
 [ext_resource type="Resource" uid="uid://b3q4gbqcal6qa" path="res://Units/Buildings/ConstructableBuildingResources/BulletFactoryConstructable.tres" id="6_ll810"]
 
 [node name="BuildingConstructionUi" type="Control" unique_id=643160159]

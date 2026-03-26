@@ -27,5 +27,5 @@ blend_shape_mode = 0
 
 [node name="Character_American_Soldier_01" unique_id=143738390 instance=ExtResource("1_7lerp")]
 
-[node name="Character_American_Soldier_01" parent="Skeleton3D" parent_id_path=PackedInt32Array(335351668) index="0" unique_id=1461059227]
+[node name="Character_American_Soldier_01" parent="Skeleton3D" parent_id_path=PackedInt32Array(1733636644) index="0" unique_id=1646906070]
 mesh = SubResource("ArrayMesh_vmgkf")

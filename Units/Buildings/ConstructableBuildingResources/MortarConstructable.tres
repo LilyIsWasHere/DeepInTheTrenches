@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_ro3u5"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_ukeiq"]
 [ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_welbh"]
-[ext_resource type="Texture2D" path="res://resources/mortar_icon.png" id="3_hkn7u"]
-[ext_resource type="PackedScene" path="res://Units/Buildings/MortarUnit.tscn" id="4_os6qb"]
+[ext_resource type="Texture2D" uid="uid://bxtlpg643emic" path="res://resources/mortar_icon.png" id="3_hkn7u"]
+[ext_resource type="PackedScene" uid="uid://d3go7jkhu7b7d" path="res://Units/Buildings/MortarUnit.tscn" id="4_os6qb"]
 
 [resource]
 script = ExtResource("2_welbh")

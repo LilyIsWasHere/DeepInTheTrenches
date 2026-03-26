@@ -13,6 +13,8 @@ enum RequestType {
 	DROPOFF
 }
 
+var local: bool = false
+
 var inventory: Inventory:
 	get():
 		assert(_valid)
