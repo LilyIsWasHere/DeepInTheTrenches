@@ -7,33 +7,48 @@ var gun_range : float
 var target_area : float
 var damage : float
 var speed : float = 20.0
+var own_unit : Unit
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# move bullet
+	translate(direction * speed * delta)
+	
 	# should make the bullet die if it has moved further than it's range
-	if $RigidBody3D.global_position.distance_to(start_position) >= gun_range:
+	if $Area3D.global_position.distance_to(start_position) >= gun_range:
 		queue_free()
 	
-func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg : float) -> void:
+func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg : float, me : Unit) -> void:
 	start_position = start
 	target_position = target
 	target_area = area
 	gun_range = range
 	damage = dmg
 	
-	direction = (target_position - start_position).normalized()
+	own_unit = me
 	
-	$RigidBody3D.linear_velocity = direction * speed
+	target_position.y = start_position.y
+	direction = (target_position - start_position).normalized()
+	global_position = start_position
 
-func _on_rigid_body_3d_body_entered(_body: Node) -> void:
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	var targetUnit : Node = body
+	
+	while targetUnit != null and !(targetUnit is Unit):
+		targetUnit = targetUnit.get_parent()
+	
+	if targetUnit == null:
+		return
+
 	if target_area > 1.0:
 		pass
 		# find all targets and deal damage to each
 	else:
-		pass
-		# find target and deal damage
+		if targetUnit.has_method("deal_damage") and targetUnit != own_unit:
+			targetUnit.deal_damage(damage)
+			print("i touched someone")
 	queue_free()

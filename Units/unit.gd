@@ -20,6 +20,8 @@ var selectedArrowPrefab : PackedScene = preload("res://Nick/selected_arrow.tscn"
 var selectedArrow : Sprite3D
 @export var selectedArrowOffset : float = 2.75
 
+@export var health : float = 50.0
+
 @export var team: int = 0:
 	set(value):
 		LineOfSightManager.unregister_unit(self)
@@ -119,3 +121,11 @@ func set_hidden(hidden: bool) -> void:
 	else:
 		visible = true
 		$PrimaryMesh.material_override.albedo_color.a = 1
+
+func deal_damage(dmg : float) -> void:
+	var remain : float = health - dmg
+	if remain > 0:
+		health = remain
+	else:
+		queue_free()
+	print(health)

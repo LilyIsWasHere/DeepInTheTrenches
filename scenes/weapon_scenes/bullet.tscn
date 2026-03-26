@@ -10,19 +10,20 @@ metallic = 1.0
 metallic_specular = 0.51
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_l5glv"]
+radius = 0.15445651
 
 [node name="Bullet" type="Node3D" unique_id=700248503]
 script = ExtResource("1_ogpfp")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1866330244]
-continuous_cd = true
+[node name="Area3D" type="Area3D" parent="." unique_id=1552221761]
 
-[node name="BulletMesh" type="MeshInstance3D" parent="RigidBody3D" unique_id=1068440411]
+[node name="BulletMesh" type="MeshInstance3D" parent="Area3D" unique_id=1068440411]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 mesh = SubResource("SphereMesh_mkf8s")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_y25gk")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=783984459]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=783984459]
 shape = SubResource("SphereShape3D_l5glv")
 
-[connection signal="body_entered" from="RigidBody3D" to="." method="_on_rigid_body_3d_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
