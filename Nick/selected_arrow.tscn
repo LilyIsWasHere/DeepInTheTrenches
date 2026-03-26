@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c65c770mjesj2"]
+
+[ext_resource type="Texture2D" uid="uid://b6chbr0jj4d6r" path="res://Nick/arrow.png" id="1_xi471"]
+
+[node name="SelectedArrow" type="Sprite3D" unique_id=642218214]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+billboard = 1
+texture = ExtResource("1_xi471")

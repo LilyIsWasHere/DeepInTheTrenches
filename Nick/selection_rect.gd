@@ -64,8 +64,13 @@ func get_selected_units() -> Array:
 func _on_area_entered(area: Area3D) -> void:
 	var unit : Unit = area.get_parent()
 	if unit.team == teamID:
-		selectedUnits.push_back(area.get_parent())
+		selectedUnits.push_back(unit)
 
+func _process(_delta : float) -> void:
+	for unit : Unit in selectedUnits:
+		unit.is_selected(true)
 
 func _on_area_exited(area: Area3D) -> void:
-	selectedUnits.erase(area.get_parent())
+	var unit : Unit = area.get_parent()
+	selectedUnits.erase(unit)
+	unit.is_selected(false)
