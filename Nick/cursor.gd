@@ -28,6 +28,8 @@ var settingDigPath : bool = false
 var isActive: bool
 var teamID : int = 0
 
+@onready var player : Player = get_parent()
+
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
@@ -38,6 +40,9 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if !isActive:
 		return
+	
+	for unit : Unit in selectedUnits:
+		unit.is_selected(true)
 	
 	if inDropdown:
 		return
@@ -60,7 +65,10 @@ func _physics_process(_delta: float) -> void:
 		var pos : Vector3 = get_world_pos()
 		#initialize the selection rect
 		if currentRect == null:
-			print("made rect")
+			for unit : Unit in selectedUnits:
+				unit.is_selected(false)
+			selectedUnits = []
+			
 			currentRect = rectPrefab.instantiate()
 			currentRect.teamID = teamID
 			
@@ -75,12 +83,14 @@ func _physics_process(_delta: float) -> void:
 		currentRect.update_size(pos)
 	elif Input.is_action_just_released("ToolClick") && currentRect != null:
 		#on release, get selected units from selection rect and get rid of it
-		update_selected_units(currentRect.get_selected_units())
+		var units : Array = currentRect.get_selected_units()
 		
 		#set currentRect to null immediately in case of a quick follow-up select
 		var rect : Area3D = currentRect
 		rect.queue_free()
 		currentRect = null
+		
+		update_selected_units(units)
 	#bring up actions/roles
 		if !(selectedUnits.is_empty()):
 			rolesDropdown.visible = !actionsDropdown.visible
@@ -90,6 +100,11 @@ func _physics_process(_delta: float) -> void:
 			var mousePos : Vector2 = get_viewport().get_mouse_position()
 			actionsDropdown.position = mousePos + offset
 			rolesDropdown.position = mousePos + offset*4
+			
+			#open relevant inventories
+			handle_view_inventory()
+		else:
+			inventoryViewer.on_close()
 	
 	#Handle moving and attacking afterwards to avoid spawning a rect on moving/attack calls
 	if Input.is_action_just_pressed("ToolClick") && isMoving:
@@ -145,6 +160,8 @@ func get_world_pos() -> Vector3:
 
 func update_selected_units(units : Array) -> void:
 	selectedUnits = units.duplicate()
+	for unit : Unit in selectedUnits:
+		unit.is_selected(true)
 	update_action_buttons()
 	update_role_buttons()
 
@@ -193,7 +210,9 @@ func handle_view_inventory() -> void:
 	var textures : Dictionary
 	for unit : Unit in selectedUnits:
 			for slot in unit.inventory.slots:
-				if slot.item.name == "" || slot.num == 0:
+				if slot.item == null:
+					pass
+				elif slot.item.name == "" || slot.num == 0:
 					pass
 				elif resources.get(slot.item.name) == null:
 					resources[slot.item.name] = slot.num
@@ -202,7 +221,27 @@ func handle_view_inventory() -> void:
 					resources[slot.item.name] += slot.num
 	inventoryViewer.clear()
 	for key : String in resources.keys():
-		inventoryViewer.add_item(key + " x" + str(resources[key]), textures[key])
+		inventoryViewer.add_item(key, resources[key], textures[key])
+	inventoryViewer.on_open()
+	inventoryViewer.set_units(selectedUnits)
+
+func handle_view_specific_inventory(unitArray : Array) -> void:
+	var resources : Dictionary
+	var textures : Dictionary
+	for unit : Unit in unitArray:
+			for slot in unit.inventory.slots:
+				if slot.item == null:
+					pass
+				elif slot.item.name == "" || slot.num == 0:
+					pass
+				elif resources.get(slot.item.name) == null:
+					resources[slot.item.name] = slot.num
+					textures[slot.item.name] = slot.item.display_icon
+				else:
+					resources[slot.item.name] += slot.num
+	inventoryViewer.clear()
+	for key : String in resources.keys():
+		inventoryViewer.add_item(key, resources[key], textures[key])
 	inventoryViewer.on_open()
 
 func handle_patrol_role() -> void:

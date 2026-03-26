@@ -34,8 +34,8 @@ func _process(_delta: float) -> void:
 	pass
 	
 func _physics_process(delta: float) -> void:
-	get_enemy_unit_visibility(0)
-	get_enemy_unit_visibility(1)
+	_get_enemy_unit_visibility(0)
+	_get_enemy_unit_visibility(1)
 
 
 func register_unit(unit: Unit, player_id: int) -> void:
@@ -68,7 +68,7 @@ func check_los(a: Unit, b: Unit) -> bool:
 		return false
 
 
-func get_enemy_unit_visibility(player_id: int) -> Array[Array]:
+func _get_enemy_unit_visibility(player_id: int) -> Array[Array]:
 	var enemy_id: int = (player_id + 1) % 2
 	
 	var player_arr: Array = unit_arrs[player_id]
@@ -188,7 +188,7 @@ func update_closest_visible_enemy_dict(player_id: int) -> void:
 	
 
 func set_unit_vis_from_los(player_id: int) -> void:
-	var vis := get_enemy_unit_visibility(player_id)
+	var vis := _get_enemy_unit_visibility(player_id)
 	
 	var visible: Array[Unit] = vis[0]
 	var hidden: Array[Unit] = vis[1]

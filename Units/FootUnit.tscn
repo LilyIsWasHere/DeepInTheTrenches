@@ -28,13 +28,13 @@ albedo_color = Color(0.68235296, 0, 1, 1)
 script = ExtResource("4_vrshb")
 item = ExtResource("5_jt7ji")
 num = 2
-max_num = 10
+max_num = 64
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="Resource" id="Resource_y23oe"]
 script = ExtResource("4_vrshb")
 item = ExtResource("6_qvlg4")
-max_num = 10
+max_num = 64
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]

@@ -29,6 +29,7 @@ func _ready() -> void:
 func set_active(active : bool) -> void:
 	isActive = active
 	cursor.set_active(active)
+	Camera.current = active
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:

@@ -6,7 +6,7 @@ var unit_scene : PackedScene
 var footUnit := preload("res://Units/FootUnit.tscn")
 var mortarUnit := preload("res://Units/Buildings/MortarUnit.tscn")
 var turretUnit := preload("res://Units/Buildings/TurretUnit.tscn")
-var productionUnit := preload("res://Units/Buildings/ProductionUnit.tscn")
+var productionUnit := preload("res://Units/Buildings/FactoryUnit.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	unit_scene = footUnit

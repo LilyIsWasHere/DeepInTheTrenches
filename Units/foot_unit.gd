@@ -32,6 +32,9 @@ const dig_delay: float = 1
 
 var move_order_destination : Vector3
 
+var organic_item: InventoryItem = preload("res://Inventory/InventoryItems/organic_material_item.tres")
+var energy_crystal_item: InventoryItem = preload("res://Inventory/InventoryItems/energy_crystal_item.tres")
+
 func _ready() -> void:
 	super()
 	init_ai_states()
@@ -149,6 +152,8 @@ func init_ai_states() -> void:
 	)
 	
 	
+	
+	
 	#################################
 	### EXCAVATE ROLE CHILD STATES ##
 	#################################
@@ -164,13 +169,45 @@ func init_ai_states() -> void:
 	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
 		.set_tick_function(set_destination_to_nearest_dig_point_if_exists)
 		
+		
+	var dig_dropoff_resources := excavate_role_state.add_child_state(AIState.create("dig_dropoff")) \
+		.set_enter_function(set_excavation_item_dropoff_destination) \
+		.set_tick_function(move_safe_tick_fn) \
+		.set_exit_function(fulfill_personal_dropoff)
+		
 	move_to_dig_point_state.add_transition(dig_at_point_state, get_arrived)
 	dig_at_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
 	dig_at_point_state.add_transition(move_to_dig_point_state, is_dig_point_fully_excavated)
+	dig_at_point_state.add_transition(dig_dropoff_resources, excavation_resource_slot_full)
 	
 	move_to_dig_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
 	move_to_dig_point_state.add_transition(dig_idle_state, func()-> bool: return nav_plan_handle.status == NavPlanHandle.NavRequestStatus.FAILED)
 	dig_idle_state.add_transition(move_to_dig_point_state, func()->bool: return dig_point_info["exists"])
+	dig_idle_state.add_transition(dig_dropoff_resources, excavation_resource_slot_not_empty)
+	
+	dig_dropoff_resources.add_transition(dig_idle_state, get_arrived)
+	
+	
+
+func excavation_resource_slot_full() -> bool:
+	return inventory.is_item_slot_full(organic_item) || inventory.is_item_slot_full(energy_crystal_item)
+ 
+func excavation_resource_slot_not_empty() -> bool:
+	return inventory.item_slot_dict[organic_item].num > 0 || inventory.item_slot_dict[energy_crystal_item].num > 0
+
+func set_excavation_item_dropoff_destination() -> void:
+	Inventory
+	var full_item: InventoryItem = null
+	if (inventory.is_item_slot_full(organic_item)): full_item = organic_item
+	elif (inventory.is_item_slot_full(energy_crystal_item)): full_item = energy_crystal_item
+	
+	if full_item == null: return
+	
+	var dropoff: ItemTransportRequest = ItemTransportBlackboard.claim_closest_item_dropoff(global_position, full_item, inventory.item_slot_dict[full_item].num)
+	if dropoff == null: return
+	
+	dropoff_request = dropoff
+	set_destination_point_safe(dropoff.inventory.global_position)
 	
 
 func shoot_at_point(point : Vector3) -> void:
@@ -249,7 +286,7 @@ func is_transport_plan_set() -> bool:
 	
 
 func try_get_transport_plan() -> void:
-	var pickup_dropoff: Array[ItemTransportRequest] = ItemTransportBlackboard.get_pickup_dropoff_pair(global_position)
+	var pickup_dropoff: Array[ItemTransportRequest] = ItemTransportBlackboard.claim_pickup_dropoff_pair(global_position)
 	
 	if (!pickup_dropoff.is_empty()):
 		pickup_request = pickup_dropoff[0]
@@ -286,6 +323,32 @@ func fulfill_pickup() -> void:
 	pickup_request = null
 	
 	
+func fulfill_personal_pickup() -> void:
+	var item: InventoryItem = pickup_request.item
+	
+	if (!is_instance_valid(pickup_request.inventory)):
+		pickup_request.abandon()
+		pickup_request = null
+		return
+	
+	
+	assert(inventory.has_slot_for_item(item))
+	assert(pickup_request.inventory.has_slot_for_item(item))
+	
+	if (!pickup_request.inventory.has_item(item)):
+		assert(false)
+		pickup_request.abandon()
+		pickup_request = null
+		return
+			
+	var transfer_result: Dictionary = Inventory.transfer_items(pickup_request.inventory, inventory, item, pickup_request.quantity)
+	
+	pickup_request.fulfill(pickup_request.quantity - transfer_result["to_overflow"])
+	pickup_request = null
+	
+	
+	
+	
 func fulfill_dropoff() -> void:
 	var item: InventoryItem = dropoff_request.item
 	
@@ -308,7 +371,29 @@ func fulfill_dropoff() -> void:
 	
 	
 	
+func fulfill_personal_dropoff() -> void:
+	if dropoff_request == null:
+		return
 	
+	var item: InventoryItem = dropoff_request.item
+	
+	if (!is_instance_valid(dropoff_request)):
+		dropoff_request.abandon()
+		return
+	
+	assert(inventory.has_slot_for_item(item))
+	if (!dropoff_request.inventory.has_slot_for_item(item)):
+		assert(false)
+		print("WARNING: resource transport dropoff inventory has no slot for " + str(item.name) + ". Abandoning dropoff request.")
+		dropoff_request.abandon()
+		dropoff_request = null
+		return
+		
+	var transfer_result: Dictionary = Inventory.transfer_items(inventory, dropoff_request.inventory, item, dropoff_request.quantity)
+		
+	dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
+	dropoff_request = null
+
 	
 	
 	

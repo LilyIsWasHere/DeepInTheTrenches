@@ -1,10 +1,9 @@
 extends Node
 
 
-
+# used for item transportation
 var pickup_requests: Array[Array]
 var dropoff_requests: Array[Array]
-
 
 var pickup_request_inv_item_map: Dictionary[Array, ItemTransportRequest]
 var dropoff_request_inv_item_map: Dictionary[Array, ItemTransportRequest]
@@ -16,25 +15,48 @@ func _ready() -> void:
 		dropoff_requests.append([])
 
 
-func get_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportRequest]:
-	
-	var p_idx: int = -1
-	var d_idx: int = -1
-	
-	
-	
-	for i in range(ItemTransportRequest.RequestPriority.SIZE):
-		if !pickup_requests[i].is_empty(): 
-			p_idx = i
-			break
 
-	for i in range(ItemTransportRequest.RequestPriority.SIZE):
-			if !dropoff_requests[i].is_empty(): 
-				d_idx = i
-				break
+func claim_closest_item_pickup(position: Vector3, item: InventoryItem, quantity: int) ->ItemTransportRequest:
+	
+	var closest: ItemTransportRequest = null
+	var closest_dist: float = INF
+		
+	for idx in range(ItemTransportRequest.RequestPriority.SIZE):
+		var pickup_arr: Array = pickup_requests[idx]
+		for pickup: ItemTransportRequest in pickup_arr:
+			if (pickup.item == item):
+				if (pickup.inventory.global_position.distance_to(position) < closest_dist):
+					closest = pickup
 				
-	if (p_idx == -1 || d_idx == -1):
-		return []
+	if (closest): _claim_pickup_request(closest, quantity)
+	return closest
+	
+func claim_closest_item_dropoff(position: Vector3, item: InventoryItem, quantity: int) ->ItemTransportRequest:
+	
+	var closest: ItemTransportRequest = null
+	var closest_dist: float = INF
+		
+	for idx in range(ItemTransportRequest.RequestPriority.SIZE):
+		var dropoff_arr: Array = dropoff_requests[idx]
+		for dropoff: ItemTransportRequest in dropoff_arr:
+			if (dropoff.item == item):
+				if (dropoff.inventory.global_position.distance_to(position) < closest_dist):
+					closest = dropoff
+				
+	if (closest): _claim_dropoff_request(closest, quantity)
+	return closest
+	
+	
+	
+
+func has_bidirecional_request(inventory: Inventory, item :InventoryItem) -> bool:
+	var pickup: ItemTransportRequest = pickup_request_inv_item_map.get([inventory, item])
+	var dropoff: ItemTransportRequest = dropoff_request_inv_item_map.get([inventory, item])
+	if (!pickup || !dropoff): return false
+	return !pickup.local && !dropoff.local
+
+func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportRequest]:
+	
 		
 	# Find the closest pickup request to the provided point
 	
@@ -42,16 +64,21 @@ func get_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportRequest]
 	var closest_dist: float = INF
 	var matching_dropoff: ItemTransportRequest = null
 	
-	for pickup: ItemTransportRequest in pickup_requests[p_idx]:
-		var dist: float = near_point.distance_to(pickup.inventory.global_position)
-		if (dist < closest_dist):
-			var dropoff: ItemTransportRequest = _find_matching_dropoff(pickup)
-			if (!dropoff): 
-				continue
-			closest_pickup = pickup
-			closest_dist = dist
-			matching_dropoff = dropoff
-			
+	for p_idx in range(ItemTransportRequest.RequestPriority.SIZE):
+		for pickup: ItemTransportRequest in pickup_requests[p_idx]:
+			var dist: float = near_point.distance_to(pickup.inventory.global_position)
+			if (dist < closest_dist):
+				var dropoff: ItemTransportRequest = _find_matching_dropoff(pickup)
+				if (!dropoff || has_bidirecional_request(dropoff.inventory, dropoff.item) && !dropoff.local): 
+					continue
+					
+				
+				closest_pickup = pickup
+				closest_dist = dist
+				matching_dropoff = dropoff
+				
+		if closest_pickup != null:
+			break
 		
 	if (!closest_pickup || !matching_dropoff):
 		return []
@@ -71,13 +98,13 @@ func _find_matching_dropoff(pickup_request: ItemTransportRequest) -> ItemTranspo
 	for d_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var dropoff_arr: Array = dropoff_requests[d_idx]
 		for dropoff: ItemTransportRequest in dropoff_arr:
-			if (dropoff.item == pickup_request.item):
+			if (dropoff.item == pickup_request.item && !has_bidirecional_request(dropoff.inventory, dropoff.item) && !dropoff.local):
 				return dropoff
 				
 	return null
 			
 
-func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority) -> void:
+func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false) -> void:
 	var existing_request: ItemTransportRequest = pickup_request_inv_item_map.get([from_inventory, item])
 	
 	if (existing_request):
@@ -85,6 +112,7 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 			pickup_requests[existing_request.priority].erase(existing_request)
 			pickup_requests[priority].append(existing_request)
 			existing_request.priority = priority
+			existing_request.local = is_local
 		
 		existing_request.quantity += qty
 		
@@ -95,11 +123,12 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 		new_request.priority = priority
 		new_request.quantity = qty
 		new_request.type = ItemTransportRequest.RequestType.PICKUP
+		new_request.local = is_local
 		pickup_requests[priority].append(new_request)
 		var key: Array = [from_inventory, item]
 		pickup_request_inv_item_map.set(key, new_request)	
 
-func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority) -> void:
+func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false) -> void:
 	var existing_request: ItemTransportRequest = dropoff_request_inv_item_map.get([to_inventory, item])
 	
 	if (existing_request):
@@ -107,7 +136,7 @@ func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, pri
 			dropoff_requests[existing_request.priority].erase(existing_request)
 			dropoff_requests[priority].append(existing_request)
 			existing_request.priority = priority
-		
+			existing_request.local = is_local
 		existing_request.quantity += qty
 		
 	else:
@@ -117,6 +146,7 @@ func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, pri
 		new_request.priority = priority
 		new_request.quantity = qty
 		new_request.type = ItemTransportRequest.RequestType.DROPOFF
+		new_request.local = is_local
 		dropoff_requests[priority].append(new_request)
 		var key: Array = [to_inventory, item]
 		dropoff_request_inv_item_map.set(key, new_request)	
