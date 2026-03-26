@@ -65,9 +65,7 @@ func _physics_process(_delta: float) -> void:
 		var pos : Vector3 = get_world_pos()
 		#initialize the selection rect
 		if currentRect == null:
-			for unit : Unit in selectedUnits:
-				unit.is_selected(false)
-			selectedUnits = []
+			deselect_units()
 			
 			currentRect = rectPrefab.instantiate()
 			currentRect.teamID = teamID
@@ -122,6 +120,11 @@ func _physics_process(_delta: float) -> void:
 			unit.shoot_at_point(pos)
 		handle_attack(false)
 
+func deselect_units() -> void:
+	for unit : Unit in selectedUnits:
+		unit.is_selected(false)
+	selectedUnits = []
+
 func _input(event: InputEvent) -> void:
 	if !isActive:
 		return
@@ -138,6 +141,13 @@ func _input(event: InputEvent) -> void:
 
 func set_active(active : bool) -> void:
 	isActive = active
+	deselect_units()
+	inventoryViewer.on_close()
+	actionsDropdown.visible = false
+	rolesDropdown.visible = false
+	inDropdown = false
+	isAttacking = false
+	isMoving = false
 
 #	casts a ray from the camera (in view direction)
 #	and returns the position where it first collides with an object
