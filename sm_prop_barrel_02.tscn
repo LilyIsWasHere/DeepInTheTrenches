@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://tlw800q3y84j"]
+
+[ext_resource type="PackedScene" uid="uid://b6or6qi63lrs" path="res://resources/SM_Prop_Barrel_02.fbx" id="1_i6wwy"]
+[ext_resource type="Texture2D" uid="uid://d2mujbnuo4s5t" path="res://resources/PolygonWar_Texture_04_C.png" id="2_gi6bi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qegux"]
+albedo_texture = ExtResource("2_gi6bi")
+
+[node name="SM_Prop_Barrel_02" unique_id=1188800567 instance=ExtResource("1_i6wwy")]
+
+[node name="SM_Prop_Barrel_02" parent="." index="0" unique_id=1228769458]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_qegux")

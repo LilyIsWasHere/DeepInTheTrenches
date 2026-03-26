@@ -74,6 +74,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.879803, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_c58w5")
 mesh = SubResource("SphereMesh_ypl2c")
 
