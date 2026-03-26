@@ -67,7 +67,6 @@ func _physics_process(_delta: float) -> void:
 		if currentRect == null:
 			for unit : Unit in selectedUnits:
 				unit.is_selected(false)
-				print("deselecting")
 			selectedUnits = []
 			
 			currentRect = rectPrefab.instantiate()
