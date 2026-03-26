@@ -41,6 +41,9 @@ func _physics_process(_delta: float) -> void:
 	if !isActive:
 		return
 	
+	for unit : Unit in selectedUnits:
+		unit.is_selected(true)
+	
 	if inDropdown:
 		return
 	
@@ -62,7 +65,10 @@ func _physics_process(_delta: float) -> void:
 		var pos : Vector3 = get_world_pos()
 		#initialize the selection rect
 		if currentRect == null:
-			print("made rect")
+			for unit : Unit in selectedUnits:
+				unit.is_selected(false)
+			selectedUnits = []
+			
 			currentRect = rectPrefab.instantiate()
 			currentRect.teamID = teamID
 			
@@ -77,12 +83,14 @@ func _physics_process(_delta: float) -> void:
 		currentRect.update_size(pos)
 	elif Input.is_action_just_released("ToolClick") && currentRect != null:
 		#on release, get selected units from selection rect and get rid of it
-		update_selected_units(currentRect.get_selected_units())
+		var units : Array = currentRect.get_selected_units()
 		
 		#set currentRect to null immediately in case of a quick follow-up select
 		var rect : Area3D = currentRect
 		rect.queue_free()
 		currentRect = null
+		
+		update_selected_units(units)
 	#bring up actions/roles
 		if !(selectedUnits.is_empty()):
 			rolesDropdown.visible = !actionsDropdown.visible
@@ -152,6 +160,8 @@ func get_world_pos() -> Vector3:
 
 func update_selected_units(units : Array) -> void:
 	selectedUnits = units.duplicate()
+	for unit : Unit in selectedUnits:
+		unit.is_selected(true)
 	update_action_buttons()
 	update_role_buttons()
 
@@ -200,7 +210,9 @@ func handle_view_inventory() -> void:
 	var textures : Dictionary
 	for unit : Unit in selectedUnits:
 			for slot in unit.inventory.slots:
-				if slot.item.name == "" || slot.num == 0:
+				if slot.item == null:
+					pass
+				elif slot.item.name == "" || slot.num == 0:
 					pass
 				elif resources.get(slot.item.name) == null:
 					resources[slot.item.name] = slot.num
@@ -218,7 +230,9 @@ func handle_view_specific_inventory(unitArray : Array) -> void:
 	var textures : Dictionary
 	for unit : Unit in unitArray:
 			for slot in unit.inventory.slots:
-				if slot.item.name == "" || slot.num == 0:
+				if slot.item == null:
+					pass
+				elif slot.item.name == "" || slot.num == 0:
 					pass
 				elif resources.get(slot.item.name) == null:
 					resources[slot.item.name] = slot.num

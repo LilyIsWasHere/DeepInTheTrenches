@@ -12,8 +12,13 @@ var ai_controller: AIController
 var resource_extractor: ResourceExtractor
 
 var enemy_overlay_mat: Material = preload("res://materials/enemy_overlay_material.tres")
+var friendly_overlap_mat : Material = preload("res://materials/friendly_overlay_material.tres")
 
 var should_move: bool = false
+
+var selectedArrowPrefab : PackedScene = preload("res://Nick/selected_arrow.tscn")
+var selectedArrow : Sprite3D
+@export var selectedArrowOffset : float = 2.75
 
 @export var team: int = 0:
 	set(value):
@@ -35,6 +40,9 @@ var should_move: bool = false
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
+func is_selected(isSelected : bool) -> void:
+	selectedArrow.visible = isSelected
+
 func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 	arr.push_back(in_node)
 	for child in in_node.get_children():
@@ -46,6 +54,10 @@ func _init() -> void:
 	resource_extractor = ResourceExtractor.new()
 	sync_to_physics = false
 	
+	selectedArrow = selectedArrowPrefab.instantiate()
+	add_child(selectedArrow)
+	selectedArrow.visible = false
+	selectedArrow.position = Vector3(0, selectedArrowOffset, 0)
 
 func _ready() -> void:
 	add_child(ai_controller)
@@ -54,7 +66,10 @@ func _ready() -> void:
 	resource_extractor.inventory_connection = inventory
 	
 	if (team == 0):
-		pass
+		var children: Array[Node] = get_all_children(self)
+		for child in children:
+			if child.is_class("MeshInstance3D"):
+				child.material_overlay = friendly_overlap_mat
 	else:
 		var children: Array[Node] = get_all_children(self)
 		for child in children:
