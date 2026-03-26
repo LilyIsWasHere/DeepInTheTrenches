@@ -93,3 +93,4 @@ visibleDebugMesh = true
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1895028167]
 
 [node name="BuildingConstructionUi" parent="CanvasLayer" unique_id=643160159 instance=ExtResource("13_oudfo")]
+mouse_filter = 1
