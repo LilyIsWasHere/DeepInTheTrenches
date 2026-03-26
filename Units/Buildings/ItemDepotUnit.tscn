@@ -40,15 +40,8 @@ is_placed = false
 
 [node name="MeshInstance3D" parent="." index="1" unique_id=1138292857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-visible = false
 material_override = SubResource("StandardMaterial3D_hbxkx")
 mesh = SubResource("BoxMesh_grfpu")
-
-[node name="LineOfSightTarget" parent="." index="2" unique_id=1813088803]
-visible = false
-
-[node name="MeshInstance3D" parent="LineOfSightTarget" index="0" unique_id=11716211]
-visible = false
 
 [node name="Inventory" parent="." index="3" unique_id=1571323257]
 slots = Array[ExtResource("4_jxqvy")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe"), SubResource("Resource_ug0xm")])
