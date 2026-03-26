@@ -7,6 +7,8 @@ var footUnit := preload("res://Units/FootUnit.tscn")
 var mortarUnit := preload("res://Units/Buildings/MortarUnit.tscn")
 var turretUnit := preload("res://Units/Buildings/TurretUnit.tscn")
 var productionUnit := preload("res://Units/Buildings/FactoryUnit.tscn")
+
+var isActive : bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	unit_scene = footUnit
@@ -14,7 +16,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
-	if ($"../..".player_id == 1):
+	if !isActive:
 		return
 	if (Input.is_action_just_pressed("SpawnPlayerUnit") || Input.is_action_just_pressed("SpawnEnemyUnit")):
 		var unit_team: int = 0 if Input.is_action_pressed("SpawnPlayerUnit") else 1
@@ -41,8 +43,7 @@ func _physics_process(_delta: float) -> void:
 				#unit.move_target_pos = result.position
 
 func _input(event: InputEvent) -> void:
-	
-	if ($"../..".player_id == 1):
+	if !isActive:
 		return
 	
 	if event.is_action_pressed("1"):

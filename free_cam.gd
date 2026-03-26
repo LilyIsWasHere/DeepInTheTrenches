@@ -30,7 +30,11 @@ var _alt := false
 
 @export var freeCamActive : bool = false
 
+var isActive : bool = false
+
 func _input(event: InputEvent)-> void:
+	if !isActive:
+		return
 	# Only handle mouse capture if free cam is active
 	if freeCamActive:
 		# Receives mouse motion
@@ -70,6 +74,8 @@ func _input(event: InputEvent)-> void:
 
 # Updates mouselook and movement every frame
 func _process(delta: float) -> void:
+	if !isActive:
+		return
 	if freeCamActive:
 		_update_mouselook()
 	_update_movement(delta)
