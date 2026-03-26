@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://hb05se8utxgu" path="res://terrain_tile_static_body_3d.gd" id="3_rg4wi"]
 [ext_resource type="Script" uid="uid://dsejgw4f86mnh" path="res://heightmap_edit_shader.gd" id="4_cfsic"]
 [ext_resource type="Texture2D" uid="uid://cbx2gh4068iii" path="res://resources/energy_crystal_texture.png" id="5_lrlw4"]
-[ext_resource type="Texture2D" uid="uid://b5j4svfxhnohp" path="res://resources/organic_texture.png" id="6_68x4c"]
+[ext_resource type="Texture2D" uid="uid://dw5p54bwob5wj" path="res://resources/organic_texture_solid.png" id="6_68x4c"]
 
 [sub_resource type="Environment" id="Environment_hp1fw"]
 resource_local_to_scene = true

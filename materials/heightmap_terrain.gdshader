@@ -229,7 +229,7 @@ void fragment() {
 	
 	switch(resource_data) {
 		case 1:
-			color = organic_tex_val;
+			color = mix(color, organic_tex_val, 0.6);
 			SPECULAR = organic_specular;
 			ROUGHNESS = organic_diffuse;
 			CLEARCOAT = organic_clearcoat;
