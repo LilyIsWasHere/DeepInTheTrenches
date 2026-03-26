@@ -28,6 +28,8 @@ var settingDigPath : bool = false
 var isActive: bool
 var teamID : int = 0
 
+@onready var player : Player = get_parent()
+
 func _ready() -> void:
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
@@ -90,6 +92,11 @@ func _physics_process(_delta: float) -> void:
 			var mousePos : Vector2 = get_viewport().get_mouse_position()
 			actionsDropdown.position = mousePos + offset
 			rolesDropdown.position = mousePos + offset*4
+			
+			#open relevant inventories
+			handle_view_inventory()
+		else:
+			inventoryViewer.on_close()
 	
 	#Handle moving and attacking afterwards to avoid spawning a rect on moving/attack calls
 	if Input.is_action_just_pressed("ToolClick") && isMoving:
@@ -202,7 +209,25 @@ func handle_view_inventory() -> void:
 					resources[slot.item.name] += slot.num
 	inventoryViewer.clear()
 	for key : String in resources.keys():
-		inventoryViewer.add_item(key + " x" + str(resources[key]), textures[key])
+		inventoryViewer.add_item(key, resources[key], textures[key])
+	inventoryViewer.on_open()
+	inventoryViewer.set_units(selectedUnits)
+
+func handle_view_specific_inventory(unitArray : Array) -> void:
+	var resources : Dictionary
+	var textures : Dictionary
+	for unit : Unit in unitArray:
+			for slot in unit.inventory.slots:
+				if slot.item.name == "" || slot.num == 0:
+					pass
+				elif resources.get(slot.item.name) == null:
+					resources[slot.item.name] = slot.num
+					textures[slot.item.name] = slot.item.display_icon
+				else:
+					resources[slot.item.name] += slot.num
+	inventoryViewer.clear()
+	for key : String in resources.keys():
+		inventoryViewer.add_item(key, resources[key], textures[key])
 	inventoryViewer.on_open()
 
 func handle_patrol_role() -> void:

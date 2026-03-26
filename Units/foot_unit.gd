@@ -366,6 +366,9 @@ func fulfill_dropoff() -> void:
 	
 	
 func fulfill_personal_dropoff() -> void:
+	if dropoff_request == null:
+		return
+	
 	var item: InventoryItem = dropoff_request.item
 	
 	if (!is_instance_valid(dropoff_request)):

@@ -23,6 +23,7 @@ grow_vertical = 2
 script = ExtResource("1_3psrt")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=717687081]
+layer = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1445219779]
 custom_minimum_size = Vector2(150, 0)
@@ -70,4 +71,13 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 text = " X "
 
+[node name="RefreshButton" type="Button" parent="CanvasLayer/PanelContainer" unique_id=1657970175]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 16
+text = " ⟳ "
+
 [connection signal="button_down" from="CanvasLayer/PanelContainer/CloseButton" to="." method="on_close"]
+[connection signal="button_down" from="CanvasLayer/PanelContainer/RefreshButton" to="." method="on_refresh"]
