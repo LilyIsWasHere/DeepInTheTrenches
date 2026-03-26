@@ -25,7 +25,7 @@ var dig_timer: Timer = Timer.new()
 
 const dig_point_range: float = 0.5
 const dig_amount: float = 3
-const dig_radius: float = 15
+const dig_radius: float = 25
 const dig_delay: float = 1
 
 @export var item_transport_inventory: Inventory
@@ -153,7 +153,7 @@ func init_ai_states() -> void:
 	
 	
 	
-	
+		
 	#################################
 	### EXCAVATE ROLE CHILD STATES ##
 	#################################
@@ -223,7 +223,7 @@ func attack_enemy_tick_fn() -> void:
 	var targetEnemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
 	
 	if targetEnemy != null:
-		shoot_at_point(targetEnemy.global_position)
+		shoot_at_point(targetEnemy.LineOfSightTarget.global_position - Vector3(0, 0.4, 0))
 
 func can_see_enemy() -> bool:
 	if LineOfSightManager.get_closest_visible_enemy(self) != null:
@@ -315,7 +315,7 @@ func fulfill_pickup() -> void:
 	
 	assert(pickup_request.inventory.has_slot_for_item(item))
 	
-	if (!pickup_request.inventory.has_item(item)):
+	if (!pickup_request.inventory.has_slot_for_item(item)):
 		assert(false)
 		pickup_request.abandon()
 		pickup_request = null

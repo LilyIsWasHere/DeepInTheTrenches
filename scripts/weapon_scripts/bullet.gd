@@ -31,7 +31,6 @@ func shoot(start : Vector3, target : Vector3, area : float, range : float, dmg :
 	
 	own_unit = me
 	
-	target_position.y = start_position.y
 	direction = (target_position - start_position).normalized()
 	global_position = start_position
 

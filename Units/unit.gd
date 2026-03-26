@@ -102,6 +102,7 @@ func move_along_terrain() -> void:
 	
 	var neg_offset: float = 1.0 + velocity.y * delta
 	var query := PhysicsRayQueryParameters3D.create(Vector3(future_pos.x, global_position.y + 5.0, future_pos.z), Vector3(future_pos.x, global_position.y - neg_offset, future_pos.z))
+	query.collision_mask = (1 << 1 - 1)
 	var result: Dictionary = space_state.intersect_ray(query)
 	
 	if(result.is_empty()):

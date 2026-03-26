@@ -24,6 +24,7 @@ func initialize(constructiton_cost: Dictionary[InventoryItem, int]) -> void:
 	
 	for item: InventoryItem in constructiton_cost.keys():
 		construction_inventory.add_slot(item, constructiton_cost[item])
+		ItemTransportBlackboard.request_dropoff(construction_inventory, item, constructiton_cost[item], ItemTransportRequest.RequestPriority.HIGH)
 	
 	_set_materials_under_construction()
 		
@@ -46,6 +47,7 @@ func _process(delta: float) -> void:
 	
 	if (is_constructed == false && are_construction_resource_requirements_met()):
 		is_constructed = true
+		_set_materials_constructed()
 
 func _physics_process(delta: float) -> void:
 	super(delta)

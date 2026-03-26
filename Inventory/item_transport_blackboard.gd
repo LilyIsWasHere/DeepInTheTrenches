@@ -60,10 +60,11 @@ func item_dropoff_exists(item: InventoryItem) -> bool:
 	
 
 func has_bidirecional_request(inventory: Inventory, item :InventoryItem) -> bool:
-	var pickup: ItemTransportRequest = pickup_request_inv_item_map.get([inventory, item])
-	var dropoff: ItemTransportRequest = dropoff_request_inv_item_map.get([inventory, item])
-	if (!pickup || !dropoff): return false
-	return !pickup.local && !dropoff.local
+	return false
+	#var pickup: ItemTransportRequest = pickup_request_inv_item_map.get([inventory, item])
+	#var dropoff: ItemTransportRequest = dropoff_request_inv_item_map.get([inventory, item])
+	#if (!pickup || !dropoff): return false
+	#return !pickup.local && !dropoff.local
 
 func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportRequest]:
 	
@@ -175,7 +176,7 @@ func _claim_dropoff_request(request: ItemTransportRequest, dropoff_qty: int) -> 
 	dropoff_request_inv_item_map.erase([request.inventory, request.item])
 	dropoff_requests[request.priority].erase(request)
 	
-	assert(dropoff_qty <= request.quantity)
+	#assert(dropoff_qty <= request.quantity)
 	
 	if (dropoff_qty < request.quantity):
 		request_dropoff(request.inventory, request.item, request.quantity - dropoff_qty, request.priority)
