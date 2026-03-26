@@ -28,11 +28,6 @@ horizontal_alignment = 1
 [node name="Buttons" type="VBoxContainer" parent="PanelContainer/Options" unique_id=342084660]
 layout_mode = 2
 
-[node name="Inventory" type="Button" parent="PanelContainer/Options/Buttons" unique_id=342565440]
-visible = false
-layout_mode = 2
-text = "View Inventory"
-
 [node name="Move" type="Button" parent="PanelContainer/Options/Buttons" unique_id=996915208]
 layout_mode = 2
 text = "Move (Safely)"
@@ -50,7 +45,6 @@ visible = false
 layout_mode = 2
 text = "Dig"
 
-[connection signal="button_down" from="PanelContainer/Options/Buttons/Inventory" to="." method="on_view_inventory_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Move" to="." method="_on_move_safe_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Move2" to="." method="_on_move_direct_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Attack" to="." method="_on_attack_button_down"]

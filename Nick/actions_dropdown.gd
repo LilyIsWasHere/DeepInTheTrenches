@@ -29,9 +29,9 @@ func disable_all() -> void:
 func disable_button(buttonName : String) -> void:
 	match buttonName:
 		"move":
+			buttons[0].hide()
 			buttons[1].hide()
-			buttons[2].hide()
 		"attack":
-			buttons[3].hide()
+			buttons[2].hide()
 		"dig":
-			buttons[4].hide()
+			buttons[3].hide()
