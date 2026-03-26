@@ -13,6 +13,7 @@ var CreatedPaths: Array[ExcavationPath]
 
 
 var tool_active: bool = false
+var player_active : bool = false
 
 func get_closest_unexcavated_path_point(position: Vector3) -> Dictionary:
 	var closest: Vector3 = Vector3(9999, 9999, 9999)
@@ -81,7 +82,7 @@ func _input(event: InputEvent) -> void:
 		
 
 func _physics_process(_delta: float) -> void:
-	if (tool_active && Input.is_action_pressed("ToolClick")):
+	if (tool_active && Input.is_action_pressed("ToolClick") && player_active):
 		
 		
 		var mouse_pos := get_viewport().get_mouse_position()

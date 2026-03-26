@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="4_jxqvy"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="5_5dmhn"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_m0fyl"]
+[ext_resource type="PackedScene" uid="uid://tlw800q3y84j" path="res://sm_prop_barrel_02.tscn" id="7_grfpu"]
 [ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="7_ysr8t"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hbxkx"]
@@ -40,8 +41,12 @@ is_placed = false
 
 [node name="MeshInstance3D" parent="." index="1" unique_id=1138292857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_hbxkx")
 mesh = SubResource("BoxMesh_grfpu")
+
+[node name="MeshInstance3D" parent="LineOfSightTarget" parent_id_path=PackedInt32Array(1813088803) index="0" unique_id=11716211]
+visible = false
 
 [node name="Inventory" parent="." index="3" unique_id=1571323257]
 slots = Array[ExtResource("4_jxqvy")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe"), SubResource("Resource_ug0xm")])
@@ -51,3 +56,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="CollisionShape3D" parent="Selectable" index="0" unique_id=1831588783]
 shape = SubResource("BoxShape3D_hbxkx")
+
+[node name="SM_Prop_Barrel_02" parent="." index="5" unique_id=1188800567 instance=ExtResource("7_grfpu")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
