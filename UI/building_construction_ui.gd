@@ -15,7 +15,7 @@ var building_ui_scene: PackedScene = preload("res://UI/SingleBuildingUI.tscn")
 func spawn_building_to_place(building_type: ConstructableBuilding) -> void:
 	var building_inst: BuildingUnit = building_type.scene.instantiate()
 	$"../../..".add_child(building_inst)
-	building_inst.is_placed = false
+	building_inst.initialize(building_type.construction_cost)
 	print("spawning " + str(building_inst))
 	
 

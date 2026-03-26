@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConstructableBuilding" format=3 uid="uid://da2ll7bdwolxx"]
+
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_o8vho"]
+[ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_7q206"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_a73fr"]
+[ext_resource type="Texture2D" path="res://resources/turret_icon.png" id="3_jnb5v"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="3_r1hfx"]
+[ext_resource type="PackedScene" path="res://Units/Buildings/TurretUnit.tscn" id="4_jnb5v"]
+
+[resource]
+script = ExtResource("2_7q206")
+name = "Turret"
+icon = ExtResource("3_jnb5v")
+construction_cost = Dictionary[ExtResource("1_o8vho"), int]({
+ExtResource("2_a73fr"): 15,
+ExtResource("3_r1hfx"): 5
+})
+scene = ExtResource("4_jnb5v")
+metadata/_custom_type_script = "uid://c60tm374tpnru"

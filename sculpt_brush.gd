@@ -24,6 +24,9 @@ var terrain: Terrain
 
 func _physics_process(delta: float) -> void:
 	
+	if ($"../..".player_id == 1):
+		return
+	
 	var do_edit: bool = false
 	if (continuous):
 		do_edit = Input.is_action_pressed("AddMaterial") || Input.is_action_pressed("RemoveMaterial")

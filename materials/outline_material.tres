@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://btjnjfui15h44"]
+
+[ext_resource type="Shader" path="res://materials/outline.gdshader" id="1_oynw5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oynw5"]
+render_priority = 0
+shader = ExtResource("1_oynw5")
+shader_parameter/enable = true
+shader_parameter/outline_thickness = 0.001
+shader_parameter/color = Color(0, 0, 0, 0)
+
+[resource]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_oynw5")
+shader = ExtResource("1_oynw5")
+shader_parameter/enable = false
+shader_parameter/outline_thickness = 0.05
+shader_parameter/color = Color(0, 0, 0, 0)

@@ -5,6 +5,8 @@ var currentMin : float
 var currentMax : float
 var selectedUnits : Array = []
 
+var teamID : int
+
 @export_range(1, 32) var selectablesLayer : int
 
 #there are edge cases in which this implemenation would not detect a troop beneath the rect
@@ -60,7 +62,9 @@ func get_selected_units() -> Array:
 	return selectedUnits
 
 func _on_area_entered(area: Area3D) -> void:
-	selectedUnits.push_back(area.get_parent())
+	var unit : Unit = area.get_parent()
+	if unit.team == teamID:
+		selectedUnits.push_back(area.get_parent())
 
 
 func _on_area_exited(area: Area3D) -> void:
