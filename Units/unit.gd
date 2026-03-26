@@ -12,6 +12,7 @@ var ai_controller: AIController
 var resource_extractor: ResourceExtractor
 
 var enemy_overlay_mat: Material = preload("res://materials/enemy_overlay_material.tres")
+var friendly_overlap_mat : Material = preload("res://materials/friendly_overlay_material.tres")
 
 var should_move: bool = false
 
@@ -65,7 +66,10 @@ func _ready() -> void:
 	resource_extractor.inventory_connection = inventory
 	
 	if (team == 0):
-		pass
+		var children: Array[Node] = get_all_children(self)
+		for child in children:
+			if child.is_class("MeshInstance3D"):
+				child.material_overlay = friendly_overlap_mat
 	else:
 		var children: Array[Node] = get_all_children(self)
 		for child in children:
