@@ -46,6 +46,7 @@ func _ready() -> void:
 	#add_to_group("can_dig")
 
 
+
 func init_ai_states() -> void:
 	
 		# States are created with a name
