@@ -223,8 +223,12 @@ func shoot_at_point(point : Vector3) -> void:
 func attack_enemy_tick_fn() -> void:
 	var targetEnemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
 	
+
+	
 	if targetEnemy != null:
-		shoot_at_point(targetEnemy.LineOfSightTarget.global_position - Vector3(0, 0.4, 0))
+		var look_at_pos: Vector3 = Vector3(targetEnemy.global_position.x, global_position.y, targetEnemy.global_position.z)
+		look_at(look_at_pos, Vector3(0,1,0), true)
+		shoot_at_point(targetEnemy.global_position + Vector3(0,1.4,0))
 
 func can_see_enemy() -> bool:
 	if LineOfSightManager.get_closest_visible_enemy(self) != null:
@@ -233,7 +237,8 @@ func can_see_enemy() -> bool:
 		return false
 	
 func on_see_enemy() -> void:
-	print("ENEMY IN SIGHT!") # change to attack state or hide?
+	print("ENEMY IN SIGHT!")
+	
 	
 func on_enemy_gone() -> void:
 	print("Must've been the wind") # return to previous state/task?
@@ -400,6 +405,10 @@ func fulfill_personal_dropoff() -> void:
 		
 	dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
 	dropoff_request = null
+
+func die() -> void:
+	super()
+	rotate_object_local(Vector3(1,0,0), deg_to_rad(90))
 
 	
 	

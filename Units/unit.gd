@@ -22,20 +22,12 @@ var selectedArrow : Sprite3D
 
 @export var health : float = 50.0
 
-@export var team: int = 0:
-	set(value):
-		LineOfSightManager.unregister_unit(self)
-	
-		team = value
-		LineOfSightManager.register_unit(self, team)
+var alive: bool = true
+
+@export var team: int = 0
+
 		
-		#put on selectable layer
-		selectableArea.collision_layer = 2
 		
-		if (team == 0):
-			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
-		else:
-			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
 
 @export var velocity: Vector3 = Vector3(0.0, 0.0, 0.0)
 
@@ -50,6 +42,16 @@ func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 	for child in in_node.get_children():
 		arr = get_all_children(child,arr)
 	return arr
+	
+	
+func initialize(_team: int) -> void:
+	team = _team
+	if (team == 0):
+			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
+	else:
+		BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
+		
+	LineOfSightManager.register_unit(self, team)
 
 func _init() -> void:
 	ai_controller = AIController.new()
@@ -78,7 +80,7 @@ func _ready() -> void:
 			if child.is_class("MeshInstance3D"):
 				child.material_overlay = enemy_overlay_mat
 	
-	LineOfSightManager.register_unit(self, team)
+
 
 func _physics_process(delta: float) -> void:
 	if !on_floor:
@@ -102,7 +104,7 @@ func move_along_terrain() -> void:
 	
 	var neg_offset: float = 1.0 + velocity.y * delta
 	var query := PhysicsRayQueryParameters3D.create(Vector3(future_pos.x, global_position.y + 5.0, future_pos.z), Vector3(future_pos.x, global_position.y - neg_offset, future_pos.z))
-	query.collision_mask = (1 << 1 - 1)
+	query.collision_mask = pow(2, 1-1)
 	var result: Dictionary = space_state.intersect_ray(query)
 	
 	if(result.is_empty()):
@@ -128,5 +130,15 @@ func deal_damage(dmg : float) -> void:
 	if remain > 0:
 		health = remain
 	else:
-		queue_free()
+		die()
 	print(health)
+
+
+
+func die() -> void:
+		alive = false
+		visible = true
+		LineOfSightManager.unregister_unit(self)
+		ItemTransportBlackboard.cancel_all_requests(inventory)
+		
+		

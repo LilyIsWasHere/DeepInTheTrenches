@@ -14,7 +14,8 @@ func _ready() -> void:
 	add_child(construction_inventory)
 
 
-func initialize(constructiton_cost: Dictionary[InventoryItem, int]) -> void:
+func initialize_building(_team: int, constructiton_cost: Dictionary[InventoryItem, int]) -> void:
+	initialize(_team)
 	
 	is_placed = false
 	#if (constructiton_cost.is_empty()):
@@ -62,7 +63,7 @@ func _physics_process(delta: float) -> void:
 		query.collide_with_areas = true
 		
 		
-		query.collision_mask = 	(1 << 1 - 1)
+		query.collision_mask = 	pow(2, 1-1)
 		var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
 		
 		if (!result): return	

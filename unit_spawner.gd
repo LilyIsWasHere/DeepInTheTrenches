@@ -34,7 +34,7 @@ func _physics_process(_delta: float) -> void:
 			
 		else:
 			var unit: Unit = unit_scene.instantiate()
-			unit.team = unit_team
+			unit.initialize(unit_team)
 			
 			var attach_node: Node3D = $"../..".get_parent_node_3d()
 			attach_node.add_child(unit)

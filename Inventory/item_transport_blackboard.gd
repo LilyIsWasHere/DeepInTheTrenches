@@ -16,6 +16,30 @@ func _ready() -> void:
 
 
 
+
+func cancel_all_requests(inventory: Inventory) -> void:
+	for i in range(ItemTransportRequest.RequestPriority.SIZE):
+		pickup_requests[i].erase(inventory)
+		dropoff_requests[i].erase(inventory)
+		
+	
+	var pickup_keys_to_erase: Array = []
+	for key: Array in pickup_request_inv_item_map.keys():
+		if pickup_request_inv_item_map[key].inventory == inventory:
+			pickup_keys_to_erase.append(key)
+			
+	for key: Array in pickup_keys_to_erase:
+		pickup_request_inv_item_map.erase(key)
+		
+	var dropoff_keys_to_erase: Array = []
+	for key: Array in dropoff_request_inv_item_map.keys():
+		if dropoff_request_inv_item_map[key].inventory == inventory:
+			dropoff_keys_to_erase.append(key)
+			
+	for key: Array in dropoff_keys_to_erase:
+		dropoff_request_inv_item_map.erase(key)
+
+
 func claim_closest_item_pickup(position: Vector3, item: InventoryItem, quantity: int) ->ItemTransportRequest:
 	
 	var closest: ItemTransportRequest = null

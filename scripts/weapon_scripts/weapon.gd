@@ -2,7 +2,7 @@ extends Node3D
 class_name Weapon
 
 # variables for weapon
-@export var damage : float = 5.0
+@export var damage : float = 30
 @export var range : float = 10.0 # how far it can shoot
 @export var affected_area : float = 1.0 # the zone the shot will hit (e.g. cannon hits a multiple targets, bullet only hits one target)
 
@@ -15,6 +15,7 @@ const ammoItem : InventoryItem = preload("res://Inventory/InventoryItems/ammo_it
 
 var reloading : bool = false
 var inWeaponCooldown : bool = false
+@export var inaccuracy: float = 5 # Gaussian standard deviation in degrees
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -41,10 +42,8 @@ func reload() -> void:
 		
 func shoot(target_pos : Vector3) -> void:
 	if !reloading and !inWeaponCooldown:
-		print("shooting")
 		# checks that the magazine has enough ammo loaded
 		if $Magazine.get_item_quantity(magazineItem) >= ammo_per_shot:
-			print("shooting fr")
 			# check for missing bullets, shouldn't really be necessary but I'm leaving it in for now, incase we only want to check that there is one bullet on the line above
 			var missing_shots : int = $Magazine.remove_items(magazineItem, ammo_per_shot)
 			
@@ -54,12 +53,30 @@ func shoot(target_pos : Vector3) -> void:
 				get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 				bullet_instance.global_position = global_position
 				# MISSING: spray pattern calculation for target position, before sending it to the bullet
-				bullet_instance.shoot(global_position, target_pos, affected_area, range, damage, get_parent()) # calls the shooting function for the bullet scene
+				
+				var global_pos: Vector3 = global_position
+				var direction: Vector3 = (target_pos - global_pos).normalized()
+				var rand_direction: Vector3 = get_random_gaussian_direction(direction, deg_to_rad(inaccuracy))
+				bullet_instance.shoot(global_pos, rand_direction, range, damage) # calls the shooting function for the bullet scene
 			
 			$CooldownTime.start()
 			inWeaponCooldown = true
 		else:
 			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
+
+
+func get_random_gaussian_direction(dir: Vector3, sigma: float) -> Vector3:
+	
+	var rand_gaussian: float = randfn(0, sigma)
+	
+	var perpendicular: Vector3 = ((dir + Vector3(1,1,1)).cross(dir)).normalized()
+	
+	var rand_angle: float = randf_range(0, 2*PI)
+	
+	var rand_perp: Vector3 = perpendicular.rotated(dir, rand_angle)
+	
+	return dir.rotated(rand_perp, rand_gaussian)
+	
 
 # for loading resources into the weapon inventory, will load ammo into the reserves
 func deposit_ammo(amount : int) -> int:
