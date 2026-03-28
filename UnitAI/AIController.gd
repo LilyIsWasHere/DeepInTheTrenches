@@ -18,3 +18,8 @@ func _process(_delta: float) -> void:
 	if (parent && parent.alive):
 		if (base_state):
 			base_state.state_tick()
+
+func get_active_state_icons() -> Array[Texture2D]:
+	var arr: Array[Texture2D] = []
+	base_state.get_display_icons_recursive(arr)
+	return arr

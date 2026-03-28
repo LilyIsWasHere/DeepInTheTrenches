@@ -29,11 +29,17 @@ const dig_radius: float = 25
 const dig_delay: float = 1
 
 @export var item_transport_inventory: Inventory
+@export var ai_state_display: AIStateDisplay
+
 
 var move_order_destination : Vector3
-
 var organic_item: InventoryItem = preload("res://Inventory/InventoryItems/organic_material_item.tres")
 var energy_crystal_item: InventoryItem = preload("res://Inventory/InventoryItems/energy_crystal_item.tres")
+
+var ai_state_icons: Array[Texture2D] = []
+
+
+
 
 func _ready() -> void:
 	super()
@@ -45,7 +51,12 @@ func _ready() -> void:
 	#uncomment this vvv when we get troops digging working
 	#add_to_group("can_dig")
 
-
+func _process(_delta: float) -> void:
+	super(_delta)
+	var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()
+	if (new_icons != ai_state_icons):
+		ai_state_icons = new_icons
+		ai_state_display.set_icons(ai_state_icons)
 
 func init_ai_states() -> void:
 	
@@ -58,10 +69,12 @@ func init_ai_states() -> void:
 	# Only the tick funcitons of the active state, and it's active child, etc. will execute each frame
 	# Generally (but with lots of exceptions), only leaf node states (states with no child state) will have tick functions
 	var self_defense_state := base_state.add_child_state(AIState.create("self_defense")) \
+		.set_display_icon(load("res://UnitAI/StateIcons/crosshair_icon.png")) \
 		.set_tick_function(attack_enemy_tick_fn) \
 		.set_enter_function(on_see_enemy) \
 		.set_exit_function(on_enemy_gone)
-	var direct_order_state := base_state.add_child_state(AIState.create("direct_order"))
+	var direct_order_state := base_state.add_child_state(AIState.create("direct_order")) \
+		.set_display_icon(load("res://UnitAI/StateIcons/order_icon.png"))
 	var execute_role_state := base_state.add_child_state(AIState.create("execute_role"))
 
 	# State transitions will occur when the provided condition function evaluates to true (checked each frame)
@@ -83,10 +96,13 @@ func init_ai_states() -> void:
 	#################################
 	# tick funciton, entry function and exit funciton can also be set in the .create constructor
 	var move_direct_order_state := direct_order_state.add_child_state(AIState.create("move_direct_order", move_direct_tick_fn)) \
-		.set_enter_function(func() -> void : set_destination_point_direct(move_order_destination))
+		.set_enter_function(func() -> void : set_destination_point_direct(move_order_destination)) \
+		.set_display_icon(load("res://UnitAI/StateIcons/move_direct_icon.png"))
 	var move_safe_order_state := direct_order_state.add_child_state(AIState.create("move_safe_order", move_safe_tick_fn)) \
-		.set_enter_function(func() -> void : set_destination_point_safe(move_order_destination))
-	var attack_order_state := direct_order_state.add_child_state(AIState.create("attack_order", attack_order_tick_fn))
+		.set_enter_function(func() -> void : set_destination_point_safe(move_order_destination)) \
+		.set_display_icon(load("res://UnitAI/StateIcons/move_safe_icon.png"))
+	var attack_order_state := direct_order_state.add_child_state(AIState.create("attack_order", attack_order_tick_fn)) \
+		.set_display_icon(load("res://UnitAI/StateIcons/crosshair_icon.png"))
 	var hold_order_state := direct_order_state.add_child_state(AIState.create("hold_order", hold_tick_fn))
 	var none_order_state := direct_order_state.add_child_state(AIState.create("none_order")) \
 		.set_enter_function(func() -> void : active_order = DirectOrders.NONE)
@@ -106,12 +122,16 @@ func init_ai_states() -> void:
 	### EXECUTE ROLE CHILD STATES ###
 	#################################
 	var patrol_role_state := execute_role_state.add_child_state(AIState.create("patrol_role")) \
-		.set_enter_function(get_patrol_destination)
+		.set_enter_function(get_patrol_destination) \
+		.set_display_icon(load("res://UnitAI/StateIcons/patrol_icon.png"))
+		
 		
 	var excavate_role_state := execute_role_state.add_child_state(AIState.create("excavate_role")) \
-		.set_enter_function(fetch_nearest_dig_point_info)
+		.set_enter_function(fetch_nearest_dig_point_info) \
+		.set_display_icon(load("res://UnitAI/StateIcons/excavation_icon.png"))
 		
-	var resource_transport_role_state := execute_role_state.add_child_state(AIState.create("resource_transport_role"))
+	var resource_transport_role_state := execute_role_state.add_child_state(AIState.create("resource_transport_role")) \
+		.set_display_icon(load("res://UnitAI/StateIcons/item_transport_icon.png"))
 	
 	var role_states: Array[AIState] = [patrol_role_state, excavate_role_state, resource_transport_role_state]
 	AIState.add_transition_to(role_states, patrol_role_state, func()->bool: return role == FootUnitRoles.PATROL )
@@ -124,7 +144,8 @@ func init_ai_states() -> void:
 	###########################################
 	
 	var resource_transport_idle_state := resource_transport_role_state.add_child_state(AIState.create("resouce_transport_idle")) \
-		.set_tick_function(try_get_transport_plan)
+		.set_tick_function(try_get_transport_plan) \
+		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
 		
 	var resource_transport_move_to_pickup := resource_transport_role_state.add_child_state(AIState.create("move_to_pickup")) \
 		.set_enter_function(func()->void: set_destination_point_safe(pickup_request.inventory.global_position)) \
@@ -168,7 +189,9 @@ func init_ai_states() -> void:
 		.set_enter_function(func()->void: dig_timer.start(dig_delay))
 		
 	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
-		.set_tick_function(set_destination_to_nearest_dig_point_if_exists)
+		.set_tick_function(set_destination_to_nearest_dig_point_if_exists) \
+		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
+		
 		
 		
 	var dig_dropoff_resources := excavate_role_state.add_child_state(AIState.create("dig_dropoff")) \
@@ -409,6 +432,7 @@ func fulfill_personal_dropoff() -> void:
 func die() -> void:
 	super()
 	rotate_object_local(Vector3(1,0,0), deg_to_rad(90))
+	$AIStateIconsSprite.visible = false
 
 	
 	

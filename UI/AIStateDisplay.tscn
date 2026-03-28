@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://b3t5jhs6exlrn"]
+
+[ext_resource type="Script" uid="uid://de2oa41jmedhu" path="res://UI/ai_state_display.gd" id="1_2msl5"]
+[ext_resource type="PackedScene" uid="uid://crvoclyffr1l4" path="res://UI/AIStateIcon.tscn" id="2_pqewx"]
+
+[node name="AiStateDisplay" type="Control" unique_id=957562690]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2msl5")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1906028656]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -572.5
+offset_right = 572.5
+offset_bottom = 377.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="AiStateIcon" parent="HBoxContainer" unique_id=1108626797 instance=ExtResource("2_pqewx")]
+layout_mode = 2
+
+[node name="AiStateIcon2" parent="HBoxContainer" unique_id=151761558 instance=ExtResource("2_pqewx")]
+layout_mode = 2
+
+[node name="AiStateIcon3" parent="HBoxContainer" unique_id=282454055 instance=ExtResource("2_pqewx")]
+layout_mode = 2

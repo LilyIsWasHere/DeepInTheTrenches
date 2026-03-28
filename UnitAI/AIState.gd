@@ -19,6 +19,9 @@ var active_child_state: AIState
 
 var transitions_dbg: Array[String]
 
+
+var display_icon: Texture2D = null
+
 func state_tick() -> void:
 	
 	if (active_child_state):
@@ -54,6 +57,19 @@ static func create(_name: String, _tick_function: Callable = Callable(), _enter_
 	
 	return ai_state
 
+
+
+func get_display_icons_recursive(arr: Array[Texture2D]) -> void:
+	if (display_icon):
+		arr.append(display_icon)
+	if (active_child_state):
+		active_child_state.get_display_icons_recursive(arr)
+	return
+
+func set_display_icon(icon: Texture2D) -> AIState:
+	display_icon = icon
+	return self
+	
 
 func set_tick_function(f: Callable) -> AIState:
 	tick_function = f
@@ -92,18 +108,6 @@ static func add_transition_to(add_to: Array[AIState], to_state: AIState, conditi
 	for from_state in add_to:
 		if from_state != to_state:
 			from_state.add_transition(to_state, condition)
-
-#func add_signal_transition(to_state: AIState, sig: Signal) -> void:
-	#assert(!(signal_transitions.has(sig)),String("Could not add signal transition from " + name + " to " + to_state.name + ". This signal is already used by state" + name + " to transition to another state") ) 
-	#if (signal_transitions.has(sig)):
-		#return
-		#
-	#signal_transitions[sig] = to_state
-	#
-	#sig.connect(func()->void:signal_transition_triggered.emit(to_state))
-		#
-	
-	
 
 func check_transition() -> Dictionary:
 	var should_transition: bool = false

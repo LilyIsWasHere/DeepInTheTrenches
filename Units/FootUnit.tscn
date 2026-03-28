@@ -9,6 +9,8 @@
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_qvlg4"]
 [ext_resource type="PackedScene" uid="uid://b22wpxxf0i1nw" path="res://Nick/Assets/Ready Assets/machineGun.tscn" id="7_im02j"]
 [ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="9_qvlg4"]
+[ext_resource type="Script" uid="uid://cwwanfn8gie7m" path="res://Units/ai_state_icons_sprite.gd" id="10_obu8b"]
+[ext_resource type="PackedScene" uid="uid://b3t5jhs6exlrn" path="res://UI/AIStateDisplay.tscn" id="10_oup3h"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -44,13 +46,17 @@ item = ExtResource("9_qvlg4")
 max_num = 10
 metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
-[node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[sub_resource type="ViewportTexture" id="ViewportTexture_oup3h"]
+viewport_path = NodePath("SubViewport")
+
+[node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "ai_state_display", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 4
 collision_mask = 0
 sync_to_physics = false
 script = ExtResource("1_c0xtx")
 weapon = NodePath("Weapon")
 item_transport_inventory = NodePath("ItemTransportInventory")
+ai_state_display = NodePath("SubViewport/AiStateDisplay")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
@@ -99,3 +105,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2445847, 0.880491)
 script = ExtResource("3_plcxh")
 slots = Array[ExtResource("4_vrshb")]([SubResource("Resource_oup3h")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="AIStateIconsSprite" type="Sprite3D" parent="." unique_id=40179696]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 2.232453, 0)
+billboard = 1
+double_sided = false
+alpha_antialiasing_mode = 2
+texture = SubResource("ViewportTexture_oup3h")
+script = ExtResource("10_obu8b")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=298737456]
+own_world_3d = true
+transparent_bg = true
+canvas_item_default_texture_filter = 2
+size = Vector2i(1536, 512)
+render_target_update_mode = 1
+
+[node name="AiStateDisplay" parent="SubViewport" unique_id=957562690 instance=ExtResource("10_oup3h")]
