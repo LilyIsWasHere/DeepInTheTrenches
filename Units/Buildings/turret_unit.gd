@@ -78,10 +78,13 @@ func rotate_towards_enemy_tick_fn() -> void:
 	var rot_amt: float = min(max_rot_this_frame, angle_diff)
 	
 	var rot_step: float = rot_amt / angle_diff 
+	if (angle_diff == 0): rot_step = 0
 	
 	var old_basis: Basis = global_transform.basis
 	var new_basis: Basis = Basis.looking_at(enemy_dir)
-	global_transform.basis = lerp(old_basis, new_basis, rot_step).orthonormalized()
+	var intermediate_basis: Basis = lerp(old_basis, new_basis, rot_step).orthonormalized()
+	global_transform.basis = intermediate_basis
+	assert(intermediate_basis.is_conformal() && intermediate_basis.is_finite())
 	
 func fire_at_enemy_tick_fn() -> void:
 	if !(workstation.is_occupied()):
