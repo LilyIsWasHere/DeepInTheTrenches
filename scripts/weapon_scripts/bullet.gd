@@ -37,16 +37,16 @@ func _physics_process(delta: float) -> void:
 			
 			
 			
-			DebugDraw3D.draw_line(global_position, result["position"], Color(1,0.7,0), 0.3)
-			DebugDraw3D.draw_sphere(result["position"], 0.2, Color(1,0,0), 0.3)
+			DebugDraw3D.draw_line(global_position, result["position"], Color(1,0.7,0), 0.1)
+			DebugDraw3D.draw_sphere(result["position"], 0.2, Color(1,0,0), 0.1)
 			
 			if (collider.has_method("deal_damage")):
 				collider.deal_damage(damage)
 			else:
 				pass
 		else:
-			DebugDraw3D.draw_line(global_position, global_position + (direction * range), Color(1,0.7,0), 0.3)
-			DebugDraw3D.draw_sphere(global_position + (direction * range), 0.2, Color(1,0,0), 0.3)
+			DebugDraw3D.draw_line(global_position, global_position + (direction * range), Color(1,0.7,0), 0.1)
+			DebugDraw3D.draw_sphere(global_position + (direction * range), 0.2, Color(1,0,0), 0.1)
 		is_shot = false	
 		queue_free()
 

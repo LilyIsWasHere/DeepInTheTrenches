@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="4_45qro"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="5_vkisb"]
 [ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="6_su3ak"]
+[ext_resource type="PackedScene" uid="uid://dfx30yk5yafor" path="res://Workstation.tscn" id="7_hlj41"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -43,24 +44,29 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]
 
-[node name="TurretUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[node name="TurretUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "workstation", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_4httk")
 weapon = NodePath("Weapon")
+workstation = NodePath("Workstation")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
 selectableArea = NodePath("Selectable")
 
 [node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("2_nk5dt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.607254, 0)
+inaccuracy = 10.0
+fire_delay = 0.1
+reload_delay = 5.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_pl1pi")
 
 [node name="StationaryGun" parent="." unique_id=326441267 instance=ExtResource("3_4httk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.615, 0)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.615, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138292857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -73,6 +79,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0760012, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_c58w5")
 mesh = SubResource("SphereMesh_ypl2c")
 
@@ -88,3 +95,6 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
 shape = SubResource("CapsuleShape3D_lvdn7")
+
+[node name="Workstation" parent="." unique_id=608623028 instance=ExtResource("7_hlj41")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.1276174)

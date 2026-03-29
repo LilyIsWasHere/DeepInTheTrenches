@@ -10,6 +10,7 @@ var is_constructed: bool = false
 var under_construction_material: Material = preload("res://materials/building_under_construction_material.tres")
 
 func _ready() -> void:
+	super()
 	construction_inventory = Inventory.new()
 	add_child(construction_inventory)
 
@@ -18,6 +19,7 @@ func initialize_building(_team: int, constructiton_cost: Dictionary[InventoryIte
 	initialize(_team)
 	
 	is_placed = false
+	remove_child(ai_controller)
 	#if (constructiton_cost.is_empty()):
 		#is_constructed = true
 	#else:
@@ -106,6 +108,6 @@ func _set_materials_constructed() -> void:
 			child.set_surface_override_material(0, null)
 	
 func on_placed() -> void:
-	if (!is_constructed):
-		for item: InventoryItem in construction_inventory.item_slot_dict.keys():
-			ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM)
+	add_child(ai_controller)
+	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
+		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM)

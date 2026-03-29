@@ -16,9 +16,13 @@ const ammoItem : InventoryItem = preload("res://Inventory/InventoryItems/ammo_it
 var reloading : bool = false
 var inWeaponCooldown : bool = false
 @export var inaccuracy: float = 5 # Gaussian standard deviation in degrees
+@export var fire_delay: float = 0.5
+@export var reload_delay: float = 3
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$ReloadTime.wait_time = reload_delay
+	$CooldownTime.wait_time = fire_delay
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
