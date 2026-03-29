@@ -1,6 +1,8 @@
 extends AnimatableBody3D
 class_name Unit
 
+signal died
+
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
@@ -25,9 +27,6 @@ var selectedArrow : Sprite3D
 var alive: bool = true
 
 @export var team: int = 0
-
-		
-		
 
 @export var velocity: Vector3 = Vector3(0.0, 0.0, 0.0)
 
@@ -140,5 +139,4 @@ func die() -> void:
 		visible = true
 		LineOfSightManager.unregister_unit(self)
 		ItemTransportBlackboard.cancel_all_requests(inventory)
-		
-		
+		died.emit()

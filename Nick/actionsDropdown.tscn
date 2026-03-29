@@ -40,6 +40,10 @@ text = "Move (Direct)"
 layout_mode = 2
 text = "Attack"
 
+[node name="Operate" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1867776951]
+layout_mode = 2
+text = "Operate"
+
 [node name="Dig" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1225912520]
 visible = false
 layout_mode = 2
@@ -48,4 +52,5 @@ text = "Dig"
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Move" to="." method="_on_move_safe_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Move2" to="." method="_on_move_direct_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Attack" to="." method="_on_attack_button_down"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Operate" to="." method="on_operate_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Dig" to="." method="_on_dig_button_down"]

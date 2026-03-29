@@ -1,9 +1,17 @@
 extends Unit
 class_name MoveableUnit
 
+signal just_arrived
+
 var move_target_pos : Vector3
 var arrived : bool = true
+var previouslyArrived : bool = true
+
 func get_arrived()->bool:
+	if arrived && !previouslyArrived:
+		just_arrived.emit()
+	
+	previouslyArrived = arrived
 	return arrived
 
 func get_arrived_2D()->bool:

@@ -46,8 +46,7 @@ func _input(event: InputEvent) -> void:
 		is_placed = true
 		on_placed()
 	
-func _process(delta: float) -> void:	
-	
+func _process(_delta: float) -> void:	
 	if (is_constructed == false && are_construction_resource_requirements_met()):
 		is_constructed = true
 		_set_materials_constructed()

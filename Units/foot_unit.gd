@@ -45,6 +45,7 @@ func _ready() -> void:
 	super()
 	init_ai_states()
 	add_to_group("can_attack")
+	add_to_group("can_operate")
 	add_to_group("foot_unit")
 	add_child(dig_timer)
 	dig_timer.one_shot = true

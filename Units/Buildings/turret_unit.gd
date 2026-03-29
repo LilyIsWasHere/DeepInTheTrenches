@@ -15,6 +15,7 @@ func _ready() -> void:
 	super()
 	init_ai_states()
 	add_to_group("can_attack")
+	connect("died", destroyed)
 
 func shoot_at_point(point : Vector3) -> void:
 	weapon.shoot(point)
@@ -62,6 +63,9 @@ func enemy_in_sights() -> bool:
 	
 
 func rotate_towards_enemy_tick_fn() -> void:
+	if !(workstation.is_occupied()):
+		return
+	
 	var enemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
 	if (!enemy):
 		return
@@ -80,6 +84,9 @@ func rotate_towards_enemy_tick_fn() -> void:
 	global_transform.basis = lerp(old_basis, new_basis, rot_step).orthonormalized()
 	
 func fire_at_enemy_tick_fn() -> void:
+	if !(workstation.is_occupied()):
+		return
+	
 	rotate_towards_enemy_tick_fn()
 	var enemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
 	if (enemy):
@@ -87,10 +94,10 @@ func fire_at_enemy_tick_fn() -> void:
 
 func enemy_visible() -> bool:
 	return LineOfSightManager.get_closest_visible_enemy(self) != null
-	
 
-
+func destroyed() -> void:
+	$Workstation.eject_operator()
+	queue_free()
 
 func _process(delta: float) -> void:
 	super(delta)
-		

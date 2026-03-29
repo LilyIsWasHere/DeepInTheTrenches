@@ -17,6 +17,7 @@ var selectedUnits : Array = []
 var isMoving : bool = false
 var moveMode : String = ""
 var isAttacking : bool = false
+var isOperating : bool = false
 
 var targetCursor : Texture2D = preload("res://Nick/target (1).png")
 var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
@@ -45,6 +46,26 @@ func _physics_process(_delta: float) -> void:
 		unit.is_selected(true)
 	
 	if inDropdown:
+		return
+	
+	#if we're selecting a workstation to operate, and we click somewhere, query it and return
+	if Input.is_action_just_pressed("ToolClick") && isOperating:
+		var area : Area3D = get_clicked()
+		
+		#if we clicked a valid workstation
+		if area:
+			var workstation : Workstation = area.get_parent()
+			if workstation.is_occupied():
+				pass
+			elif selectedUnits.size() == 1:
+				var unit : MoveableUnit = selectedUnits[0]
+				unit.move_order_destination = workstation.get_unit_position()
+				unit.active_order = FootUnit.DirectOrders.MOVE_SAFE
+				unit.connect("just_arrived", workstation.operate.bind(unit))
+		
+		isOperating = false
+		deselect_units()
+		inventoryViewer.on_close()
 		return
 	
 	#pre select exit conditions
@@ -149,6 +170,26 @@ func set_active(active : bool) -> void:
 	isAttacking = false
 	isMoving = false
 
+func get_clicked() -> Node3D:
+	var camera : Camera3D = get_viewport().get_camera_3d()
+	var mousePos : Vector2 = get_viewport().get_mouse_position()
+	
+	var rayOrigin : Vector3 = camera.project_ray_origin(mousePos)
+	var rayDir : Vector3 = camera.project_ray_normal(mousePos)
+	var rayEnd : Vector3 = rayOrigin + rayDir * rayLength
+	
+	var spaceState := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(rayOrigin, rayEnd)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	query.collision_mask = 4
+	var result := spaceState.intersect_ray(query)
+	
+	if result:
+		return result["collider"]
+	else:
+		return null
+
 #	casts a ray from the camera (in view direction)
 #	and returns the position where it first collides with an object
 func get_world_pos() -> Vector3:
@@ -180,11 +221,17 @@ func update_action_buttons() -> void:
 	if selectedUnits.is_empty() == false:
 		actionsDropdown.enable_all()
 	
+	#Can only assign one unit to operate
+	if selectedUnits.size() > 1:
+		actionsDropdown.disable_button("operate")
+	
 	for unit : Unit in selectedUnits:
 		if !(unit.is_in_group("can_move")):
 			actionsDropdown.disable_button("move")
 		if !(unit.is_in_group("can_attack")):
 			actionsDropdown.disable_button("attack")
+		if !(unit.is_in_group("can_operate")):
+			actionsDropdown.disable_button("operate")
 		if !(unit.is_in_group("can_dig")):
 			actionsDropdown.disable_button("dig")
 
@@ -253,6 +300,10 @@ func handle_view_specific_inventory(unitArray : Array) -> void:
 	for key : String in resources.keys():
 		inventoryViewer.add_item(key, resources[key], textures[key])
 	inventoryViewer.on_open()
+
+func handle_operate() -> void:
+	isOperating = true
+	print("operating")
 
 func handle_patrol_role() -> void:
 	for unit : FootUnit in selectedUnits:

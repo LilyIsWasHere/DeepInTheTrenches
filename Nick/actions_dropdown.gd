@@ -15,6 +15,9 @@ func _on_attack_button_down() -> void:
 func on_view_inventory_down() -> void:
 	cursor.handle_view_inventory()
 
+func on_operate_button_down() -> void:
+	cursor.handle_operate()
+
 func _on_dig_button_down() -> void:
 	pass # Replace with function body.
 
@@ -33,5 +36,7 @@ func disable_button(buttonName : String) -> void:
 			buttons[1].hide()
 		"attack":
 			buttons[2].hide()
-		"dig":
+		"operate":
 			buttons[3].hide()
+		"dig":
+			buttons[4].hide()

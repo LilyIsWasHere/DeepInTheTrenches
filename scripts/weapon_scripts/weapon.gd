@@ -19,6 +19,8 @@ var inWeaponCooldown : bool = false
 @export var fire_delay: float = 0.5
 @export var reload_delay: float = 3
 
+var enabled : bool = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$ReloadTime.wait_time = reload_delay
@@ -45,6 +47,9 @@ func reload() -> void:
 		$ReloadTime.start()
 		
 func shoot(target_pos : Vector3) -> void:
+	if !enabled:
+		return
+	
 	if !reloading and !inWeaponCooldown:
 		# checks that the magazine has enough ammo loaded
 		if $Magazine.get_item_quantity(magazineItem) >= ammo_per_shot:
@@ -70,16 +75,17 @@ func shoot(target_pos : Vector3) -> void:
 
 
 func get_random_gaussian_direction(dir: Vector3, sigma: float) -> Vector3:
+	var newDir : Vector3 = dir.normalized()
 	
 	var rand_gaussian: float = randfn(0, sigma)
 	
-	var perpendicular: Vector3 = ((dir + Vector3(1,1,1)).cross(dir)).normalized()
+	var perpendicular: Vector3 = ((newDir + Vector3(1,1,1)).cross(newDir)).normalized()
 	
 	var rand_angle: float = randf_range(0, 2*PI)
 	
-	var rand_perp: Vector3 = perpendicular.rotated(dir, rand_angle)
+	var rand_perp: Vector3 = perpendicular.rotated(newDir, rand_angle)
 	
-	return dir.rotated(rand_perp, rand_gaussian)
+	return newDir.rotated(rand_perp, rand_gaussian)
 	
 
 # for loading resources into the weapon inventory, will load ammo into the reserves

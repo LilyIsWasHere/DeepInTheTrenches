@@ -2,5 +2,19 @@
 
 [ext_resource type="Script" uid="uid://be8ipimbnpxso" path="res://workstation.gd" id="1_j0j3e"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_j0j3e"]
+radius = 1.0
+
 [node name="Workstation" type="Node3D" unique_id=608623028]
 script = ExtResource("1_j0j3e")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=874849189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1721479184]
+shape = SubResource("SphereShape3D_j0j3e")
+
+[node name="UnitPos" type="Node3D" parent="." unique_id=1797223409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3467712)
