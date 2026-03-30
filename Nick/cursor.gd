@@ -55,9 +55,9 @@ func _physics_process(_delta: float) -> void:
 		#if we clicked a valid workstation
 		if area:
 			var workstation : Workstation = area.get_parent()
-			if workstation.is_occupied():
-				pass
-			elif selectedUnits.size() == 1:
+			if selectedUnits.size() == 1:
+				if workstation.is_occupied():
+					workstation.eject_operator()
 				var unit : MoveableUnit = selectedUnits[0]
 				unit.move_order_destination = workstation.get_unit_position()
 				unit.active_order = FootUnit.DirectOrders.MOVE_SAFE

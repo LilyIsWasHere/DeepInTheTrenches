@@ -101,6 +101,8 @@ func enemy_visible() -> bool:
 func destroyed() -> void:
 	$Workstation.eject_operator()
 	visible = false
+	#this is a temporary fix so that troops can kill operators (otherwise turret is invisible shield)
+	process_mode = Node.PROCESS_MODE_DISABLED
 
 func _process(delta: float) -> void:
 	super(delta)

@@ -83,6 +83,7 @@ func init_ai_states() -> void:
 	var base_states : Array[AIState] = [self_defense_state, direct_order_state, execute_role_state]
 	
 	AIState.add_transition_to(base_states, occupied_state, func()->bool:return is_occupied)
+	occupied_state.add_transition(execute_role_state, func()->bool:return !is_occupied)
 	
 	# State transitions will occur when the provided condition function evaluates to true (checked each frame)
 	# State transitions should only ever occur between sibling states (states on the same level)
