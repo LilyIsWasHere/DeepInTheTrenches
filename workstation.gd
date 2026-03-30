@@ -22,6 +22,7 @@ func eject_operator() -> void:
 		return
 	
 	operator.weapon.enabled = true
+	operator.is_occupied = false
 	operator.disconnect("died", eject_operator)
 	remove_child(operator)
 	get_tree().current_scene.add_child(operator)
@@ -34,6 +35,7 @@ func operate(unit: FootUnit) -> void:
 	
 	operator = unit
 	operator.weapon.enabled = false
+	operator.is_occupied = true
 	operator.connect("died", eject_operator)
 	get_tree().current_scene.remove_child(operator)
 	add_child(operator)

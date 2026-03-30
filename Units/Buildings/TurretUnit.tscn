@@ -54,6 +54,7 @@ LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
 selectableArea = NodePath("Selectable")
+health = 250.0
 
 [node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("2_nk5dt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.607254, 0)

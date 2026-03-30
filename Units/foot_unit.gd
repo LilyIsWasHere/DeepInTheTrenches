@@ -38,7 +38,7 @@ var energy_crystal_item: InventoryItem = preload("res://Inventory/InventoryItems
 
 var ai_state_icons: Array[Texture2D] = []
 
-
+var is_occupied : bool = false
 
 
 func _ready() -> void:
@@ -74,10 +74,16 @@ func init_ai_states() -> void:
 		.set_tick_function(attack_enemy_tick_fn) \
 		.set_enter_function(on_see_enemy) \
 		.set_exit_function(on_enemy_gone)
+	var occupied_state := base_state.add_child_state(AIState.create("occupied"))\
+		.set_display_icon(load("res://icon.svg"))
 	var direct_order_state := base_state.add_child_state(AIState.create("direct_order")) \
 		.set_display_icon(load("res://UnitAI/StateIcons/order_icon.png"))
 	var execute_role_state := base_state.add_child_state(AIState.create("execute_role"))
-
+	
+	var base_states : Array[AIState] = [self_defense_state, direct_order_state, execute_role_state]
+	
+	AIState.add_transition_to(base_states, occupied_state, func()->bool:return is_occupied)
+	
 	# State transitions will occur when the provided condition function evaluates to true (checked each frame)
 	# State transitions should only ever occur between sibling states (states on the same level)
 	# DON'T MAKE STATE TRANSITIONS THAT MOVE UP AND DOWN THE TREE IDK WHAT WILL HAPPEN BUT IT WILL BE BAD!1!

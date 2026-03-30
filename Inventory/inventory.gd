@@ -3,7 +3,7 @@ class_name Inventory
 
 @export var slots: Array[InventorySlot]
 
-var item_slot_dict: Dictionary[InventoryItem, InventorySlot]
+var item_slot_dict: Dictionary[InventoryItem, InventorySlot] = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

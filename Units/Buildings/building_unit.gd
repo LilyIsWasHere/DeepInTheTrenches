@@ -9,9 +9,13 @@ var is_constructed: bool = false
 @export var construction_inventory: Inventory
 var under_construction_material: Material = preload("res://materials/building_under_construction_material.tres")
 
-func _ready() -> void:
+func _init() -> void:
 	super()
 	construction_inventory = Inventory.new()
+
+func _ready() -> void:
+	print("im ready")
+	super()
 	add_child(construction_inventory)
 
 

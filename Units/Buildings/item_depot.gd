@@ -1,5 +1,3 @@
-
-
 class_name ItemDepot
 extends BuildingUnit
 
@@ -9,7 +7,7 @@ var organic_item: InventoryItem = preload("res://Inventory/InventoryItems/organi
 var energy_crystal_item: InventoryItem = preload("res://Inventory/InventoryItems/organic_material_item.tres")
 
 func _ready() -> void:
-	pass
+	super()
 
 func on_placed() -> void:
 	super()

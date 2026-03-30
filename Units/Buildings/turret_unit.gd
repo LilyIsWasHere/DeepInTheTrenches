@@ -100,7 +100,7 @@ func enemy_visible() -> bool:
 
 func destroyed() -> void:
 	$Workstation.eject_operator()
-	queue_free()
+	visible = false
 
 func _process(delta: float) -> void:
 	super(delta)
