@@ -48,7 +48,6 @@ script = ExtResource("2_cxr5p")
 
 [node name="Label3D" type="Label3D" parent="Camera3D" unique_id=1024218606]
 transform = Transform3D(1, -6.7055225e-08, 2.9802322e-08, 0, 1, 1.1920929e-07, 0, -2.9802322e-08, 0.9999999, -0.6081147, 0.3632822, -0.60115767)
-visible = false
 pixel_size = 0.002
 offset = Vector2(17.9, 28.56)
 text = "FPS: "
@@ -94,5 +93,4 @@ visibleDebugMesh = true
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1895028167]
 
 [node name="BuildingConstructionUi" parent="CanvasLayer" unique_id=643160159 instance=ExtResource("13_oudfo")]
-visible = false
 mouse_filter = 1
