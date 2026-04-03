@@ -12,15 +12,28 @@ extends Node3D
 var pending_probe := false
 var pending_mouse_pos := Vector2.ZERO
 
+const MAX_DEBUG_PATHS := 8
+const DEBUG_PATH_COLORS: Array[Color] = [
+	Color(0.2, 0.8, 1.0),
+	Color(1.0, 0.6, 0.2),
+	Color(0.5, 1.0, 0.4),
+	Color(1.0, 0.3, 0.7),
+	Color(0.9, 0.9, 0.3),
+	Color(0.7, 0.5, 1.0),
+	Color(0.2, 1.0, 0.8),
+	Color(1.0, 0.8, 0.9)
+]
+
 var has_point_a := false
 var has_point_b := false
 var point_a := Vector3.ZERO
 var point_b := Vector3.ZERO
 var current_path := PackedVector3Array()
+var completed_paths: Array[PackedVector3Array] = []
 
 
 @export var nav_agent_config: NavAgentConfig
-var nav_handle: NavPlanHandle = null
+var nav_handles: Array[NavPlanHandle] = []
 
 const DEBUG_HEIGHT := 0.25
 
@@ -35,15 +48,24 @@ func _physics_process(_delta: float) -> void:
 			_handle_probe_click(result.position)
 
 func _process(_delta: float) -> void:
-	if nav_handle != null:
+	var remaining_handles: Array[NavPlanHandle] = []
+	for i in range(nav_handles.size()):
+		var nav_handle: NavPlanHandle = nav_handles[i]
+		if nav_handle == null:
+			continue
+
 		if nav_handle.status == NavPlanHandle.NavRequestStatus.READY:
 			current_path = nav_handle.waypoints
-			nav_handle = null
+			completed_paths.append(nav_handle.waypoints)
+			while completed_paths.size() > MAX_DEBUG_PATHS:
+				completed_paths.remove_at(0)
 			print("Path points:", current_path.size())
 		elif nav_handle.status == NavPlanHandle.NavRequestStatus.FAILED:
-			current_path = PackedVector3Array()
-			nav_handle = null
 			print("Path request failed")
+		else:
+			remaining_handles.append(nav_handle)
+
+	nav_handles = remaining_handles
 
 	if has_point_a:
 		DebugDraw3D.draw_text(point_a + Vector3.UP * 0.6, "A", 32, Color(0, 1, 0))
@@ -53,14 +75,17 @@ func _process(_delta: float) -> void:
 		DebugDraw3D.draw_text(point_b + Vector3.UP * 0.6, "B", 32, Color(1, 0, 0))
 		DebugDraw3D.draw_arrow(point_b + Vector3.UP * 0.8, point_b, Color(1, 0, 0), 0.08)
 
-	for i in range(current_path.size()):
-		var point: Vector3 = current_path[i] + Vector3.UP * DEBUG_HEIGHT
-		DebugDraw3D.draw_sphere(point, 0.08, Color(0.2, 0.8, 1.0))
+	for i in range(completed_paths.size()):
+		var path: PackedVector3Array = completed_paths[i]
+		var color: Color = DEBUG_PATH_COLORS[i % DEBUG_PATH_COLORS.size()]
+		for j in range(path.size()):
+			var point: Vector3 = path[j] + Vector3.UP * DEBUG_HEIGHT
+			DebugDraw3D.draw_sphere(point, 0.08, color)
 
-	for i in range(current_path.size() - 1):
-		var from: Vector3 = current_path[i] + Vector3.UP * DEBUG_HEIGHT
-		var to: Vector3 = current_path[i + 1] + Vector3.UP * DEBUG_HEIGHT
-		DebugDraw3D.draw_line(from, to, Color(0.2, 0.8, 1.0), 0.03)
+		for j in range(path.size() - 1):
+			var from: Vector3 = path[j] + Vector3.UP * DEBUG_HEIGHT
+			var to: Vector3 = path[j + 1] + Vector3.UP * DEBUG_HEIGHT
+			DebugDraw3D.draw_line(from, to, color, 0.03)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MouseButton.MOUSE_BUTTON_MIDDLE and event.pressed:
@@ -82,16 +107,10 @@ func _handle_probe_click(hit_position: Vector3) -> void:
 	has_point_b = true
 	print("Set B:", point_b)
 
-	#nav_agent_config = NavAgentConfig.new()
-	#nav_agent_config.radius = test_agent_radius
-	#nav_agent_config.height = test_agent_height
-	#nav_agent_config.max_speed = 5.0
-	#nav_agent_config.max_slope_degrees = test_agent_max_slope_degrees
-	#nav_agent_config.max_step_height = test_agent_max_step_height
-	#nav_agent_config.wall_climb_height = test_agent_wall_climb_height
-
 	current_path = PackedVector3Array()
-	nav_handle = Navigation.debug_request_path(point_a, point_b, self, nav_agent_config)
+	var nav_handle: NavPlanHandle = Navigation.debug_request_path(point_a, point_b, self, nav_agent_config)
+	if nav_handle != null:
+		nav_handles.append(nav_handle)
 
 func get_nav_agent_config() -> NavAgentConfig:
 	return nav_agent_config
