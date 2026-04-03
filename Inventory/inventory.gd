@@ -1,6 +1,8 @@
 extends Node3D
 class_name Inventory
 
+signal itemAdded
+
 @export var slots: Array[InventorySlot]
 
 var item_slot_dict: Dictionary[InventoryItem, InventorySlot] = {}
@@ -50,6 +52,7 @@ func add_items(item: InventoryItem, quantity: int) -> int:
 	if overflow < 0: overflow = 0
 	slot.num = min(slot.num, slot.max_num)
 	
+	itemAdded.emit()
 	return overflow
 	
 # removes the specified quantity of the item from the relevant inventory slot, returning any underflow below zero (positive value)
