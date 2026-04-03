@@ -12,7 +12,7 @@ const DEFAULT_AGENT_MAX_SLOPE_DEGREES := 90.0#45.0
 const DEFAULT_AGENT_MAX_STEP_HEIGHT := 1.0
 const DEFAULT_AGENT_WALL_CLIMB_HEIGHT := 1.7
 const TERRAIN_SNAPSHOT_MIN_REFRESH_MS := 100
-const NUM_THREADS_PER_PLAYER := 8
+const NUM_THREADS_PER_PLAYER := 4
 
 # active requests for agents, mapping from the agent Node to their NavPlanHandle
 var _active_requests: Dictionary = {}
