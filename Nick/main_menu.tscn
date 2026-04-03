@@ -3,9 +3,9 @@
 [ext_resource type="Shader" uid="uid://b5br1alrv3qw0" path="res://Nick/main_menu.gdshader" id="1_figej"]
 [ext_resource type="Script" uid="uid://cvysd5o06t6eo" path="res://Nick/main_menu.gd" id="1_gr02g"]
 [ext_resource type="FontFile" uid="uid://cfdcx7j43ue84" path="res://Nick/Airborne 86.ttf" id="1_k3of0"]
-[ext_resource type="Texture2D" uid="uid://byt35efree153" path="res://Nick/dirty-metal-texture.jpg" id="2_figej"]
 [ext_resource type="StyleBox" uid="uid://cij17xcbuwnqn" path="res://Nick/normal_button.tres" id="2_iejt6"]
 [ext_resource type="StyleBox" uid="uid://d0riwhn2wn8dn" path="res://Nick/pressed_button.tres" id="3_figej"]
+[ext_resource type="Texture2D" uid="uid://dlg67anavgwge" path="res://Nick/Screenshot 2026-04-03 171105.png" id="3_yppy2"]
 [ext_resource type="StyleBox" uid="uid://bw6aiypa6b57x" path="res://Nick/hover_button.tres" id="4_gr02g"]
 [ext_resource type="FontFile" uid="uid://erdgllynwqkw" path="res://examples_dd3d/Roboto-Bold.ttf" id="8_yppy2"]
 
@@ -25,7 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_figej")
+texture = ExtResource("3_yppy2")
 expand_mode = 1
 
 [node name="MainMenu" type="MarginContainer" parent="CanvasLayer" unique_id=140070414]
