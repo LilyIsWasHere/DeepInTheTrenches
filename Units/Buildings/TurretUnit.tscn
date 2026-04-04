@@ -44,12 +44,39 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lvdn7"]
 
-[node name="TurretUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "workstation", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hlj41"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:team")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:health")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:velocity")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:is_placed")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:is_constructed")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[node name="TurretUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "workstation", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_4httk")
 weapon = NodePath("Weapon")
 workstation = NodePath("Workstation")
+construction_inventory = NodePath("ConstructionInventory")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
@@ -98,3 +125,10 @@ collision_mask = 0
 shape = SubResource("CapsuleShape3D_lvdn7")
 
 [node name="Workstation" parent="." unique_id=608623028 instance=ExtResource("7_hlj41")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1595168708]
+replication_config = SubResource("SceneReplicationConfig_hlj41")
+
+[node name="ConstructionInventory" type="Node3D" parent="." unique_id=460385706]
+script = ExtResource("4_45qro")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"

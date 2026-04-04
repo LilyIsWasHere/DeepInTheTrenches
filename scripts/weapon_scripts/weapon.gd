@@ -47,6 +47,9 @@ func reload() -> void:
 		$ReloadTime.start()
 		
 func shoot(target_pos : Vector3) -> void:
+	
+	
+	
 	if !enabled:
 		return
 	
@@ -58,20 +61,24 @@ func shoot(target_pos : Vector3) -> void:
 			
 			# instantiate a bullet for every shot, will need to setup some kind of spray pattern
 			for i in range(ammo_per_shot - missing_shots):
-				var bullet_instance : Node3D = bullet.instantiate()
-				get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
-				bullet_instance.global_position = global_position
-				# MISSING: spray pattern calculation for target position, before sending it to the bullet
 				
-				var global_pos: Vector3 = global_position
-				var direction: Vector3 = (target_pos - global_pos).normalized()
+				var direction: Vector3 = (target_pos - global_position).normalized()
 				var rand_direction: Vector3 = get_random_gaussian_direction(direction, deg_to_rad(inaccuracy))
-				bullet_instance.shoot(global_pos, rand_direction, range, damage) # calls the shooting function for the bullet scene
+				fire_bullet.rpc(rand_direction)
 			
 			$CooldownTime.start()
 			inWeaponCooldown = true
 		else:
 			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
+
+@rpc("any_peer", "call_local", "reliable") func fire_bullet(direction: Vector3) -> void:
+	var bullet_instance : Node3D = bullet.instantiate()
+	get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
+	bullet_instance.global_position = global_position
+	
+	bullet_instance.shoot(global_position, direction, range, damage) # calls the shooting function for the bullet scene
+
+	
 
 
 func get_random_gaussian_direction(dir: Vector3, sigma: float) -> Vector3:

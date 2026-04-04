@@ -30,11 +30,21 @@ var _alt := false
 
 @export var freeCamActive : bool = false
 
-var isActive : bool = false
+@export var unit_spawner: UnitSpawnerTool
+@export var excavation_path_tool: ExcavationPathTool
+
+var owning_player: Player
+
+func _ready() -> void:
+	var stylebox: StyleBoxFlat = $CanvasLayer/Panel.get_theme_stylebox("panel") as StyleBoxFlat
+	
+	var border_color: Color = Color(0,0,1) if owning_player.player_id == 0 else Color(1,0,0)
+	
+	stylebox.border_color = border_color
 
 func _input(event: InputEvent)-> void:
-	if !isActive:
-		return
+	if !is_multiplayer_authority(): return
+	
 	# Only handle mouse capture if free cam is active
 	if freeCamActive:
 		# Receives mouse motion
@@ -74,8 +84,6 @@ func _input(event: InputEvent)-> void:
 
 # Updates mouselook and movement every frame
 func _process(delta: float) -> void:
-	if !isActive:
-		return
 	if freeCamActive:
 		_update_mouselook()
 	_update_movement(delta)

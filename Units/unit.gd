@@ -53,16 +53,23 @@ func initialize(_team: int) -> void:
 	LineOfSightManager.register_unit(self, team)
 
 func _init() -> void:
-	ai_controller = AIController.new()
-	resource_extractor = ResourceExtractor.new()
+	
 	sync_to_physics = false
 	
 	selectedArrow = selectedArrowPrefab.instantiate()
 	add_child(selectedArrow)
 	selectedArrow.visible = false
 	selectedArrow.position = Vector3(0, selectedArrowOffset, 0)
+	ai_controller = AIController.new()
+	resource_extractor = ResourceExtractor.new()
 
 func _ready() -> void:
+	
+	
+	ai_controller.set_multiplayer_authority(get_multiplayer_authority(), true)
+	resource_extractor.set_multiplayer_authority(get_multiplayer_authority(), true)
+	
+	
 	add_child(ai_controller)
 	add_child(resource_extractor)
 	

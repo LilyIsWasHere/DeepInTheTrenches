@@ -13,7 +13,6 @@ var CreatedPaths: Array[ExcavationPath]
 
 
 var tool_active: bool = false
-var player_active : bool = false
 
 func get_closest_unexcavated_path_point(position: Vector3) -> Dictionary:
 	var closest: Vector3 = Vector3(9999, 9999, 9999)
@@ -38,6 +37,7 @@ func get_closest_unexcavated_path_point(position: Vector3) -> Dictionary:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
 	pass # Replace with function body.
 
 
@@ -82,11 +82,11 @@ func _input(event: InputEvent) -> void:
 		
 
 func _physics_process(_delta: float) -> void:
-	if (tool_active && Input.is_action_pressed("ToolClick") && player_active):
+	if (tool_active && Input.is_action_pressed("ToolClick")):
 		
 		
 		var mouse_pos := get_viewport().get_mouse_position()
-		var cam: Camera3D = $"../Camera3D"
+		var cam: Camera3D = $".."
 		var from := cam.project_ray_origin(mouse_pos)
 		var to := from + cam.project_ray_normal(mouse_pos) * 3000
 		

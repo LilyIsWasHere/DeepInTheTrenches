@@ -79,16 +79,20 @@ func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_heig
 	var scaled_min_max_height_delta: Vector2 = (min_max_height_delta * 10.0) / Vector2(terrain_height, terrain_height)
 
 	var pixel_pos: Vector2i = global_to_pixel(global_pos)
-	_update_edit_heightmap_compositor(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta, resource_extractor)
+	_update_edit_heightmap_compositor.rpc(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta, resource_extractor.id)
 
 func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:
 
 	var global_scale: Vector3 = _get_global_scale($TerrainMeshScale/TerrainMesh.global_transform.basis)
 	
-	_update_edit_heightmap_compositor(Vector2(size/2, size/2), radius, height, Vector2(-9999, 9999), null)
+	_update_edit_heightmap_compositor.rpc(Vector2(size/2, size/2), radius, height, Vector2(-9999, 9999), -1)
 
 
-func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float, min_max_height_delta: Vector2, resource_extractor: ResourceExtractor) -> void:
+@rpc("any_peer", "call_local", "reliable", 0)
+func _update_edit_heightmap_compositor(position: Vector2, radius: float, height: float, min_max_height_delta: Vector2, resource_extractor_id: int) -> void:
+	
+	var resource_extractor: ResourceExtractor = ResourceExtractor.resource_extractors.get(resource_extractor_id)
+	
 	var compositor_effect: HeightmapEditCompositorEffect = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects[0]
 	
 	

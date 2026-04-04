@@ -14,6 +14,12 @@ var resource_data: Array[int] = [0,0,0]
 
 @export var inventory_connection: Inventory
 
+var id: int
+
+static var resource_extractors: Dictionary[int, ResourceExtractor]
+static var next_id: int = 0
+
+
 enum ResourceID {
 	DEFAULT,
 	ORGANIC,
@@ -31,6 +37,12 @@ var rd: RenderingDevice
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	id = next_id
+	next_id += 1
+	resource_extractors[id] = self
+	
+	
 	rd = RenderingServer.get_rendering_device()
 	
 	var tf : RDTextureFormat = RDTextureFormat.new()

@@ -17,8 +17,7 @@ func _process(_delta: float) -> void:
 	if (points.size() > 0):
 		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 64, Color(1, 1, 0))
 	
-	var closest_unexcavated_to_player: Array = get_closest_unexcavated_point(owning_camera.global_position)
-	var closest_idx: int = closest_unexcavated_to_player[0]
+
 	
 	var idx: int = 0
 	for point: Vector3 in points:
@@ -28,8 +27,6 @@ func _process(_delta: float) -> void:
 		
 		if (is_point_excavated(idx)):
 			arrow_color = Color(0.2, 1.0, 0.2)
-		if (idx == closest_idx):
-			arrow_color = Color(1, 0, 1)
 		
 		DebugDraw3D.draw_arrow(arrow_begin, arrow_end, arrow_color, 0.1)
 		DebugDraw3D.draw_text(arrow_begin, "%.2f" % (GlobalTerrainManager.get_terrain().get_terrain_data(point).height - GlobalTerrainManager.get_terrain().get_terrain_data(point).initial_height))

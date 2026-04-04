@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://dspbgkdw5j7y3"]
+
+[ext_resource type="Script" uid="uid://b0gecqoavbf4q" path="res://Multiplayer/multiplayer.gd" id="1_n4x3g"]
+[ext_resource type="PackedScene" uid="uid://b438djrjx0hs4" path="res://base.tscn" id="2_enif7"]
+
+[node name="Multiplayer" type="Node" unique_id=1792677330]
+process_mode = 3
+script = ExtResource("1_n4x3g")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=624781425]
+layer = 5
+
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=1756156702]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -181.0
+offset_top = -20.0
+offset_right = 181.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Net" type="VBoxContainer" parent="CanvasLayer/UI" unique_id=361649470]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Optitons" type="HBoxContainer" parent="CanvasLayer/UI/Net" unique_id=909244235]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/Net/Optitons" unique_id=1375104298]
+layout_mode = 2
+text = "Direct:"
+
+[node name="Host" type="Button" parent="CanvasLayer/UI/Net/Optitons" unique_id=573067248]
+layout_mode = 2
+text = "Host"
+
+[node name="Connect" type="Button" parent="CanvasLayer/UI/Net/Optitons" unique_id=437320588]
+layout_mode = 2
+text = "Connect"
+
+[node name="Remote" type="LineEdit" parent="CanvasLayer/UI/Net/Optitons" unique_id=760089760]
+custom_minimum_size = Vector2(136.02, 0)
+layout_mode = 2
+text = "127.0.0.1"
+
+[node name="Hosting" type="Label" parent="CanvasLayer/UI/Net" unique_id=1102080455]
+visible = false
+layout_mode = 2
+text = "Waiting for Player Connection..."
+
+[node name="GameScene" parent="." unique_id=198694909 instance=ExtResource("2_enif7")]
+process_mode = 1
+visible = false
+
+[connection signal="focus_entered" from="CanvasLayer/UI/Net/Optitons/Host" to="." method="_on_host_focus_entered"]
+[connection signal="pressed" from="CanvasLayer/UI/Net/Optitons/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Net/Optitons/Connect" to="." method="_on_connect_pressed"]

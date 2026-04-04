@@ -26,7 +26,6 @@ var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
 
 var settingDigPath : bool = false
 
-var isActive: bool
 var teamID : int = 0
 
 @onready var player : Player = get_parent()
@@ -39,8 +38,6 @@ func _ready() -> void:
 	update_role_buttons()
 
 func _physics_process(_delta: float) -> void:
-	if !isActive:
-		return
 	
 	for unit : Unit in selectedUnits:
 		unit.is_selected(true)
@@ -147,8 +144,6 @@ func deselect_units() -> void:
 	selectedUnits = []
 
 func _input(event: InputEvent) -> void:
-	if !isActive:
-		return
 	
 	if event.is_action_pressed("BeginExcavationPath"):
 		settingDigPath = true
@@ -160,15 +155,7 @@ func _input(event: InputEvent) -> void:
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = false
 
-func set_active(active : bool) -> void:
-	isActive = active
-	deselect_units()
-	inventoryViewer.on_close()
-	actionsDropdown.visible = false
-	rolesDropdown.visible = false
-	inDropdown = false
-	isAttacking = false
-	isMoving = false
+
 
 func get_clicked() -> Node3D:
 	var camera : Camera3D = get_viewport().get_camera_3d()

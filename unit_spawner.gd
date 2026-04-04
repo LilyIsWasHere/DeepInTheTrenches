@@ -1,3 +1,4 @@
+class_name UnitSpawnerTool
 extends Node3D
 
 var RAY_LENGTH: float = 3000
@@ -8,7 +9,8 @@ var mortarUnit := preload("res://Units/Buildings/MortarUnit.tscn")
 var turretUnit := preload("res://Units/Buildings/TurretUnit.tscn")
 var productionUnit := preload("res://Units/Buildings/FactoryUnit.tscn")
 
-var isActive : bool = false
+var owning_player: Player
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	unit_scene = footUnit
@@ -16,10 +18,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
-	if !isActive:
-		return
 	if (Input.is_action_just_pressed("SpawnPlayerUnit") || Input.is_action_just_pressed("SpawnEnemyUnit")):
-		var unit_team: int = 0 if Input.is_action_pressed("SpawnPlayerUnit") else 1
 		
 		var mouse_pos := get_viewport().get_mouse_position()
 		var cam: Camera3D = $".."
@@ -33,18 +32,21 @@ func _physics_process(_delta: float) -> void:
 			return
 			
 		else:
-			var unit: Unit = unit_scene.instantiate()
-			unit.initialize(unit_team)
-			
-			var attach_node: Node3D = $"../..".get_parent_node_3d()
-			attach_node.add_child(unit)
-			unit.global_position = result.position
+			MultiplayerSpawnerManager.unit_spawners[owning_player.player_id].spawn_unit("res://Units/FootUnit.tscn", result.position, owning_player.player_id)
 			#if unit.is_in_group("can_move"):
 				#unit.move_target_pos = result.position
+				
+		
+		
 
 func _input(event: InputEvent) -> void:
-	if !isActive:
+	
+	if !is_multiplayer_authority():
 		return
+	
+		
+	#if event.is_action_pressed("SpawnPlayerUnit"):
+		#print_once_per_client.rpc()
 	
 	if event.is_action_pressed("1"):
 		unit_scene = footUnit
@@ -54,3 +56,9 @@ func _input(event: InputEvent) -> void:
 		unit_scene = turretUnit
 	elif event.is_action_pressed("4"):
 		unit_scene = productionUnit
+
+
+@rpc("any_peer", "call_local", "reliable") func print_once_per_client(scene: PackedScene, pos: Vector3, team: int) -> void:
+	print(multiplayer.get_peers())
+	print("I will be printed to the console once per each connected client.")
+	print(is_multiplayer_authority())
