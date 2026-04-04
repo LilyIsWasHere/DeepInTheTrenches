@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://ccjvm8kk0xc7u"]
+
+[ext_resource type="FontFile" uid="uid://cb04iwqqls4vr" path="res://UI/plexsans/IBMPlexSans-Regular.ttf" id="1_1c87t"]
+[ext_resource type="FontFile" uid="uid://br68wnpyjdavy" path="res://UI/plexsans/IBMPlexSans-Bold.ttf" id="2_3gd8y"]
+[ext_resource type="FontFile" uid="uid://cnd1qymfp2u28" path="res://UI/plexsans/IBMPlexSans-BoldItalic.ttf" id="3_tyq6s"]
+[ext_resource type="FontFile" uid="uid://ca6jc8v7jm40w" path="res://UI/plexsans/IBMPlexSans-Italic.ttf" id="4_0ekqs"]
+
+[node name="TitleCreditsUI" type="Control" unique_id=142028255]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=956291232]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3529412, 0.3529412, 0.3529412, 0.5686275)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1508447492]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer" unique_id=321341972]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_1c87t")
+theme_override_fonts/bold_font = ExtResource("2_3gd8y")
+theme_override_fonts/bold_italics_font = ExtResource("3_tyq6s")
+theme_override_fonts/italics_font = ExtResource("4_0ekqs")
+bbcode_enabled = true
+text = "[font_size=48][b]\"Deep In The Trenches\"[/b][/font_size]
+an RTS game with a fully destructive terrain
+
+
+[tornado radius=5 freq=2]COMP 4501 Final Project[/tornado]
+
+
+[font_size=32]Lily Barker
+Hendry Hu
+Nick Ralph
+Melanie Thorpe[/font_size]"
+horizontal_alignment = 1
+vertical_alignment = 1
