@@ -68,7 +68,6 @@ shader_parameter/aa_opacity = true
 shader_parameter/display_aa_bands = false
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_27wy6"]
-resource_local_to_scene = true
 size = Vector2(1, 1)
 subdivide_width = 499
 subdivide_depth = 499
