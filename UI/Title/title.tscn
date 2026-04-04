@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://cae8uj353lhne"]
+
+[ext_resource type="Script" uid="uid://dc6duxd6dy1km" path="res://UI/Title/title.gd" id="1_gbbk2"]
+[ext_resource type="FontFile" uid="uid://br68wnpyjdavy" path="res://UI/plexsans/IBMPlexSans-Bold.ttf" id="1_p6p2e"]
+[ext_resource type="PackedScene" uid="uid://ccjvm8kk0xc7u" path="res://UI/Title/title_credits_ui.tscn" id="2_ewcyg"]
+[ext_resource type="Theme" uid="uid://b7cyq8sigk6vm" path="res://UI/Title/title_theme.tres" id="2_gbbk2"]
+[ext_resource type="PackedScene" uid="uid://du7gvfrmorwp5" path="res://UI/Title/title_settings_ui.tscn" id="3_y7csd"]
+[ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="4_afynt"]
+[ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="4_tgkd2"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_woosa"]
+[ext_resource type="ButtonGroup" uid="uid://bx2pnycplr8d3" path="res://UI/Title/title_toggles.tres" id="8_woosa"]
+
+[sub_resource type="Environment" id="Environment_tgkd2"]
+background_mode = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_afynt"]
+resource_local_to_scene = true
+shader = ExtResource("5_woosa")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 200
+shader_parameter/heightmap_frequency_scale = 1.0
+shader_parameter/organic_frequency_scale = 0.515
+shader_parameter/crystal_frequency_scale = 0.49
+shader_parameter/organic_offset = 50.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.75
+shader_parameter/crystal_scarcity = 0.595
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woosa"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_3bquc"]
+line_spacing = -20.0
+font = ExtResource("1_p6p2e")
+font_size = 64
+
+[node name="Title" type="Node3D" unique_id=1401910938]
+script = ExtResource("1_gbbk2")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=643333999]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.057996348, 0.057996348, 0.05799634, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2039121797]
+environment = SubResource("Environment_tgkd2")
+
+[node name="Terrain" parent="." unique_id=1718280512 instance=ExtResource("4_tgkd2")]
+unique_name_in_owner = true
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+num_tiles = Vector2i(1, 1)
+heightmap_gen_material = SubResource("ShaderMaterial_afynt")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1442860059]
+transform = Transform3D(1, 0, 0, 0, 0.68011975, 0.733101, 0, -0.733101, 0.68011975, 5.063382, 14.719957, 9.379066)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1759437563]
+unique_name_in_owner = true
+transform = Transform3D(-0.72961056, 0.38139784, -0.56763023, 0, 0.8300352, 0.557711, 0.68386286, 0.40691185, -0.60560244, -20.049286, 54.485455, -22.650867)
+shadow_enabled = true
+shadow_opacity = 0.9
+script = ExtResource("4_afynt")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1221214813]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=792041080]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control" unique_id=1023288648]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer" unique_id=1268077209]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control/MarginContainer/HBoxContainer" unique_id=135246180]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_woosa")
+
+[node name="TitleCreditsUI" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/PanelContainer" unique_id=142028255 instance=ExtResource("2_ewcyg")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="TitleSettingsUI" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/PanelContainer" unique_id=1858148070 instance=ExtResource("3_y7csd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="MainPanel" type="VBoxContainer" parent="CanvasLayer/Control/MarginContainer/HBoxContainer" unique_id=1771993060]
+layout_mode = 2
+theme_override_constants/separation = 9
+alignment = 1
+
+[node name="Title" type="Label" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1134931715]
+layout_mode = 2
+text = "Deep
+In
+The
+Trenches"
+label_settings = SubResource("LabelSettings_3bquc")
+horizontal_alignment = 2
+
+[node name="SingleplayerButton" type="Button" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1362156368]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_gbbk2")
+text = "Play with computer"
+alignment = 2
+
+[node name="HostButton" type="Button" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1011260147]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_gbbk2")
+toggle_mode = true
+button_group = ExtResource("8_woosa")
+text = "Host a game"
+alignment = 2
+
+[node name="JoinButton" type="Button" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1657793895]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_gbbk2")
+toggle_mode = true
+button_group = ExtResource("8_woosa")
+text = "Join a game"
+alignment = 2
+
+[node name="SettingsButton" type="Button" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1286113985]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_gbbk2")
+toggle_mode = true
+button_group = ExtResource("8_woosa")
+text = "Settings"
+alignment = 2
+
+[node name="CreditsButton" type="Button" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel" unique_id=1942720275]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_gbbk2")
+toggle_mode = true
+button_group = ExtResource("8_woosa")
+text = "Credits"
+alignment = 2
+
+[connection signal="pressed" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/SingleplayerButton" to="." method="_on_singleplayer_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/SettingsButton" to="." method="_on_settings_button_toggled"]
+[connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/CreditsButton" to="." method="_on_credits_button_toggled"]

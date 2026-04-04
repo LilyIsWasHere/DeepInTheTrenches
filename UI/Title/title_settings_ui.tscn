@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://du7gvfrmorwp5"]
+
+[ext_resource type="Script" uid="uid://cf5k6048yy35u" path="res://UI/Title/title_settings_ui.gd" id="1_thm6s"]
+[ext_resource type="Theme" uid="uid://b7cyq8sigk6vm" path="res://UI/Title/title_theme.tres" id="1_wac4o"]
+[ext_resource type="FontFile" uid="uid://dollyvc5fke57" path="res://UI/plexsans/IBMPlexSans-SemiBold.ttf" id="2_a8roy"]
+
+[node name="TitleSettingsUI" type="Control" unique_id=1858148070]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_thm6s")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1432000092]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3529412, 0.3529412, 0.3529412, 0.5686275)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1789958707]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=1225668499]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer" unique_id=414729786]
+layout_mode = 2
+
+[node name="GraphicsHeadingLabel" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=38750099]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+theme_override_fonts/font = ExtResource("2_a8roy")
+theme_override_font_sizes/font_size = 40
+text = "Graphics"
+
+[node name="ShadowsToggleButton" type="CheckButton" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=616092294]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+button_pressed = true
+text = "Terrain Shadows"
+
+[node name="Spacer" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=2008919742]
+layout_mode = 2
+
+[node name="SoundHeadingLabel2" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1727024]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+theme_override_fonts/font = ExtResource("2_a8roy")
+theme_override_font_sizes/font_size = 40
+text = "Sound"
+
+[node name="MasterSliderContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1200055226]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer/MasterSliderContainer" unique_id=813591307]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+text = "Master Volume"
+
+[node name="Control" type="Control" parent="MarginContainer/ScrollContainer/VBoxContainer/MasterSliderContainer" unique_id=1268685083]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterSlider" type="HSlider" parent="MarginContainer/ScrollContainer/VBoxContainer/MasterSliderContainer" unique_id=24801559]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+theme = ExtResource("1_wac4o")
+value = 100.0
+scrollable = false
+
+[node name="SFXSliderContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1869833228]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer" unique_id=388807883]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+text = "Sound Effects Volume"
+
+[node name="Control" type="Control" parent="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer" unique_id=1198738044]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterSlider" type="HSlider" parent="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer" unique_id=21121783]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+theme = ExtResource("1_wac4o")
+value = 100.0
+scrollable = false
+
+[node name="MusicSliderContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1046761212]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer/MusicSliderContainer" unique_id=397533935]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+text = "Music Volume"
+
+[node name="Control" type="Control" parent="MarginContainer/ScrollContainer/VBoxContainer/MusicSliderContainer" unique_id=1009415988]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterSlider" type="HSlider" parent="MarginContainer/ScrollContainer/VBoxContainer/MusicSliderContainer" unique_id=360039448]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+theme = ExtResource("1_wac4o")
+value = 100.0
+scrollable = false
+
+[node name="Spacer2" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1796611660]
+layout_mode = 2
+
+[node name="KeybindsHeadingLabel" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=77559546]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+theme_override_fonts/font = ExtResource("2_a8roy")
+theme_override_font_sizes/font_size = 40
+text = "Keybinds"
+
+[node name="KeybindsDescriptionLabel" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1648196816]
+layout_mode = 2
+theme = ExtResource("1_wac4o")
+theme_override_font_sizes/font_size = 16
+text = "Press the keybind and then press the key you want to rebind to. Press the escape to cancel."
+
+[node name="Spacer3" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer" unique_id=1100683411]
+layout_mode = 2
+
+[connection signal="toggled" from="MarginContainer/ScrollContainer/VBoxContainer/ShadowsToggleButton" to="." method="_on_shadows_toggle_button_toggled"]
