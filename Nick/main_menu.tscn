@@ -1,0 +1,186 @@
+[gd_scene format=3 uid="uid://c1fx5jg2denqf"]
+
+[ext_resource type="Shader" uid="uid://b5br1alrv3qw0" path="res://Nick/main_menu.gdshader" id="1_figej"]
+[ext_resource type="Script" uid="uid://cvysd5o06t6eo" path="res://Nick/main_menu.gd" id="1_gr02g"]
+[ext_resource type="FontFile" uid="uid://cfdcx7j43ue84" path="res://Nick/Airborne 86.ttf" id="1_k3of0"]
+[ext_resource type="StyleBox" uid="uid://cij17xcbuwnqn" path="res://Nick/normal_button.tres" id="2_iejt6"]
+[ext_resource type="StyleBox" uid="uid://d0riwhn2wn8dn" path="res://Nick/pressed_button.tres" id="3_figej"]
+[ext_resource type="Texture2D" uid="uid://dlg67anavgwge" path="res://Nick/Screenshot 2026-04-03 171105.png" id="3_yppy2"]
+[ext_resource type="StyleBox" uid="uid://bw6aiypa6b57x" path="res://Nick/hover_button.tres" id="4_gr02g"]
+[ext_resource type="FontFile" uid="uid://erdgllynwqkw" path="res://examples_dd3d/Roboto-Bold.ttf" id="8_yppy2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yppy2"]
+shader = ExtResource("1_figej")
+shader_parameter/scroll_speed = 0.050000239874999686
+
+[node name="Main Menu" type="Node2D" unique_id=660133912]
+script = ExtResource("1_gr02g")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1621126165]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1924564893]
+material = SubResource("ShaderMaterial_yppy2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_yppy2")
+expand_mode = 1
+
+[node name="MainMenu" type="MarginContainer" parent="CanvasLayer" unique_id=140070414]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -111.0
+offset_right = 82.0
+offset_bottom = 111.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 245
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu" unique_id=1521788240]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 45
+
+[node name="Title" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer" unique_id=1944798441]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5294118)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 14
+theme_override_constants/outline_size = 21
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 100
+text = "Deep in the Trenches"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu/VBoxContainer" unique_id=69276334]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer/MarginContainer" unique_id=1494525723]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Start" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer" unique_id=624543699]
+custom_minimum_size = Vector2(200, 66)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = ExtResource("2_iejt6")
+theme_override_styles/pressed = ExtResource("3_figej")
+theme_override_styles/hover = ExtResource("4_gr02g")
+text = "Start"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1512895078]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 76
+
+[node name="Credits" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1754890906]
+custom_minimum_size = Vector2(200, 66)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = ExtResource("2_iejt6")
+theme_override_styles/pressed = ExtResource("3_figej")
+theme_override_styles/hover = ExtResource("4_gr02g")
+text = "Credits"
+
+[node name="Quit" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=895393357]
+custom_minimum_size = Vector2(200, 66)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = ExtResource("2_iejt6")
+theme_override_styles/pressed = ExtResource("3_figej")
+theme_override_styles/hover = ExtResource("4_gr02g")
+text = "Quit"
+
+[node name="Credits" type="MarginContainer" parent="CanvasLayer" unique_id=774649540]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -111.0
+offset_right = 82.0
+offset_bottom = 111.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 245
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Credits" unique_id=2126646573]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 45
+
+[node name="Credits" type="Label" parent="CanvasLayer/Credits/VBoxContainer" unique_id=1726497248]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5294118)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 14
+theme_override_constants/outline_size = 21
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 64
+text = "Credits"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Credits/VBoxContainer" unique_id=1202094850]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Credits/VBoxContainer/MarginContainer" unique_id=820755769]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Credits/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1136891542]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Credits/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=579491053]
+layout_mode = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/Credits/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1280250294]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("8_yppy2")
+theme_override_font_sizes/font_size = 20
+text = "
+Lily Barker
+Hendry Hu
+Nicholas Ralph
+Melanie Thorpe
+"
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="CanvasLayer/Credits/VBoxContainer/MarginContainer/VBoxContainer" unique_id=376517758]
+custom_minimum_size = Vector2(200, 66)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_k3of0")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = ExtResource("2_iejt6")
+theme_override_styles/pressed = ExtResource("3_figej")
+theme_override_styles/hover = ExtResource("4_gr02g")
+text = "Back"
+
+[connection signal="button_down" from="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer/Start" to="." method="_on_start_button_down"]
+[connection signal="button_down" from="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/Credits" to="." method="_on_credits_button_down"]
+[connection signal="button_down" from="CanvasLayer/MainMenu/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/Quit" to="." method="_on_quit_button_down"]
+[connection signal="button_down" from="CanvasLayer/Credits/VBoxContainer/MarginContainer/VBoxContainer/Back" to="." method="_on_back_button_down"]

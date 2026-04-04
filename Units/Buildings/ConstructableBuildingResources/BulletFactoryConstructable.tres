@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://o3hfjyq0544u" path="res://resources/bullet_factory_icon.png" id="2_i7qhu"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="2_xro4j"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="3_xro4j"]
-[ext_resource type="PackedScene" uid="uid://tewox8xo2ifm" path="res://Units/Buildings/FactoryUnit.tscn" id="5_gd4h2"]
+[ext_resource type="PackedScene" uid="uid://bc65cjqf6sncx" path="res://Units/Buildings/BulletFactoryUnit.tscn" id="5_gd4h2"]
 
 [resource]
 script = ExtResource("2_6ikdp")

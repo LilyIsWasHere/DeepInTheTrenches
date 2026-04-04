@@ -1,6 +1,8 @@
 extends Node3D
 class_name Inventory
 
+signal itemAdded
+
 @export var slots: Array[InventorySlot]
 
 var item_slot_dict: Dictionary[InventoryItem, InventorySlot] = {}
@@ -69,7 +71,7 @@ func add_items(item: InventoryItem, quantity: int) -> int:
 	if overflow < 0: overflow = 0
 	slot.num = min(slot.num, slot.max_num)
 	
-	
+	itemAdded.emit()
 	return overflow
 	
 @rpc("any_peer", "call_remote", "unreliable") func rpc_add_items(item_path: String, quantity: int) -> void:
