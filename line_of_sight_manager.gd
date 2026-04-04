@@ -17,6 +17,9 @@ var units_seen_this_frame: Array[Dictionary]
 
 var should_update_closest: bool = false
 
+
+var phys_ticks_without_process: int = 0
+
 # Called when the node enters the scene tree for the first time.
 func _init() -> void:
 	var arr0: Array[Unit]
@@ -30,9 +33,14 @@ func _init() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
 func _process(_delta: float) -> void:
-	pass
+	phys_ticks_without_process = 0
 	
 func _physics_process(delta: float) -> void:
+	
+	phys_ticks_without_process += 1
+	if (phys_ticks_without_process > 10):
+		return
+		
 	_get_enemy_unit_visibility(0)
 	_get_enemy_unit_visibility(1)
 	

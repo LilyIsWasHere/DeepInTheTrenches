@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://j6ixkqum3m1p"]
+
+[ext_resource type="Script" uid="uid://cabp03eulhuwn" path="res://Multiplayer/multiplayer_test_scene.gd" id="1_ayfhx"]
+[ext_resource type="PackedScene" uid="uid://cfgkjsr1gxvg8" path="res://Multiplayer/MPSphere.tscn" id="1_ikaox"]
+[ext_resource type="PackedScene" uid="uid://dpgp3e6f2xmk5" path="res://Player.tscn" id="2_a247t"]
+[ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ayfhx"]
+[ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="4_7e08a"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7vw7o"]
+shader = ExtResource("4_7e08a")
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/size = 500
+shader_parameter/heightmap_frequency_scale = 10.0
+shader_parameter/organic_frequency_scale = 4.344
+shader_parameter/crystal_frequency_scale = 2.565
+shader_parameter/organic_offset = 100.0
+shader_parameter/crystal_offset = 70.0
+shader_parameter/organic_scarcity = 0.663
+shader_parameter/crystal_scarcity = 0.762
+
+[node name="MultiplayerTestScene" type="Node3D" unique_id=166302726]
+script = ExtResource("1_ayfhx")
+
+[node name="Objects" type="Node3D" parent="." unique_id=1387999329]
+
+[node name="MpSphere" parent="Objects" unique_id=1735547008 instance=ExtResource("1_ikaox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5256903, 1.9225196, -1.2443166)
+
+[node name="MpSphere2" parent="Objects" unique_id=1179481423 instance=ExtResource("1_ikaox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.40900546, 0.8001665, 0.12549365)
+
+[node name="Player" parent="." unique_id=1877591714 node_paths=PackedStringArray("terrain") instance=ExtResource("2_a247t")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -19.473824, 7.7558184)
+terrain = NodePath("../Terrain")
+
+[node name="Terrain" parent="." unique_id=1718280512 instance=ExtResource("3_ayfhx")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -7.122198, 0)
+num_tiles = Vector2i(3, 3)
+tile_size = 255
+heightmap_gen_material = SubResource("ShaderMaterial_7vw7o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=118196264]
+transform = Transform3D(-0.82311475, -0.39196217, 0.41091102, 0, 0.72359395, 0.6902259, -0.5678752, 0.5681351, -0.5956008, 8.382453, 10.432047, -14.499258)

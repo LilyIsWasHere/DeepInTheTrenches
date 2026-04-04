@@ -54,12 +54,37 @@ metadata/_custom_type_script = "uid://84nxt6to1ne8"
 [sub_resource type="BoxShape3D" id="BoxShape3D_x534k"]
 size = Vector3(6.096588, 3.371521, 4.29023)
 
-[node name="FactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("productionTimer", "productionProgressBar", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q7vbn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:team")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:health")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:velocity")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:is_constructed")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:is_placed")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[node name="FactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_q7vbn")
-productionTimer = NodePath("ProductionTimer")
-productionProgressBar = NodePath("SubViewport/ProductionProgressBar")
+construction_inventory = NodePath("ConstructionInventory")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")
 inventory = NodePath("Inventory")
@@ -121,3 +146,10 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00819397, 1.1857604, -0.025562286)
 shape = SubResource("BoxShape3D_x534k")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=195851278]
+replication_config = SubResource("SceneReplicationConfig_q7vbn")
+
+[node name="ConstructionInventory" type="Node3D" parent="." unique_id=438235801]
+script = ExtResource("2_su1s3")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"

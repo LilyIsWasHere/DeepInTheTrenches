@@ -3,6 +3,7 @@ class_name SculptBrush
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	terrain = GlobalTerrainManager.get_terrain()
 	resource_extractor.resource_items_extracted.connect(on_resource_items_acquired)
 	pass # Replace with function body.
 
@@ -22,10 +23,11 @@ const RAY_LENGTH: float = 3000.0
 
 var terrain: Terrain
 
+
+
 func _physics_process(delta: float) -> void:
 	
-	if ($"../..".player_id == 1):
-		return
+
 	
 	var do_edit: bool = false
 	if (continuous):

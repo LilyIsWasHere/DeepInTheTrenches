@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="DeepInTheTrenches"
-run/main_scene="uid://cae8uj353lhne"
+run/main_scene="uid://dspbgkdw5j7y3"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -29,6 +29,7 @@ GlobalPlayerManager="*res://global_player_manager.gd"
 Navigation="*uid://cy0mmna3ycsxr"
 ItemTransportBlackboard="*uid://ctufirrptf431"
 GameSettings="*uid://cm3tow1k6ot2p"
+MultiplayerSpawnerManager="*uid://bibb6a5oaogwf"
 
 [debug]
 
@@ -141,7 +142,7 @@ ScrollDown={
 }
 ToolClick={
 "deadzone": 0.2,
-"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(79, 19),"global_position":Vector2(91, 79),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(286, 5),"global_position":Vector2(298, 65),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
 ToolAltClick={
@@ -181,7 +182,7 @@ RotateBuildingCCW={
 }
 PlaceBuilding={
 "deadzone": 0.2,
-"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(428, 23),"global_position":Vector2(440, 83),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(272, 12),"global_position":Vector2(284, 72),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
 alt={

@@ -13,10 +13,18 @@ var building_ui_scene: PackedScene = preload("res://UI/SingleBuildingUI.tscn")
 
 
 func spawn_building_to_place(building_type: ConstructableBuilding) -> void:
-	var building_inst: BuildingUnit = building_type.scene.instantiate()
-	$"../../..".add_child(building_inst)
-	building_inst.initialize_building(0, building_type.construction_cost)
-	print("spawning " + str(building_inst))
+	
+	var building: BuildingUnit = MultiplayerSpawnerManager.unit_spawners[GlobalPlayerManager.get_player_by_auth(multiplayer.get_unique_id()).player_id].spawn_unit(
+		building_type.scene.resource_path, 
+		Vector3(0,0,0), 
+		GlobalPlayerManager.get_player_by_auth(multiplayer.get_unique_id()).player_id, 
+	) as BuildingUnit
+	
+	var construction_cost: Dictionary[InventoryItem, int] = building_type.construction_cost if building_type.construction_cost != null else {}
+	building.initialize_building(building_type.construction_cost)
+	
+
+		
 	
 
 func _ready() -> void:

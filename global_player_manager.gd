@@ -11,20 +11,17 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 
-func register_player(player: Player) -> void:
+
+func register_player(player: Player, team: int) -> void:
 	players[player.player_id] = player
 
+func get_player_by_auth(multiplayer_authority: int) -> Player:
+	for key: int in players.keys():
+		if players[key].get_multiplayer_authority() == multiplayer_authority:
+			return players[key]
+			
+	return null
+	
+	
 func get_player(id: int) -> Player:
 	return players[id]
-
-func set_active_player(id : int) -> void:
-	for i in players.size():
-		players[i].set_active(false)
-	print("Player ", id, " is active")
-	players[id].set_active(true)
-
-func _input(event : InputEvent) -> void:
-	if event.is_action_pressed("player1"):
-		set_active_player(0)
-	elif event.is_action_pressed("player2"):
-		set_active_player(1)

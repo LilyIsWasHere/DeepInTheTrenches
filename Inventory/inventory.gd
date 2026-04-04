@@ -31,16 +31,30 @@ static func transfer_items(from_inventory: Inventory, to_inventory: Inventory, i
 	
 	
 func add_slot(item: InventoryItem, max_quantity: int) -> void:
+	
+
+	if (is_multiplayer_authority()):
+		rpc_add_slot.rpc(item.resource_path, max_quantity)
+	
 	var slot: InventorySlot = InventorySlot.new()
 	slot.item = item
 	slot.num = 0
 	slot.max_num = max_quantity
+	
 	slots.append(slot)
 	item_slot_dict.set(item, slot)
+	
+	
+@rpc("any_peer", "call_remote", "unreliable") func rpc_add_slot(item_path: String, max_quantity: int) -> void:
+	add_slot(load(item_path), max_quantity)
 	
 # adds the specified quantity of the item to the relevant inventory slot, returning any overflow above slot max_quantity
 # returns -1 if the inventory lacks a slot for the specified item type, or the quantity < 0
 func add_items(item: InventoryItem, quantity: int) -> int:
+	
+	if (is_multiplayer_authority()):
+		rpc_add_items.rpc(item.resource_path, quantity)
+	
 	var slot: InventorySlot = item_slot_dict.get(item)
 
 	if (slot == null || quantity < 0):
@@ -55,9 +69,16 @@ func add_items(item: InventoryItem, quantity: int) -> int:
 	itemAdded.emit()
 	return overflow
 	
+@rpc("any_peer", "call_remote", "unreliable") func rpc_add_items(item_path: String, quantity: int) -> void:
+	add_items(load(item_path), quantity) 
+
+	
 # removes the specified quantity of the item from the relevant inventory slot, returning any underflow below zero (positive value)
 # returns -1 if the inventory lacks a slot for the specified item type, or the quantity < 0
 func remove_items(item: InventoryItem, quantity: int) -> int:
+	
+	if (is_multiplayer_authority()):
+		rpc_remove_items.rpc(item.resource_path, quantity)
 	
 	var slot: InventorySlot = item_slot_dict.get(item)
 	
@@ -69,6 +90,9 @@ func remove_items(item: InventoryItem, quantity: int) -> int:
 	slot.num = max(slot.num, 0)
 	
 	return underflow
+	
+@rpc("any_peer", "call_remote", "unreliable") func rpc_remove_items(item_path: String, quantity: int) -> void:
+	remove_items(load(item_path), quantity) 
 	
 # returns -1 if the inventory lacks a slot for the specified item type
 func get_item_quantity(item: InventoryItem) -> int:

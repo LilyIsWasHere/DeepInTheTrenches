@@ -2,7 +2,7 @@ class_name BuildingUnit
 extends Unit
 
 
-var is_constructed: bool = false
+@export var is_constructed: bool = false
 @export var is_placed: bool = false
 
 
@@ -11,19 +11,18 @@ var under_construction_material: Material = preload("res://materials/building_un
 
 func _init() -> void:
 	super()
-	construction_inventory = Inventory.new()
 
 func _ready() -> void:
-	print("im ready")
 	super()
-	add_child(construction_inventory)
 
 
-func initialize_building(_team: int, constructiton_cost: Dictionary[InventoryItem, int]) -> void:
-	initialize(_team)
+func initialize_building(constructiton_cost: Dictionary[InventoryItem, int]) -> void:
+	
+	print("initializing")
+	#print("Initializing building on session " + str(multiplayer.get_unique_id()))
 	
 	is_placed = false
-	remove_child(ai_controller)
+	ai_controller.process_mode = Node.PROCESS_MODE_DISABLED
 	#if (constructiton_cost.is_empty()):
 		#is_constructed = true
 	#else:
@@ -33,7 +32,7 @@ func initialize_building(_team: int, constructiton_cost: Dictionary[InventoryIte
 		construction_inventory.add_slot(item, constructiton_cost[item])
 		ItemTransportBlackboard.request_dropoff(construction_inventory, item, constructiton_cost[item], ItemTransportRequest.RequestPriority.HIGH)
 	
-	_set_materials_under_construction()
+	_set_materials_under_construction.rpc()
 		
 
 	
@@ -54,9 +53,13 @@ func _process(_delta: float) -> void:
 	if (is_constructed == false && are_construction_resource_requirements_met()):
 		is_constructed = true
 		_set_materials_constructed()
+		
 
 func _physics_process(delta: float) -> void:
 	super(delta)
+		
+	if (!is_multiplayer_authority()):
+		return
 		
 	if (!is_placed):
 		var mouse_pos := get_viewport().get_mouse_position()
@@ -79,8 +82,7 @@ func _physics_process(delta: float) -> void:
 
 func are_construction_resource_requirements_met() -> bool:
 	
-	if construction_inventory == null:
-		return true
+
 		
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
 		
@@ -96,7 +98,7 @@ func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 	return arr
 
 # override me to set all the materials in this building
-func _set_materials_under_construction() -> void:
+@rpc func _set_materials_under_construction() -> void:
 	var children: Array[Node] = get_all_children(self)
 	
 	for child in children:
@@ -111,6 +113,6 @@ func _set_materials_constructed() -> void:
 			child.set_surface_override_material(0, null)
 	
 func on_placed() -> void:
-	add_child(ai_controller)
+	ai_controller.process_mode = Node.PROCESS_MODE_INHERIT
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
 		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM)
