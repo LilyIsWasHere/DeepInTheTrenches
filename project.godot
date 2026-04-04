@@ -210,3 +210,15 @@ debug_factory={
 
 3d/run_on_separate_thread=true
 3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+
+[shader_globals]
+
+terrain_ao={
+"type": "float",
+"value": 101.385
+}

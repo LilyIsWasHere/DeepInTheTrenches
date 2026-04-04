@@ -1,8 +1,13 @@
 extends Node
 
+@export var auto_connect: bool = true
+
 const PORT = 4433
 var hosting: bool = false
 var game_started: bool = false
+
+
+
 
 func _ready() -> void:
 	
@@ -10,11 +15,15 @@ func _ready() -> void:
 	get_tree().paused = true
 	# You can save bandwidth by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
+	
 
 	# Automatically start the server in headless mode.
 	if DisplayServer.get_name() == "headless":
 		print("Automatically starting dedicated server.")
 		_on_host_pressed.call_deferred()
+		
+		
+
 		
 
 
@@ -42,6 +51,21 @@ func _on_host_pressed() -> void:
 	
 
 
+func _on_local_singleplayer_pressed() -> void:
+	print("Hosting")
+	var peer := ENetMultiplayerPeer.new()
+	peer.create_server(PORT)
+	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		OS.alert("Failed to start multiplayer server.")
+		return
+	multiplayer.multiplayer_peer = peer
+	
+	hosting = true
+	$CanvasLayer/UI/Net/Optitons.visible = false
+	$CanvasLayer/UI/Net/Hosting.visible = true
+	
+	start_game(true)
+
 func _on_connect_pressed() -> void:
 	print("Connecting")
 	# Start as client.
@@ -57,7 +81,7 @@ func _on_connect_pressed() -> void:
 	multiplayer.multiplayer_peer = peer
 
 
-func start_game() -> void:
+func start_game(local: bool = false) -> void:
 	print(multiplayer.get_peers())
 	# Hide the UI and unpause to start the game.
 	$CanvasLayer/UI.hide()
@@ -66,8 +90,5 @@ func start_game() -> void:
 	
 	if (is_multiplayer_authority()):
 		$"GameScene/PlayerSpawner".spawn_player(1)
-		$"GameScene/PlayerSpawner".spawn_player(multiplayer.get_peers().get(0))
-
-
-func _on_host_focus_entered() -> void:
-	print("FOCUS") # Replace with function body.
+		if (!local): $"GameScene/PlayerSpawner".spawn_player(multiplayer.get_peers().get(0))
+		else: $"GameScene/PlayerSpawner".spawn_player(2)

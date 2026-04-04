@@ -51,6 +51,10 @@ custom_minimum_size = Vector2(136.02, 0)
 layout_mode = 2
 text = "127.0.0.1"
 
+[node name="LocalSingleplayer" type="Button" parent="CanvasLayer/UI/Net/Optitons" unique_id=1657875994]
+layout_mode = 2
+text = "Local Singleplayer"
+
 [node name="Hosting" type="Label" parent="CanvasLayer/UI/Net" unique_id=1102080455]
 visible = false
 layout_mode = 2
@@ -63,3 +67,4 @@ visible = false
 [connection signal="focus_entered" from="CanvasLayer/UI/Net/Optitons/Host" to="." method="_on_host_focus_entered"]
 [connection signal="pressed" from="CanvasLayer/UI/Net/Optitons/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Net/Optitons/Connect" to="." method="_on_connect_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Net/Optitons/LocalSingleplayer" to="." method="_on_local_singleplayer_pressed"]

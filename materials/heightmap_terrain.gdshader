@@ -252,6 +252,8 @@ void fragment() {
 
     ROUGHNESS = 1.0;
     SPECULAR = mix(0.0, mix(0.0, 0.5, flatness), h);
+	
+	AO_LIGHT_AFFECT = 10.0;
 }
 
 //void light() {
