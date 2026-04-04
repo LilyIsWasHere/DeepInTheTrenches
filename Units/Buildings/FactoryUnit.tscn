@@ -80,12 +80,10 @@ properties/7/path = NodePath(".:is_placed")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
-[node name="FactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("construction_inventory", "productionTimer", "productionProgressBar", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[node name="FactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_q7vbn")
-productionTimer = NodePath("ProductionTimer")
-productionProgressBar = NodePath("SubViewport/ProductionProgressBar")
 construction_inventory = NodePath("ConstructionInventory")
 LineOfSightTarget = NodePath("LineOfSightTarget")
 BodyMesh = NodePath("MeshInstance3D")

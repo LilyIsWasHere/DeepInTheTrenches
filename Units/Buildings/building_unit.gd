@@ -54,7 +54,6 @@ func _process(_delta: float) -> void:
 		is_constructed = true
 		_set_materials_constructed()
 		
-	DebugDraw3D.draw_text(global_position + Vector3(0,2,0), str(construction_inventory.slots))
 
 func _physics_process(delta: float) -> void:
 	super(delta)
@@ -83,8 +82,7 @@ func _physics_process(delta: float) -> void:
 
 func are_construction_resource_requirements_met() -> bool:
 	
-	if construction_inventory == null:
-		return true
+
 		
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
 		

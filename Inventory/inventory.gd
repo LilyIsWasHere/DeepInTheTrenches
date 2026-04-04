@@ -34,7 +34,6 @@ func add_slot(item: InventoryItem, max_quantity: int) -> void:
 	
 
 	if (is_multiplayer_authority()):
-		print("RPCing remote")
 		rpc_add_slot.rpc(item.resource_path, max_quantity)
 	
 	var slot: InventorySlot = InventorySlot.new()
@@ -42,12 +41,8 @@ func add_slot(item: InventoryItem, max_quantity: int) -> void:
 	slot.num = 0
 	slot.max_num = max_quantity
 	
-	print("adding slot for " + str(item.name) + " on peer " + str(multiplayer.get_unique_id()))
-
-	print("before: " + str(item_slot_dict))
 	slots.append(slot)
 	item_slot_dict.set(item, slot)
-	print("after: " + str(item_slot_dict))
 	
 	
 @rpc("any_peer", "call_remote", "unreliable") func rpc_add_slot(item_path: String, max_quantity: int) -> void:

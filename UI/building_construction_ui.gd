@@ -20,6 +20,7 @@ func spawn_building_to_place(building_type: ConstructableBuilding) -> void:
 		GlobalPlayerManager.get_player_by_auth(multiplayer.get_unique_id()).player_id, 
 	) as BuildingUnit
 	
+	var construction_cost: Dictionary[InventoryItem, int] = building_type.construction_cost if building_type.construction_cost != null else {}
 	building.initialize_building(building_type.construction_cost)
 	
 

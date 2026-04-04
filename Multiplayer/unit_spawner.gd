@@ -32,6 +32,7 @@ func _spawn_unit_func(data: Array) -> Unit:
 	
 	var unit: Unit = scene.instantiate()
 	unit.initialize(team)
+	(func()->void: unit.global_position = pos).call_deferred()
 	unit.global_position = pos
 	unit.set_multiplayer_authority(get_multiplayer_authority())
 	spawned_unit.emit(unit)
