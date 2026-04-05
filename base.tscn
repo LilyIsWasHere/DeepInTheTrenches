@@ -66,4 +66,12 @@ transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -62.
 [node name="Node3D4" parent="." unique_id=1783833469 instance=ExtResource("4_ohhpf")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 292.36597, 0, 113.61902)
 
+[node name="Player0CamOrigin" type="Node3D" parent="." unique_id=875080957]
+transform = Transform3D(-1, 7.161255e-08, -5.0143647e-08, 0, 0.57357645, 0.81915206, 8.742278e-08, 0.81915206, -0.57357645, 120.659, 225.265, -72.494)
+visible = false
+
+[node name="Player1CamOrigin" type="Node3D" parent="." unique_id=1991555454]
+transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 120.659, 225.265, 304.11188)
+visible = false
+
 [connection signal="spawned" from="PlayerSpawner" to="PlayerSpawner" method="_on_spawned"]

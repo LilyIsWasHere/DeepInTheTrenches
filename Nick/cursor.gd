@@ -1,7 +1,7 @@
 extends Node3D
 class_name Cursor
 
-var rayLength : int = 100
+var rayLength : int = 3000
 
 var currentRect : Area3D
 @onready var rectPrefab : PackedScene = preload("res://Nick/selection_rect.tscn")

@@ -40,7 +40,6 @@ visibleDebugMesh = true
 replication_config = SubResource("SceneReplicationConfig_d6rpx")
 
 [node name="CamAnchor" type="Node3D" parent="." unique_id=1898928595]
-transform = Transform3D(-0.99993616, 0.008546421, -0.007390649, 0, 0.6541089, 0.7564004, 0.0112988055, 0.7563521, -0.6540671, -0.304357, 23.854485, -15.972433)
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="." unique_id=1670406318]
 _spawnable_scenes = PackedStringArray("uid://btlpx6lr8ra1s")

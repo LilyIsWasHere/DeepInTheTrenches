@@ -108,6 +108,8 @@ func _update_movement(delta: float) -> void:
 	if _shift: speed_multi *= SHIFT_MULTIPLIER
 
 	
+	
+	
 	# Checks if we should bother translating the camera
 	if _direction == Vector3.ZERO and offset.length_squared() > _velocity.length_squared():
 		# Sets the velocity to 0 to prevent jittering due to imperfect deceleration
@@ -117,11 +119,15 @@ func _update_movement(delta: float) -> void:
 		_velocity.x = clamp(_velocity.x + offset.x, -_vel_multiplier, _vel_multiplier)
 		_velocity.y = clamp(_velocity.y + offset.y, -_vel_multiplier, _vel_multiplier)
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
-		if freeCamActive:
-			translate(_velocity * delta * speed_multi)
-		else:
-			#not the best way to do this (isn't as smooth as freeCam) but works
-			global_position -= _velocity*0.1*speed_multi
+		
+		_velocity = _velocity.rotated(Vector3(0,1,0), deg_to_rad(rotation_degrees.y))
+		
+		global_translate(_velocity * delta * speed_multi * Vector3(50.0, 25.0, 50.0))
+		#if freeCamActive:
+			#translate(_velocity * delta * speed_multi)
+		#else:
+			##not the best way to do this (isn't as smooth as freeCam) but works
+			#global_position -= _velocity*0.1*speed_multi
 
 # Updates mouse look 
 func _update_mouselook() -> void:

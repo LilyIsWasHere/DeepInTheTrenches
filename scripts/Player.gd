@@ -38,8 +38,17 @@ func _ready() -> void:
 
 	
 func attach_camera() -> void:
+	
+	
+	
 	var cam_inst: FreeLookCamera = CameraScene.instantiate()
 	Camera = cam_inst
+	
+	if (player_id == 0):
+		cam_inst.global_transform = $"../Player0CamOrigin".global_transform
+	else:
+		cam_inst.global_transform = $"../Player1CamOrigin".global_transform
+	
 	cam_inst.set_multiplayer_authority(get_multiplayer_authority())
 	cam_inst.set_multiplayer_authority.call_deferred(get_multiplayer_authority())
 	cam_inst.unit_spawner.owning_player = self

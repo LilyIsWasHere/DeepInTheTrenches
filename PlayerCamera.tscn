@@ -28,9 +28,8 @@ border_width_bottom = 3
 border_color = Color(1, 0, 0, 1)
 
 [node name="Camera3D" type="Camera3D" unique_id=1454175158 node_paths=PackedStringArray("unit_spawner", "excavation_path_tool")]
+fov = 40.0
 script = ExtResource("1_ibo1c")
-sensitivity = null
-freeCamActive = null
 unit_spawner = NodePath("UnitSpawner")
 excavation_path_tool = NodePath("ExcavationPathTool")
 
