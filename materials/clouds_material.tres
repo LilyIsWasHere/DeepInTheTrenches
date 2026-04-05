@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://iw75gspyu6m3"]
+
+[ext_resource type="Texture2D" uid="uid://d3vgelcndx7jw" path="res://resources/clouds_tex.png" id="1_qpddx"]
+
+[resource]
+heightmap_texture = ExtResource("1_qpddx")

@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
+[ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
@@ -16,10 +17,18 @@ shader_parameter/crystal_offset = 70.0
 shader_parameter/organic_scarcity = 0.663
 shader_parameter/crystal_scarcity = 0.762
 
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_8rhti"]
+
+[sub_resource type="Sky" id="Sky_ohhpf"]
+sky_material = SubResource("PhysicalSkyMaterial_8rhti")
+
 [sub_resource type="Environment" id="Environment_8rhti"]
+background_mode = 2
+sky = SubResource("Sky_ohhpf")
 ssao_enabled = true
 ssao_radius = 6.34
 ssao_intensity = 0.3
+volumetric_fog_density = 0.0
 
 [node name="Node3D" type="Node3D" unique_id=198694909]
 
@@ -44,5 +53,17 @@ script = ExtResource("4_21bcp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=793894031]
 environment = SubResource("Environment_8rhti")
+
+[node name="Node3D" parent="." unique_id=878599373 instance=ExtResource("4_ohhpf")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 110.745056, 0, -62.09883)
+
+[node name="Node3D2" parent="." unique_id=1072255060 instance=ExtResource("4_ohhpf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110.745056, 0, 292.2625)
+
+[node name="Node3D3" parent="." unique_id=162723945 instance=ExtResource("4_ohhpf")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -62.38974, 0, 113.61903)
+
+[node name="Node3D4" parent="." unique_id=1783833469 instance=ExtResource("4_ohhpf")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 292.36597, 0, 113.61902)
 
 [connection signal="spawned" from="PlayerSpawner" to="PlayerSpawner" method="_on_spawned"]

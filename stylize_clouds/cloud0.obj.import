@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cnrsm8ih1unoc"
+path="res://.godot/imported/cloud0.obj-e807da8f800790d28b06b948a753626f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cloud0.obj-e807da8f800790d28b06b948a753626f.mesh"]
+
+source_file="res://stylize_clouds/cloud0.obj"
+dest_files=["res://.godot/imported/cloud0.obj-e807da8f800790d28b06b948a753626f.mesh", "res://.godot/imported/cloud0.obj-e807da8f800790d28b06b948a753626f.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
