@@ -33,7 +33,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	#velocity.x = 0
 	#velocity.z = 0
-	should_move = false
+	#should_move = false
 	pass
 
 func move_direct_tick_fn() -> void:
@@ -42,6 +42,8 @@ func move_direct_tick_fn() -> void:
 	velocity.x = steer_result.desired_velocity.x
 	velocity.z = steer_result.desired_velocity.z
 	arrived = steer_result.arrived
+	if (arrived):
+		should_move = false
 	
 func move_safe_tick_fn() -> void:
 	#TODO: REPLACE THIS WITH NAVIGATION STEERING STUFF
@@ -50,7 +52,8 @@ func move_safe_tick_fn() -> void:
 	velocity.x = steer_result.desired_velocity.x
 	velocity.z = steer_result.desired_velocity.z
 	arrived = steer_result.arrived
-	
+	if (arrived):
+		should_move = false
 
 
 func set_destination_point_safe(destination: Vector3) -> void:

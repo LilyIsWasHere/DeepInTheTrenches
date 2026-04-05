@@ -1,3 +1,4 @@
+class_name SelectionRect
 extends Area3D
 
 var startPos : Vector3

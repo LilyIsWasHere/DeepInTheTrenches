@@ -16,7 +16,7 @@ var resource_extractor: ResourceExtractor
 var enemy_overlay_mat: Material = preload("res://materials/enemy_overlay_material.tres")
 var friendly_overlap_mat : Material = preload("res://materials/friendly_overlay_material.tres")
 
-var should_move: bool = false
+@export var should_move: bool = false
 
 var selectedArrowPrefab : PackedScene = preload("res://Nick/selected_arrow.tscn")
 var selectedArrow : Sprite3D
@@ -101,6 +101,9 @@ func get_slope_velocity_multiplier(_normal: Vector3, _vel_dir: Vector3) -> float
 	return 1.0
 
 func move_along_terrain() -> void:
+	
+	
+	
 	var delta: float = get_physics_process_delta_time()
 	
 	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
@@ -114,10 +117,15 @@ func move_along_terrain() -> void:
 	var result: Dictionary = space_state.intersect_ray(query)
 	
 	if(result.is_empty()):
+		
 		global_position = future_pos
 		on_floor = false
 		
 	else:
+		if (!is_multiplayer_authority() && velocity.length() > 0.0):
+			print("non authority moving with velocity: " + str(velocity))
+			print("	to_pos: " + str(result["position"]))
+			print("	should_move: " + str(should_move))
 		global_position = result["position"]
 		slope_normal = result["normal"]
 		velocity.y = 0.0

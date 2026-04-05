@@ -3,7 +3,7 @@ class_name Cursor
 
 var rayLength : int = 3000
 
-var currentRect : Area3D
+var currentRect : SelectionRect
 @onready var rectPrefab : PackedScene = preload("res://Nick/selection_rect.tscn")
 @export var visibleDebugMesh : bool = false
 
@@ -28,9 +28,10 @@ var settingDigPath : bool = false
 
 var teamID : int = 0
 
-@onready var player : Player = get_parent()
+@onready var player : Player = get_parent().owning_player
 
 func _ready() -> void:
+	teamID = player.player_id
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
 	rolesDropdown.visible = false

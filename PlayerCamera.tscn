@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://c8kyg434ywwc7" path="res://resource_extractor.gd" id="6_l4wm4"]
 [ext_resource type="PackedScene" uid="uid://ctc4oo1iulc2q" path="res://UI/BuildingConstructionUI.tscn" id="7_ri33b"]
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="8_3y4og"]
+[ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="9_qqtj1"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
 
@@ -81,3 +82,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ri33b")
 [node name="ExcavationPathTool" type="Node3D" parent="." unique_id=812009993]
 top_level = true
 script = ExtResource("8_3y4og")
+
+[node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("9_qqtj1")]
+visibleDebugMesh = true

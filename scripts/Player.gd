@@ -30,9 +30,7 @@ func _ready() -> void:
 	if (is_multiplayer_authority()):
 		attach_camera()
 		
-	
-	cursor = $Cursor
-	cursor.teamID = player_id
+
 	
 	
 
