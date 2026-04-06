@@ -102,9 +102,13 @@ func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportReques
 	for p_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		for pickup: ItemTransportRequest in pickup_requests[p_idx]:
 			var dist: float = near_point.distance_to(pickup.inventory.global_position)
+			
+			if (pickup.inventory.get_item_quantity(pickup.item) == 0):
+				continue
+			
 			if (dist < closest_dist):
 				var dropoff: ItemTransportRequest = _find_matching_dropoff(pickup)
-				if (!dropoff || has_bidirecional_request(dropoff.inventory, dropoff.item) && !dropoff.local): 
+				if (!dropoff || pickup.inventory == dropoff.inventory || pickup.local): 
 					continue
 					
 				
@@ -133,7 +137,7 @@ func _find_matching_dropoff(pickup_request: ItemTransportRequest) -> ItemTranspo
 	for d_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var dropoff_arr: Array = dropoff_requests[d_idx]
 		for dropoff: ItemTransportRequest in dropoff_arr:
-			if (dropoff.item == pickup_request.item && !has_bidirecional_request(dropoff.inventory, dropoff.item) && !dropoff.local):
+			if (dropoff.item == pickup_request.item && pickup_request.inventory != dropoff.inventory && !dropoff.local):
 				return dropoff
 				
 	return null

@@ -220,6 +220,11 @@ func init_ai_states() -> void:
 	#################################
 	### EXCAVATE ROLE CHILD STATES ##
 	#################################
+	
+	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
+		.set_tick_function(set_destination_to_nearest_dig_point_if_exists) \
+		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
+		
 	var move_to_dig_point_state := excavate_role_state.add_child_state(AIState.create("move_to_dig_point")) \
 		.set_tick_function(move_safe_tick_fn) \
 		# enter functions can be lambdas too
@@ -229,9 +234,7 @@ func init_ai_states() -> void:
 		.set_tick_function(dig_at_point_tick_fn) \
 		.set_enter_function(func()->void: dig_timer.start(dig_delay))
 		
-	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
-		.set_tick_function(set_destination_to_nearest_dig_point_if_exists) \
-		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
+	
 		
 		
 		
@@ -272,10 +275,13 @@ func set_excavation_item_dropoff_destination() -> void:
 		else:
 			fullest_item = energy_crystal_item
 	
-	if fullest_item == null: return
+	if fullest_item == null: 
+		return
 	
 	var dropoff: ItemTransportRequest = ItemTransportBlackboard.claim_closest_item_dropoff(global_position, fullest_item, inventory.item_slot_dict[fullest_item].num)
-	if dropoff == null: return
+	if dropoff == null: 
+		print("No dropoff available")
+		return
 	
 	dropoff_request = dropoff
 	set_destination_point_safe(dropoff.inventory.global_position)
@@ -322,7 +328,9 @@ func set_destination_to_nearest_dig_point_if_exists() -> void:
 
 func dig_at_point_tick_fn() -> void:
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
-	if (!dig_point_info["exists"]): return
+	if (!dig_point_info["exists"]): 
+		print("AAAAAAAAAA")
+		return
 	var height_delta: float = dig_point_info["height_delta"]
 	
 	if (dig_timer.is_stopped()):

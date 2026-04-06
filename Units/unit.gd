@@ -76,7 +76,10 @@ func _ready() -> void:
 	add_child(resource_extractor)
 	
 	resource_extractor.inventory_connection = inventory
+	_set_team_overlay_materials()
 	
+	
+func _set_team_overlay_materials() -> void:
 	if (team == 0):
 		var children: Array[Node] = get_all_children(self)
 		for child in children:
@@ -87,7 +90,19 @@ func _ready() -> void:
 		for child in children:
 			if child.is_class("MeshInstance3D") && !child.is_in_group("no_team_overlay_material"):
 				child.material_overlay = enemy_overlay_mat
-	
+
+
+func _unset_team_overlay_materials() -> void:
+	if (team == 0):
+		var children: Array[Node] = get_all_children(self)
+		for child in children:
+			if child.is_class("MeshInstance3D") && !child.is_in_group("no_team_overlay_material"):
+				child.material_overlay = null
+	else:
+		var children: Array[Node] = get_all_children(self)
+		for child in children:
+			if child.is_class("MeshInstance3D") && !child.is_in_group("no_team_overlay_material"):
+				child.material_overlay = null
 
 
 func _physics_process(delta: float) -> void:
