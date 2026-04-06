@@ -70,10 +70,16 @@ properties/7/path = NodePath(".:is_constructed")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
-[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536]
+[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_3ooov")
+weapon = NodePath("ArtilleryWeapon")
+construction_inventory = NodePath("ConstructionInventory")
+LineOfSightTarget = NodePath("LineOfSightTarget")
+BodyMesh = NodePath("MeshInstance3D")
+inventory = NodePath("Inventory")
+selectableArea = NodePath("Selectable")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

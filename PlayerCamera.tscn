@@ -81,9 +81,12 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ri33b")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1355530150]
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = -1
+anchor_left = 0.14500001
+anchor_right = 0.823
 anchor_bottom = 1.0
+offset_left = -0.040008545
+offset_right = -0.0960083
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 40

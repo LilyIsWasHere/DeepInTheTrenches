@@ -46,9 +46,11 @@ func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 func initialize(_team: int) -> void:
 	team = _team
 	if (team == 0):
+		if BodyMesh != null:
 			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
 	else:
-		BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
+		if BodyMesh != null:
+			BodyMesh.material_override.albedo_color = Color(1, 0.2, 0.2)
 		
 	LineOfSightManager.register_unit(self, team)
 
