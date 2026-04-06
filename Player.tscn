@@ -3,21 +3,6 @@
 [ext_resource type="Script" uid="uid://wv8qughyk7t2" path="res://scripts/Player.gd" id="1_xhfnw"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="8_5ncpa"]
 [ext_resource type="Script" uid="uid://cp2qyglrsxc12" path="res://Multiplayer/unit_spawner.gd" id="8_wi0c6"]
-[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="10_l6ohk"]
-[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="11_oudfo"]
-[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="12_d6rpx"]
-
-[sub_resource type="Resource" id="Resource_r3kul"]
-script = ExtResource("10_l6ohk")
-item = ExtResource("11_oudfo")
-max_num = 256
-metadata/_custom_type_script = "uid://84nxt6to1ne8"
-
-[sub_resource type="Resource" id="Resource_jatw7"]
-script = ExtResource("10_l6ohk")
-item = ExtResource("12_d6rpx")
-max_num = 512
-metadata/_custom_type_script = "uid://84nxt6to1ne8"
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_d6rpx"]
 properties/0/path = NodePath(".:player_id")
@@ -31,7 +16,6 @@ bullet_spawner = NodePath("BulletSpawner")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1473978561]
 script = ExtResource("8_5ncpa")
-slots = Array[ExtResource("10_l6ohk")]([SubResource("Resource_r3kul"), SubResource("Resource_jatw7")])
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2090344084]

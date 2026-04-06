@@ -1,11 +1,11 @@
 extends Path3D
 class_name ExcavationPath
 
-var height_delta: float = -1.75
+var height_delta: float = -2.0
 
 var owning_camera: Camera3D
 
-# Called when the node enters the scene tree for the first time.
+# Called when the node enters the scene tree for tdhe first time.
 func _ready() -> void:
 	pass # Replace with function body.
 

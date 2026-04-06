@@ -3,14 +3,19 @@ class_name Inventory
 
 signal itemAdded
 
-@export var slots: Array[InventorySlot]
-
+@export var slots: Array[InventorySlot] = []
 var item_slot_dict: Dictionary[InventoryItem, InventorySlot] = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for slot in slots:
-		item_slot_dict[slot.item] = slot
+	var children: Array[Node] = get_children()
+	for child in children:
+		if child is InventorySlot:
+			var slot: InventorySlot = child as InventorySlot
+			slot.name = slot.item.name + " Slot"
+			slots.append(slot)
+			item_slot_dict[slot.item] = slot
+		
  
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,15 +37,21 @@ static func transfer_items(from_inventory: Inventory, to_inventory: Inventory, i
 	
 func add_slot(item: InventoryItem, max_quantity: int) -> void:
 	
-
 	if (is_multiplayer_authority()):
 		rpc_add_slot.rpc(item.resource_path, max_quantity)
+	
+	
+	if (item_slot_dict.has(item)):
+		assert(false, "add_slot failed: Inventory " + str(self) + " already has slot for  " + item.name)
+		return
 	
 	var slot: InventorySlot = InventorySlot.new()
 	slot.item = item
 	slot.num = 0
 	slot.max_num = max_quantity
+	slot.name = item.name + " Slot"
 	
+	add_child(slot)
 	slots.append(slot)
 	item_slot_dict.set(item, slot)
 	
@@ -51,6 +62,8 @@ func add_slot(item: InventoryItem, max_quantity: int) -> void:
 # adds the specified quantity of the item to the relevant inventory slot, returning any overflow above slot max_quantity
 # returns -1 if the inventory lacks a slot for the specified item type, or the quantity < 0
 func add_items(item: InventoryItem, quantity: int) -> int:
+	
+	print("adding items to inventory: " + str(self))
 	
 	if (is_multiplayer_authority()):
 		rpc_add_items.rpc(item.resource_path, quantity)

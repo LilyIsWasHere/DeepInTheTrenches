@@ -5,7 +5,7 @@
 [ext_resource type="ArrayMesh" uid="uid://ln8bgwgqy1t4" path="res://resources/factory.obj" id="2_sp3ff"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="3_g02vh"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="4_g02vh"]
-[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="4_jdmie"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/dbg_inventory_slot.gd" id="4_jdmie"]
 [ext_resource type="FontFile" uid="uid://cqbkyhs6g8trq" path="res://examples_dd3d/Minecraft - by BennyFonts1002 - from fontstruct.ttf" id="5_jdmie"]
 [ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="5_xocyb"]
 

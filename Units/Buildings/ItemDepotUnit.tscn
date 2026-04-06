@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dx24te8mmsxmv" path="res://Units/Buildings/item_depot.gd" id="2_7vp2u"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_grfpu"]
-[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="4_jxqvy"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/dbg_inventory_slot.gd" id="4_jxqvy"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="5_5dmhn"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_m0fyl"]
 [ext_resource type="PackedScene" uid="uid://tlw800q3y84j" path="res://sm_prop_barrel_02.tscn" id="7_grfpu"]
