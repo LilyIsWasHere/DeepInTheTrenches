@@ -52,12 +52,20 @@ func _ready() -> void:
 	#uncomment this vvv when we get troops digging working
 	#add_to_group("can_dig")
 
+
+func initialize(_team: int) -> void:
+	super(_team)
+	var distant_mat: ShaderMaterial = $DistantUnitMarker.material_override
+	distant_mat.set_shader_parameter("team", team)
+
 func _process(_delta: float) -> void:
 	super(_delta)
-	var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()
-	if (new_icons != ai_state_icons):
-		ai_state_icons = new_icons
-		ai_state_display.set_icons(ai_state_icons)
+	
+	if (is_multiplayer_authority()):
+		var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()
+		if (new_icons != ai_state_icons):
+			ai_state_icons = new_icons
+			ai_state_display.set_icons(ai_state_icons)
 
 func init_ai_states() -> void:
 	
@@ -71,9 +79,8 @@ func init_ai_states() -> void:
 	# Generally (but with lots of exceptions), only leaf node states (states with no child state) will have tick functions
 	var self_defense_state := base_state.add_child_state(AIState.create("self_defense")) \
 		.set_display_icon(load("res://UnitAI/StateIcons/crosshair_icon.png")) \
-		.set_tick_function(attack_enemy_tick_fn) \
-		.set_enter_function(on_see_enemy) \
-		.set_exit_function(on_enemy_gone)
+		.set_tick_function(attack_enemy_tick_fn)
+		
 	var occupied_state := base_state.add_child_state(AIState.create("occupied"))\
 		.set_display_icon(load("res://icon.svg"))
 	var direct_order_state := base_state.add_child_state(AIState.create("direct_order")) \
@@ -267,13 +274,7 @@ func can_see_enemy() -> bool:
 	else:
 		return false
 	
-func on_see_enemy() -> void:
-	print("ENEMY IN SIGHT!")
-	
-	
-func on_enemy_gone() -> void:
-	print("Must've been the wind") # return to previous state/task?
-	
+
 
 func attack_order_tick_fn() -> void:
 	pass
@@ -441,6 +442,7 @@ func die() -> void:
 	super()
 	rotate_object_local(Vector3(1,0,0), deg_to_rad(90))
 	$AIStateIconsSprite.visible = false
+	$DistantUnitMarker.visible = false
 
 	
 	

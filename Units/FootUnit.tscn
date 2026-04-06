@@ -56,6 +56,7 @@ properties/6/spawn = true
 properties/6/replication_mode = 1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vvufb"]
+resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("12_h5n6i")
 shader_parameter/team = 0

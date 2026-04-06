@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://cmiuh488qtiml" path="res://scripts/weapon_scripts/weapon.gd" id="1_v53xh"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_b5rk6"]
 [ext_resource type="PackedScene" uid="uid://bc103q6d7uwa2" path="res://scenes/weapon_scenes/bullet.tscn" id="2_kyrca"]
+[ext_resource type="Script" uid="uid://1aewywpcrjwu" path="res://Inventory/inventory_slot.gd" id="4_v53xh"]
+[ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="5_b5rk6"]
+[ext_resource type="Resource" uid="uid://dt3t4ws4pich7" path="res://Inventory/InventoryItems/magazine_item.tres" id="6_b5rk6"]
 
 [node name="Weapon" type="Node3D" unique_id=687748021]
 script = ExtResource("1_v53xh")
@@ -12,6 +15,20 @@ inaccuracy = 3.0
 
 [node name="Magazine" type="Node3D" parent="." unique_id=1170183349]
 script = ExtResource("2_b5rk6")
+
+[node name="Ammo Slot" type="Node" parent="Magazine" unique_id=726505375]
+script = ExtResource("4_v53xh")
+item = ExtResource("5_b5rk6")
+num = 16
+max_num = 16
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="Magazine Slot" type="Node" parent="Magazine" unique_id=102928916]
+script = ExtResource("4_v53xh")
+item = ExtResource("6_b5rk6")
+num = 10
+max_num = 10
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
 
 [node name="ReloadTime" type="Timer" parent="." unique_id=627210623]
 wait_time = 2.0
