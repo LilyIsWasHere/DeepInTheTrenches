@@ -11,6 +11,7 @@
 [ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="9_qvlg4"]
 [ext_resource type="Script" uid="uid://cwwanfn8gie7m" path="res://Units/ai_state_icons_sprite.gd" id="10_obu8b"]
 [ext_resource type="PackedScene" uid="uid://b3t5jhs6exlrn" path="res://UI/AIStateDisplay.tscn" id="10_oup3h"]
+[ext_resource type="Shader" uid="uid://byr7uw8ooxg8t" path="res://materials/distant_unit_marker.gdshader" id="12_h5n6i"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -72,7 +73,17 @@ properties/6/path = NodePath(".:position")
 properties/6/spawn = true
 properties/6/replication_mode = 1
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvufb"]
+render_priority = 0
+shader = ExtResource("12_h5n6i")
+shader_parameter/team = 0
+shader_parameter/near_vanish_dist = 50.0
+shader_parameter/vanish_range = 5.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_obu8b"]
+
 [node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "ai_state_display", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+transform = Transform3D(1, 0, 0, 0, 0.9715491, -0.23683815, 0, 0.23683815, 0.9715491, 0, 0, 0)
 collision_layer = 4
 collision_mask = 0
 sync_to_physics = false
@@ -148,3 +159,8 @@ render_target_update_mode = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1341743197]
 replication_config = SubResource("SceneReplicationConfig_obu8b")
+
+[node name="DistantUnitMarker" type="MeshInstance3D" parent="." unique_id=1399663589 groups=["no_team_overlay_material"]]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_vvufb")
+mesh = SubResource("TorusMesh_obu8b")

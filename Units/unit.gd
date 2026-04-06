@@ -78,12 +78,12 @@ func _ready() -> void:
 	if (team == 0):
 		var children: Array[Node] = get_all_children(self)
 		for child in children:
-			if child.is_class("MeshInstance3D"):
+			if child.is_class("MeshInstance3D") && !child.is_in_group("no_team_overlay_material"):
 				child.material_overlay = friendly_overlap_mat
 	else:
 		var children: Array[Node] = get_all_children(self)
 		for child in children:
-			if child.is_class("MeshInstance3D"):
+			if child.is_class("MeshInstance3D") && !child.is_in_group("no_team_overlay_material"):
 				child.material_overlay = enemy_overlay_mat
 	
 
@@ -122,10 +122,6 @@ func move_along_terrain() -> void:
 		on_floor = false
 		
 	else:
-		if (!is_multiplayer_authority() && velocity.length() > 0.0):
-			print("non authority moving with velocity: " + str(velocity))
-			print("	to_pos: " + str(result["position"]))
-			print("	should_move: " + str(should_move))
 		global_position = result["position"]
 		slope_normal = result["normal"]
 		velocity.y = 0.0

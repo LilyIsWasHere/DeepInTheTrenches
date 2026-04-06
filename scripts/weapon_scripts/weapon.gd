@@ -9,7 +9,7 @@ class_name Weapon
 @export var ammo_per_shot : int = 1
 
 # loading the bullet scene
-const bullet : PackedScene = preload("res://scenes/weapon_scenes/bullet.tscn")
+@export var bullet : PackedScene;
 const magazineItem : InventoryItem = preload("res://Inventory/InventoryItems/magazine_item.tres")
 const ammoItem : InventoryItem = preload("res://Inventory/InventoryItems/ammo_item.tres")
 
@@ -48,8 +48,6 @@ func reload() -> void:
 		
 func shoot(target_pos : Vector3) -> void:
 	
-	
-	
 	if !enabled:
 		return
 	
@@ -72,7 +70,7 @@ func shoot(target_pos : Vector3) -> void:
 			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
 
 @rpc("any_peer", "call_local", "reliable") func fire_bullet(direction: Vector3) -> void:
-	var bullet_instance : Node3D = bullet.instantiate()
+	var bullet_instance : Bullet = bullet.instantiate()
 	get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 	bullet_instance.global_position = global_position
 	

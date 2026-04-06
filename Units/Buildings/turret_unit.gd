@@ -86,10 +86,7 @@ func rotate_towards_enemy_tick_fn() -> void:
 	global_transform.basis = intermediate_basis
 	assert(intermediate_basis.is_conformal() && intermediate_basis.is_finite())
 	
-	var vehicle: VehicleBody3D = VehicleBody3D.new()
-	vehicle.basis
-	
-	var real_forward := vehicle.transform * Vector3.MODEL_FRONT
+
 	
 	
 func fire_at_enemy_tick_fn() -> void:

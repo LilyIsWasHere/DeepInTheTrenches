@@ -1,7 +1,7 @@
 extends Path3D
 class_name ExcavationPath
 
-var height_delta: float = -1.0
+var height_delta: float = -1.75
 
 var owning_camera: Camera3D
 
@@ -13,9 +13,16 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	
+	
+	
+	
+	
 	var points := curve.get_baked_points()
 	if (points.size() > 0):
-		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 64, Color(1, 1, 0))
+		
+		var dist: float = points[0].distance_to(owning_camera.global_position)
+		
+		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 3 * dist, Color(1, 1, 0))
 	
 
 	

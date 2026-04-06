@@ -79,7 +79,7 @@ func sculpt_tile(global_pos: Vector3, radius: float, height: float, min_max_heig
 	var scaled_min_max_height_delta: Vector2 = (min_max_height_delta * 10.0) / Vector2(terrain_height, terrain_height)
 
 	var pixel_pos: Vector2i = global_to_pixel(global_pos)
-	_update_edit_heightmap_compositor.rpc(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta, resource_extractor.id)
+	_update_edit_heightmap_compositor.rpc(Vector2(pixel_pos.x, pixel_pos.y), radius, height, scaled_min_max_height_delta, resource_extractor.id if resource_extractor else -1)
 
 func dbg_sculpt_tile(local_pos: Vector3, radius: float, height: float) -> void:
 

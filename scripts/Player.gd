@@ -11,6 +11,9 @@ var CameraScene: PackedScene = preload("res://PlayerCamera.tscn")
 
 var cursor : Cursor
 
+@export var unit_spawner: MultiplayerSpawner
+@export var bullet_spawner: MultiplayerSpawner
+
 
 func _input(event: InputEvent) -> void:
 	#if (event.is_action_pressed("ToolClick")):

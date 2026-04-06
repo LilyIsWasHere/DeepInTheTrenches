@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://ci8h600jjf0kr" path="res://Units/Buildings/mortar_unit.gd" id="1_3ooov"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_3ooov"]
 [ext_resource type="PackedScene" uid="uid://cfjqneqmh7gqf" path="res://Nick/Assets/Ready Assets/mortar.tscn" id="2_ft3yy"]
-[ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="2_x5o4g"]
 [ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="3_ft3yy"]
 [ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="4_x5o4g"]
+[ext_resource type="PackedScene" uid="uid://wiinibxdca3h" path="res://scenes/weapon_scenes/artillery_weapon.tscn" id="6_s74ec"]
+[ext_resource type="PackedScene" uid="uid://dfx30yk5yafor" path="res://Workstation.tscn" id="7_s74ec"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -69,18 +70,10 @@ properties/7/path = NodePath(".:is_constructed")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
-[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_3ooov")
-weapon = NodePath("Weapon")
-construction_inventory = NodePath("ConstructionInventory")
-LineOfSightTarget = NodePath("LineOfSightTarget")
-BodyMesh = NodePath("MeshInstance3D")
-inventory = NodePath("Inventory")
-selectableArea = NodePath("Selectable")
-
-[node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("2_x5o4g")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -123,3 +116,8 @@ replication_config = SubResource("SceneReplicationConfig_k42jg")
 [node name="ConstructionInventory" type="Node3D" parent="." unique_id=1613089741]
 script = ExtResource("2_3ooov")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="ArtilleryWeapon" parent="." unique_id=687748021 instance=ExtResource("6_s74ec")]
+
+[node name="Workstation" parent="." unique_id=608623028 instance=ExtResource("7_s74ec")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7035409, 0, -0.15178615)

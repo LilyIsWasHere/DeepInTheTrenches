@@ -58,6 +58,7 @@ can_move=""
 can_dig=""
 can_attack=""
 foot_unit=""
+no_team_overlay_material=""
 
 [gui]
 
@@ -210,6 +211,7 @@ debug_factory={
 
 3d/run_on_separate_thread=true
 3d/physics_engine="Jolt Physics"
+3d/default_linear_damp=0.0
 
 [rendering]
 

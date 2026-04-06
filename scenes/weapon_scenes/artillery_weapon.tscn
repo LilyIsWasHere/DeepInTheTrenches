@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://wiinibxdca3h"]
+
+[ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="1_ty4qq"]
+[ext_resource type="PackedScene" uid="uid://cxf10ht8qgdcj" path="res://scenes/weapon_scenes/Shell.tscn" id="2_1m1d5"]
+[ext_resource type="Script" uid="uid://dt3vw34yg7c7t" path="res://scripts/weapon_scripts/artillery_weapon.gd" id="2_gth5h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1m1d5"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_gth5h"]
+
+[node name="ArtilleryWeapon" unique_id=687748021 instance=ExtResource("1_ty4qq")]
+script = ExtResource("2_gth5h")
+firing_velocity = 50.0
+bullet = ExtResource("2_1m1d5")
+inaccuracy = 1.5
+
+[node name="CooldownTime" parent="." index="2" unique_id=490793869]
+wait_time = 2.0
+
+[node name="TargetDBG" type="MeshInstance3D" parent="." index="3" unique_id=1939483130]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_1m1d5")
+mesh = SubResource("SphereMesh_gth5h")
+skeleton = NodePath("../Magazine")

@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://cxf10ht8qgdcj"]
+
+[ext_resource type="Script" uid="uid://dg6r5g71jjggu" path="res://scripts/weapon_scripts/shell.gd" id="1_nli3a"]
+[ext_resource type="ArrayMesh" uid="uid://dlwsgceg838ch" path="res://resources/shell.obj" id="2_yosw4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nli3a"]
+radius = 0.2
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yosw4"]
+albedo_color = Color(0.25275356, 0.25275356, 0.25275356, 1)
+
+[sub_resource type="Curve" id="Curve_yosw4"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7239354, 0.70634925), -1.4021107, -1.4021107, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_7kk88"]
+curve = SubResource("Curve_yosw4")
+
+[sub_resource type="Gradient" id="Gradient_xt4ex"]
+offsets = PackedFloat32Array(0, 0.059413582, 0.2199074, 0.4992284)
+colors = PackedColorArray(1, 0.7166667, 0, 1, 1, 0.31666666, 0, 1, 0.41, 0.295405, 0.25010002, 1, 0.18, 0.18, 0.18, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qps5r"]
+gradient = SubResource("Gradient_xt4ex")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yosw4"]
+particle_flag_damping_as_friction = true
+direction = Vector3(0, 1, 0)
+spread = 52.721
+initial_velocity_min = 74.17
+initial_velocity_max = 130.31999
+damping_min = 0.68700004
+damping_max = 3.8840003
+color_ramp = SubResource("GradientTexture1D_qps5r")
+alpha_curve = SubResource("CurveTexture_7kk88")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7kk88"]
+transparency = 1
+vertex_color_use_as_albedo = true
+use_particle_trails = true
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_xt4ex"]
+material = SubResource("StandardMaterial3D_7kk88")
+radius = 0.1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7kk88"]
+resource_local_to_scene = true
+particle_flag_damping_as_friction = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_max = 12.19
+gravity = Vector3(0, 0, 0)
+damping_min = 0.68700004
+damping_max = 3.8840003
+color_ramp = SubResource("GradientTexture1D_qps5r")
+alpha_curve = SubResource("CurveTexture_7kk88")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yosw4"]
+properties/0/path = NodePath("..:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("..:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("..:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("..:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[node name="Shell" type="RigidBody3D" unique_id=564017920]
+collision_layer = 0
+script = ExtResource("1_nli3a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=378065661]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_nli3a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2146312420]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, 0.2, 0, -0.2, -8.742278e-09, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_yosw4")
+mesh = ExtResource("2_yosw4")
+
+[node name="ExplosionParticles" type="GPUParticles3D" parent="." unique_id=40393825]
+transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, -0.3, 0, 0.3, -1.3113417e-08, 0, 0, 0)
+emitting = false
+amount = 1000
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+trail_enabled = true
+trail_lifetime = 0.2
+process_material = SubResource("ParticleProcessMaterial_yosw4")
+draw_passes = 2
+draw_pass_1 = SubResource("TubeTrailMesh_xt4ex")
+draw_pass_2 = null
+
+[node name="ExhaustParticles" type="GPUParticles3D" parent="." unique_id=280460112]
+transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, -0.3, 0, 0.3, -1.3113417e-08, 0, 0, 0)
+amount = 64
+lifetime = 0.5
+trail_enabled = true
+trail_lifetime = 0.2
+process_material = SubResource("ParticleProcessMaterial_7kk88")
+draw_passes = 2
+draw_pass_1 = SubResource("TubeTrailMesh_xt4ex")
+draw_pass_2 = null
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=964750626]
+root_path = NodePath("../CollisionShape3D")
+replication_config = SubResource("SceneReplicationConfig_yosw4")
