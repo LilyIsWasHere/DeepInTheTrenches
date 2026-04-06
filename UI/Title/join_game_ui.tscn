@@ -1,5 +1,8 @@
 [gd_scene format=3 uid="uid://dwnn82b3ulpmd"]
 
+[ext_resource type="Theme" uid="uid://b7cyq8sigk6vm" path="res://UI/Title/title_theme.tres" id="1_dryhf"]
+[ext_resource type="Script" uid="uid://1khqrndqg2ur" path="res://UI/Title/join_game_ui.gd" id="1_krp5c"]
+
 [node name="JoinGameUI" type="Control" unique_id=1445190923]
 layout_mode = 3
 anchors_preset = 15
@@ -7,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_krp5c")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=295500217]
 layout_mode = 1
@@ -16,3 +20,69 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.3529412, 0.3529412, 0.3529412, 0.5686275)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=9144741]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=253609330]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1941043431]
+layout_mode = 2
+theme = ExtResource("1_dryhf")
+theme_override_font_sizes/font_size = 32
+text = "Join a multiplayer game"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=601966070]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=763875521]
+layout_mode = 2
+theme = ExtResource("1_dryhf")
+text = "IP address: "
+
+[node name="IPInput" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1070916096]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(248, 0)
+layout_mode = 2
+theme = ExtResource("1_dryhf")
+text = "127.0.0.1"
+expand_to_text_length = true
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=213279533]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1701771757]
+layout_mode = 2
+theme = ExtResource("1_dryhf")
+text = "Port:"
+
+[node name="PortInput" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1055577428]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_dryhf")
+text = "4433"
+max_length = 4
+
+[node name="JoinButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=729806418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("1_dryhf")
+theme_override_font_sizes/font_size = 32
+text = "Join"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
