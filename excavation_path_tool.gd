@@ -32,8 +32,25 @@ func get_closest_unexcavated_path_point(position: Vector3) -> Dictionary:
 	dig_point_info["height_delta"] = path_of_closest.height_delta if path_of_closest else null
 	return dig_point_info
 		
-	
-	
+
+
+func get_closest_fully_excavated_point(position: Vector3) -> Dictionary:
+	var closest: Vector3 = Vector3(9999, 9999, 9999)
+	var path_of_closest: ExcavationPath = null
+	var exists: bool = false
+	for path in CreatedPaths:
+		var path_closest: Vector3 = path.get_closest_fully_excavated_point(position)[1]
+		if (position.distance_to(path_closest) < position.distance_to(closest)):
+			closest = path_closest
+			path_of_closest = path
+			exists = true
+			
+			
+	var point_info: Dictionary 
+	point_info["exists"] = exists
+	point_info["location"] = closest
+	point_info["height_delta"] = path_of_closest.height_delta if path_of_closest else null
+	return point_info
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -108,3 +125,5 @@ func _physics_process(_delta: float) -> void:
 		if (dist_2D >= point_distance_interval && (dist_2D <= point_max_distance_delta || points.size() == 0)):
 			ActivePath.curve.add_point(result.position)
 		
+		
+	

@@ -18,6 +18,7 @@ enum FootUnitRoles {
 	PATROL,
 	EXCAVATE,
 	RESOURCE_TRANSPORT,
+	HOLD_POSITION,
 }
 
 var dig_point_info: Dictionary
@@ -40,6 +41,8 @@ var ai_state_icons: Array[Texture2D] = []
 
 var is_occupied : bool = false
 
+func negate(f: Callable) -> Callable:
+	return (func()->bool: return !f.call())
 
 func _ready() -> void:
 	super()
@@ -57,6 +60,12 @@ func initialize(_team: int) -> void:
 	super(_team)
 	var distant_mat: ShaderMaterial = $DistantUnitMarker.material_override
 	distant_mat.set_shader_parameter("team", team)
+
+func die() -> void:
+	super()
+	rotate_object_local(Vector3(1,0,0), deg_to_rad(90))
+	$AIStateIconsSprite.visible = false
+	$DistantUnitMarker.visible = false
 
 func _process(_delta: float) -> void:
 	super(_delta)
@@ -140,7 +149,6 @@ func init_ai_states() -> void:
 		.set_enter_function(get_patrol_destination) \
 		.set_display_icon(load("res://UnitAI/StateIcons/patrol_icon.png"))
 		
-		
 	var excavate_role_state := execute_role_state.add_child_state(AIState.create("excavate_role")) \
 		.set_enter_function(fetch_nearest_dig_point_info) \
 		.set_display_icon(load("res://UnitAI/StateIcons/excavation_icon.png"))
@@ -148,10 +156,28 @@ func init_ai_states() -> void:
 	var resource_transport_role_state := execute_role_state.add_child_state(AIState.create("resource_transport_role")) \
 		.set_display_icon(load("res://UnitAI/StateIcons/item_transport_icon.png"))
 	
-	var role_states: Array[AIState] = [patrol_role_state, excavate_role_state, resource_transport_role_state]
+	
+	var hold_position_role_state := execute_role_state.add_child_state(AIState.create("hold_position"))
+	
+	var role_states: Array[AIState] = [patrol_role_state, excavate_role_state, resource_transport_role_state, hold_position_role_state]
 	AIState.add_transition_to(role_states, patrol_role_state, func()->bool: return role == FootUnitRoles.PATROL )
 	AIState.add_transition_to(role_states, excavate_role_state, func()->bool: return role == FootUnitRoles.EXCAVATE )
 	AIState.add_transition_to(role_states, resource_transport_role_state, func()->bool: return role == FootUnitRoles.RESOURCE_TRANSPORT )
+	AIState.add_transition_to(role_states, hold_position_role_state, func()->bool: return role == FootUnitRoles.HOLD_POSITION )
+	
+	
+	################################
+	### PATROL ROLE CHILD STATES ###
+	################################
+	var get_patrol_destination_state: AIState = patrol_role_state.add_child_state(AIState.create("get_patrol_destination")) \
+		.set_enter_function(get_patrol_destination)
+		
+	var move_to_patrol_destination_state: AIState = patrol_role_state.add_child_state(AIState.create("move_to_patrol_destination")) \
+		.set_tick_function(move_safe_tick_fn)
+
+	get_patrol_destination_state.add_transition(move_to_patrol_destination_state, negate(get_arrived))
+	move_to_patrol_destination_state.add_transition(get_patrol_destination_state, get_arrived)
+	
 	
 	
 	###########################################
@@ -283,8 +309,6 @@ func attack_order_tick_fn() -> void:
 func hold_tick_fn() -> void:
 	pass
 	
-func get_patrol_destination() -> void:
-	move_target_pos = Vector3(1,2,3)
 	
 func fetch_nearest_dig_point_info() -> void:
 	var player: Player = GlobalPlayerManager.get_player(team)
@@ -438,12 +462,21 @@ func fulfill_personal_dropoff() -> void:
 	dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
 	dropoff_request = null
 
-func die() -> void:
-	super()
-	rotate_object_local(Vector3(1,0,0), deg_to_rad(90))
-	$AIStateIconsSprite.visible = false
-	$DistantUnitMarker.visible = false
 
+
+@export var random_destination_offset: float = 10	
+func get_patrol_destination() -> void:
+	var player: Player = GlobalPlayerManager.get_player(team)
+	var ex_tool: ExcavationPathTool = player.excavation_path_tool
+	
+	var search_point: Vector3 = global_position + Vector3(randf_range(-random_destination_offset, random_destination_offset), 0.0, randf_range(-random_destination_offset, random_destination_offset))
+	
+	var rand_point_info: Dictionary = ex_tool.get_closest_fully_excavated_point(search_point)
+	if (!rand_point_info["exists"]):
+		set_destination_point_safe(search_point)
+	else:
+		set_destination_point_safe(rand_point_info["location"])
+	
 	
 	
 	

@@ -2,6 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dx24te8mmsxmv" path="res://Units/Buildings/item_depot.gd" id="2_7vp2u"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_grfpu"]
+[ext_resource type="Script" uid="uid://1aewywpcrjwu" path="res://Inventory/inventory_slot.gd" id="3_grfpu"]
+[ext_resource type="Resource" uid="uid://dt3t4ws4pich7" path="res://Inventory/InventoryItems/magazine_item.tres" id="4_5vs5s"]
+[ext_resource type="Resource" uid="uid://0k1ic8i0e1es" path="res://Inventory/InventoryItems/ammo_item.tres" id="5_l1c6e"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_r7ra8"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="7_5vs5s"]
 [ext_resource type="PackedScene" uid="uid://tlw800q3y84j" path="res://sm_prop_barrel_02.tscn" id="7_grfpu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
@@ -78,6 +83,30 @@ mesh = SubResource("SphereMesh_ypl2c")
 [node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
 script = ExtResource("2_grfpu")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Magazine Slot" type="Node" parent="Inventory" unique_id=1409332964]
+script = ExtResource("3_grfpu")
+item = ExtResource("4_5vs5s")
+max_num = 1000
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="Ammo Slot" type="Node" parent="Inventory" unique_id=643519066]
+script = ExtResource("3_grfpu")
+item = ExtResource("5_l1c6e")
+max_num = 1000
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="Energy Crystal Slot" type="Node" parent="Inventory" unique_id=865093049]
+script = ExtResource("3_grfpu")
+item = ExtResource("6_r7ra8")
+max_num = 1000
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="Compacted Organic Material Slot" type="Node" parent="Inventory" unique_id=1277614020]
+script = ExtResource("3_grfpu")
+item = ExtResource("7_5vs5s")
+max_num = 1000
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
 
 [node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)

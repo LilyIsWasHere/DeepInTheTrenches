@@ -59,10 +59,12 @@ func move_safe_tick_fn() -> void:
 func set_destination_point_safe(destination: Vector3) -> void:
 	nav_plan_handle = Navigation.request_move(self, destination, move_safe_config)
 	move_target_pos = destination
+	arrived = false
 	
 func set_destination_point_direct(destination: Vector3) -> void:
 	nav_plan_handle = Navigation.request_move(self, destination, move_direct_config)
 	move_target_pos = destination
+	arrived = false
 	
 
 func debug_movement(delta : float) -> void:

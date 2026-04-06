@@ -95,6 +95,8 @@ script = ExtResource("2_3ooov")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 
 [node name="ArtilleryWeapon" parent="." unique_id=687748021 instance=ExtResource("6_s74ec")]
+fire_delay = 5.0
+reload_delay = 5.0
 
 [node name="Workstation" parent="." unique_id=608623028 instance=ExtResource("7_s74ec")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7035409, 0, -0.15178615)

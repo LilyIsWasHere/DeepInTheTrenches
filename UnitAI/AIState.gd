@@ -1,7 +1,7 @@
 class_name AIState
 extends Node
 
-static var dbg_print: bool = false
+static var dbg_print: bool = true
 
 var state_name: String
 var tick_function: Callable = Callable()

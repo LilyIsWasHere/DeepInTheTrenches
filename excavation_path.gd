@@ -5,6 +5,8 @@ var height_delta: float = -2.0
 
 var owning_camera: Camera3D
 
+
+
 # Called when the node enters the scene tree for tdhe first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -12,10 +14,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	
-	
-	
-	
 	
 	var points := curve.get_baked_points()
 	if (points.size() > 0):
@@ -70,6 +68,26 @@ func get_closest_unexcavated_point(position: Vector3) -> Array:
 			
 	
 	return [closest_idx, closest_point]
-		
 	
+
+
+
+
 	
+func get_closest_fully_excavated_point(position: Vector3) -> Array:
+	var points := curve.get_baked_points()
+	
+	var closest_point: Vector3 = Vector3(9999, 9999, 9999)
+	var closest_idx: int = -1
+	
+	for i in range(points.size()):
+		var point: Vector3 = points[i]
+		if (not is_point_excavated(i)):
+			continue
+			
+		if (position.distance_to(point) < position.distance_to(closest_point)):
+			closest_point = point
+			closest_idx = i
+			
+	
+	return [closest_idx, closest_point]
