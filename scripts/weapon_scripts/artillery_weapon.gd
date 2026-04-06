@@ -15,6 +15,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	$TargetDBG.global_position = fixed_target
 
+func set_target_pos_visibility(isVisible : bool) -> void:
+	$TargetDBG.visible = isVisible
 
 func shoot(target_pos : Vector3) -> void:
 	fixed_target = target_pos

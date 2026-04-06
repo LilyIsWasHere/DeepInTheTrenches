@@ -18,6 +18,7 @@ var isMoving : bool = false
 var moveMode : String = ""
 var isAttacking : bool = false
 var isOperating : bool = false
+var isTargeting : bool = false
 
 var targetCursor : Texture2D = preload("res://Nick/target (1).png")
 var normalCursor : Texture2D = preload("res://Nick/Cursor (1).png")
@@ -65,6 +66,18 @@ func _physics_process(_delta: float) -> void:
 		deselect_units()
 		inventoryViewer.on_close()
 		return
+	
+	if Input.is_action_just_pressed("ToolClick") && isTargeting:
+		isTargeting = false
+		for unit :Unit in selectedUnits:
+			unit.isTargeting = false
+		return
+	elif isTargeting:
+		var newTarget : Vector3 = get_world_pos()
+		
+		for unit :Unit in selectedUnits:
+			unit.isTargeting = true
+			unit.set_target(newTarget)
 	
 	#pre select exit conditions
 	# i.e. if these are occuring we don't want to handle select
@@ -156,8 +169,6 @@ func _input(event: InputEvent) -> void:
 		actionsDropdown.visible = !actionsDropdown.visible
 		inDropdown = false
 
-
-
 func get_clicked() -> Node3D:
 	var camera : Camera3D = get_viewport().get_camera_3d()
 	var mousePos : Vector2 = get_viewport().get_mouse_position()
@@ -222,6 +233,8 @@ func update_action_buttons() -> void:
 			actionsDropdown.disable_button("operate")
 		if !(unit.is_in_group("can_dig")):
 			actionsDropdown.disable_button("dig")
+		if !(unit.is_in_group("can_set_target")):
+			actionsDropdown.disable_button("set_target")
 
 func update_role_buttons() -> void:
 	rolesDropdown.disable_all()
@@ -292,6 +305,9 @@ func handle_view_specific_inventory(unitArray : Array) -> void:
 func handle_operate() -> void:
 	isOperating = true
 	print("operating")
+
+func handle_targeting() -> void:
+	isTargeting = true
 
 func handle_patrol_role() -> void:
 	for unit : FootUnit in selectedUnits:

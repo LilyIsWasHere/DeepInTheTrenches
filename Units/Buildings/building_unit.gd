@@ -53,7 +53,6 @@ func _process(_delta: float) -> void:
 	if (is_constructed == false && are_construction_resource_requirements_met()):
 		is_constructed = true
 		_set_materials_constructed()
-		
 
 func _physics_process(delta: float) -> void:
 	super(delta)

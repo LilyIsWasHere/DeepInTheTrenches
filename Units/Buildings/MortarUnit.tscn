@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_3ooov"]
 [ext_resource type="PackedScene" uid="uid://cfjqneqmh7gqf" path="res://Nick/Assets/Ready Assets/mortar.tscn" id="2_ft3yy"]
 [ext_resource type="PackedScene" uid="uid://wiinibxdca3h" path="res://scenes/weapon_scenes/artillery_weapon.tscn" id="6_s74ec"]
-[ext_resource type="PackedScene" uid="uid://dfx30yk5yafor" path="res://Workstation.tscn" id="7_s74ec"]
+[ext_resource type="Script" uid="uid://be8ipimbnpxso" path="res://workstation.gd" id="7_s74ec"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -48,10 +48,20 @@ properties/7/path = NodePath(".:is_constructed")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
-[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536]
+[sub_resource type="SphereShape3D" id="SphereShape3D_j0j3e"]
+radius = 1.0
+
+[node name="MortarUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "workstation", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea") groups=["can_set_target"]]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_3ooov")
+weapon = NodePath("ArtilleryWeapon")
+workstation = NodePath("Workstation")
+construction_inventory = NodePath("ConstructionInventory")
+LineOfSightTarget = NodePath("LineOfSightTarget")
+BodyMesh = NodePath("MeshInstance3D")
+inventory = NodePath("Inventory")
+selectableArea = NodePath("Selectable")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -98,5 +108,17 @@ metadata/_custom_type_script = "uid://bfmh3e0len4to"
 fire_delay = 5.0
 reload_delay = 5.0
 
-[node name="Workstation" parent="." unique_id=608623028 instance=ExtResource("7_s74ec")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7035409, 0, -0.15178615)
+[node name="Workstation" type="Node3D" parent="." unique_id=608623028]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.016268015, 0, -0.14764619)
+script = ExtResource("7_s74ec")
+
+[node name="Area3D" type="Area3D" parent="Workstation" unique_id=874849189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Workstation/Area3D" unique_id=1721479184]
+shape = SubResource("SphereShape3D_j0j3e")
+
+[node name="UnitPos" type="Node3D" parent="Workstation" unique_id=1797223409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3467712)

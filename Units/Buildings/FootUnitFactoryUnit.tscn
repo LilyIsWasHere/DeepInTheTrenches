@@ -1,0 +1,194 @@
+[gd_scene format=3 uid="uid://buew8adykh5g4"]
+
+[ext_resource type="Script" uid="uid://cunrjtbsso3y7" path="res://Units/Buildings/FootUnitFactory.gd" id="1_13gf2"]
+[ext_resource type="FontFile" uid="uid://cqbkyhs6g8trq" path="res://examples_dd3d/Minecraft - by BennyFonts1002 - from fontstruct.ttf" id="2_0e64r"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_nbufn"]
+[ext_resource type="ArrayMesh" uid="uid://ln8bgwgqy1t4" path="res://resources/factory.obj" id="3_nbufn"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="4_yxetk"]
+[ext_resource type="Script" uid="uid://84nxt6to1ne8" path="res://Inventory/inventory_slot.gd" id="5_un6t6"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="6_npiic"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w72rk"]
+bg_color = Color(0.15487596, 0.154876, 0.15487587, 0.48235294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gulig"]
+bg_color = Color(0.453475, 0.66699445, 0.39567596, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_v0871"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l434h"]
+size = Vector3(6.110718, 3.899643, 4.203804)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypl2c"]
+resource_local_to_scene = true
+transparency = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c58w5"]
+resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_13gf2"]
+bottom_radius = 0.775
+height = 4.26
+radial_segments = 12
+
+[sub_resource type="SphereMesh" id="SphereMesh_0e64r"]
+radius = 1.0
+height = 1.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nbufn"]
+top_radius = 0.48
+height = 5.295
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c58w5"]
+albedo_color = Color(0.68235296, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ypl2c"]
+
+[sub_resource type="Resource" id="Resource_d172s"]
+script = ExtResource("6_npiic")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_i4nis"]
+script = ExtResource("5_un6t6")
+item = SubResource("Resource_d172s")
+max_num = 10
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="Resource" id="Resource_f1vr2"]
+script = ExtResource("6_npiic")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"
+
+[sub_resource type="Resource" id="Resource_y23oe"]
+script = ExtResource("5_un6t6")
+item = SubResource("Resource_f1vr2")
+max_num = 10
+metadata/_custom_type_script = "uid://84nxt6to1ne8"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x534k"]
+size = Vector3(6.096588, 3.371521, 4.29023)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q7vbn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:team")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:health")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:velocity")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:is_constructed")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:is_placed")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[node name="FootUnitFactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("FootUnitSpawnPos", "productionTimer", "productionProgressBar", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_13gf2")
+FootUnitSpawnPos = NodePath("FootUnitSpawnPos")
+output_batch_size = 1
+input_ingredients = Dictionary[Object, int]({
+ExtResource("2_nbufn"): 40
+})
+productionTimer = NodePath("ProductionTimer")
+productionProgressBar = NodePath("SubViewport/ProductionProgressBar")
+construction_inventory = NodePath("ConstructionInventory")
+LineOfSightTarget = NodePath("LineOfSightTarget")
+BodyMesh = NodePath("MeshInstance3D")
+inventory = NodePath("Inventory")
+selectableArea = NodePath("Selectable")
+
+[node name="ProductionTimer" type="Timer" parent="." unique_id=1677865496]
+one_shot = true
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=943050233]
+disable_3d = true
+transparent_bg = true
+
+[node name="ProductionProgressBar" type="ProgressBar" parent="SubViewport" unique_id=862923321]
+offset_right = 200.0
+offset_bottom = 29.999996
+scale = Vector2(2, 2)
+theme_override_fonts/font = ExtResource("2_0e64r")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_w72rk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_gulig")
+
+[node name="ProductionProgress" type="Sprite3D" parent="." unique_id=114825899]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.0637617, 3.9154143, -1.0210788)
+billboard = 1
+texture = SubResource("ViewportTexture_v0871")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9210968, -0.01706314)
+shape = SubResource("BoxShape3D_l434h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138292857]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, 1, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_ypl2c")
+mesh = SubResource("CapsuleMesh_c58w5")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1311444610]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, 0, 0)
+mesh = ExtResource("3_nbufn")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MeshInstance3D2" unique_id=1217739234]
+transform = Transform3D(-1.6391939, 0.0086376015, -0.020483965, 0, 1.5105408, 0.6369591, 0.02223063, 0.6369006, -1.510402, 2.5839167, 7.7595096, -4.893156)
+mesh = SubResource("CylinderMesh_13gf2")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="MeshInstance3D2" unique_id=289286426]
+transform = Transform3D(-1.639194, 0.004839996, -0.021697365, 0, 1.6000199, 0.35691386, 0.02223063, 0.35688105, -1.5998728, 2.6046112, 10.980524, -3.367246)
+mesh = SubResource("SphereMesh_0e64r")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D2" unique_id=2137053057]
+transform = Transform3D(-1.6391939, -0.014533295, -0.01682214, 0, 1.2405082, -1.071723, 0.02223063, -1.0716243, -1.2403942, 2.6420941, 7.68253, -0.7655058)
+mesh = SubResource("CylinderMesh_nbufn")
+skeleton = NodePath("../..")
+
+[node name="LineOfSightTarget" type="Node3D" parent="." unique_id=1813088803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9877052, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_c58w5")
+mesh = SubResource("SphereMesh_ypl2c")
+
+[node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
+script = ExtResource("4_yxetk")
+slots = Array[ExtResource("5_un6t6")]([SubResource("Resource_i4nis"), SubResource("Resource_y23oe")])
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0188318, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00819397, 1.1857604, -0.025562286)
+shape = SubResource("BoxShape3D_x534k")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=195851278]
+replication_config = SubResource("SceneReplicationConfig_q7vbn")
+
+[node name="ConstructionInventory" type="Node3D" parent="." unique_id=438235801]
+script = ExtResource("4_yxetk")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="FootUnitSpawnPos" type="Node3D" parent="." unique_id=2012604381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5659235, 1.6494799, -3.983249)

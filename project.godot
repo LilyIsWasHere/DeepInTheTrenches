@@ -59,6 +59,7 @@ can_dig=""
 can_attack=""
 foot_unit=""
 no_team_overlay_material=""
+can_set_target=""
 
 [gui]
 
