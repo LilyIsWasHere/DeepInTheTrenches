@@ -38,5 +38,10 @@ func disable_button(buttonName : String) -> void:
 			buttons[2].hide()
 		"operate":
 			buttons[3].hide()
-		"dig":
+		"set_target":
 			buttons[4].hide()
+		"dig":
+			buttons[5].hide()
+
+func _on_set_target_button_down() -> void:
+	cursor.handle_targeting()

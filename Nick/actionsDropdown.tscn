@@ -44,6 +44,10 @@ text = "Attack"
 layout_mode = 2
 text = "Operate"
 
+[node name="Set Target" type="Button" parent="PanelContainer/Options/Buttons" unique_id=452597395]
+layout_mode = 2
+text = "Set Target"
+
 [node name="Dig" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1225912520]
 visible = false
 layout_mode = 2
@@ -53,4 +57,5 @@ text = "Dig"
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Move2" to="." method="_on_move_direct_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Attack" to="." method="_on_attack_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Operate" to="." method="on_operate_button_down"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Set Target" to="." method="_on_set_target_button_down"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Dig" to="." method="_on_dig_button_down"]
