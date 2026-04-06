@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://csyt8r0gbu2hd" path="res://sculpt_brush.gd" id="5_1u4fj"]
 [ext_resource type="Script" uid="uid://c8kyg434ywwc7" path="res://resource_extractor.gd" id="6_l4wm4"]
 [ext_resource type="PackedScene" uid="uid://ctc4oo1iulc2q" path="res://UI/BuildingConstructionUI.tscn" id="7_ri33b"]
+[ext_resource type="PackedScene" uid="uid://dpqkaifcjkrx1" path="res://hendry/pause_menu/pause_menu.tscn" id="8_1u4fj"]
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="8_3y4og"]
 [ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="9_qqtj1"]
 
@@ -78,6 +79,22 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ri33b")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1355530150]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="PauseMenu" parent="CanvasLayer/MarginContainer" unique_id=920401410 instance=ExtResource("8_1u4fj")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="ExcavationPathTool" type="Node3D" parent="." unique_id=812009993]
 top_level = true

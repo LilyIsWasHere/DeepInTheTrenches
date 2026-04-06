@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dpqkaifcjkrx1"]
+
+[ext_resource type="Script" uid="uid://cwn1yir88sqdw" path="res://hendry/pause_menu/pause_menu.gd" id="1_2y76y"]
+[ext_resource type="PackedScene" uid="uid://du7gvfrmorwp5" path="res://UI/Title/title_settings_ui.tscn" id="1_sjh2y"]
+[ext_resource type="Theme" uid="uid://b7cyq8sigk6vm" path="res://UI/Title/title_theme.tres" id="2_r1hdp"]
+[ext_resource type="FontFile" uid="uid://d3fphqfqbk6j6" path="res://UI/plexsans/IBMPlexSans_SemiCondensed-Bold.ttf" id="3_r1m7u"]
+
+[node name="PauseMenu" type="Control" unique_id=920401410]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2y76y")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1609961923]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3529412, 0.3529412, 0.3529412, 0.5686275)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=598815891]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1154167836]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1201549625]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1617491378]
+layout_mode = 2
+theme = ExtResource("2_r1hdp")
+theme_override_fonts/font = ExtResource("3_r1m7u")
+theme_override_font_sizes/font_size = 64
+text = "Paused."
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1112991958]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1806791946]
+layout_mode = 2
+theme = ExtResource("2_r1hdp")
+theme_override_font_sizes/font_size = 40
+text = "Quit to Title"
+
+[node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=832311719]
+layout_mode = 2
+theme = ExtResource("2_r1hdp")
+theme_override_font_sizes/font_size = 40
+text = "Resume"
+
+[node name="TitleSettingsUI" parent="MarginContainer/VBoxContainer" unique_id=1858148070 instance=ExtResource("1_sjh2y")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]

@@ -1,5 +1,8 @@
 [gd_scene format=3 uid="uid://p5p464rwtofv"]
 
+[ext_resource type="Script" uid="uid://ds2xgv4xn8gja" path="res://UI/Title/host_game_ui.gd" id="1_3vgb8"]
+[ext_resource type="Theme" uid="uid://b7cyq8sigk6vm" path="res://UI/Title/title_theme.tres" id="1_p1pmt"]
+
 [node name="HostGameUI" type="Control" unique_id=171624050]
 layout_mode = 3
 anchors_preset = 15
@@ -7,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_3vgb8")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=294618504]
 layout_mode = 1
@@ -16,3 +20,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.3529412, 0.3529412, 0.3529412, 0.5686275)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=947678315]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=194877564]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=620717815]
+layout_mode = 2
+theme = ExtResource("1_p1pmt")
+theme_override_font_sizes/font_size = 32
+text = "Host a multiplayer game"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1752222269]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1705660518]
+layout_mode = 2
+theme = ExtResource("1_p1pmt")
+text = "Port:"
+
+[node name="PortInput" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=719473681]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_p1pmt")
+text = "4433"
+max_length = 4
+
+[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=2132426547]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("1_p1pmt")
+theme_override_font_sizes/font_size = 32
+text = "Start"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

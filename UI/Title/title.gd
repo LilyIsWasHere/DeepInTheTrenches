@@ -3,6 +3,8 @@ extends Node3D
 @export var terrain_rotation_speed: float = 0.1
 
 # panels
+@onready var host_panel: Control = %"HostGameUI"
+@onready var join_panel: Control = %"JoinGameUI"
 @onready var credits_panel: Control = %"TitleCreditsUI"
 @onready var settings_panel: Control = %"TitleSettingsUI"
 
@@ -34,17 +36,41 @@ func hide_all_panels() -> void:
 	settings_panel.hide()
 
 func _on_singleplayer_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://base.tscn")
+	var peer := ENetMultiplayerPeer.new()
+	peer.create_server(4433)
+	multiplayer.multiplayer_peer = peer
+
+	# do some weird stuff to get the multiplayer scene to start
+	var scene_resource := ResourceLoader.load("res://Multiplayer/Multiplayer.tscn")
+	var scene_instance : Node = scene_resource.instantiate()
+	var tree := get_tree()
+	var current_scene := tree.current_scene
+	tree.root.add_child(scene_instance)
+	tree.current_scene = scene_instance
+
+	scene_instance.game_started = true
+	scene_instance.start_game(true)
+	current_scene.queue_free()
+
+func _on_host_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		host_panel.show()
+	else:
+		host_panel.hide()
+
+func _on_join_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		join_panel.show()
+	else:
+		join_panel.hide()
 
 func _on_settings_button_toggled(toggled_on: bool) -> void:
-
 	if toggled_on:
 		settings_panel.show()
 	else:
 		settings_panel.hide()
 
 func _on_credits_button_toggled(toggled_on: bool) -> void:
-
 	if toggled_on:
 		credits_panel.show()
 	else:

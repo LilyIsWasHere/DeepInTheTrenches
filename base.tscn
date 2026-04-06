@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
+[ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="1_21bcp"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
@@ -39,6 +40,7 @@ directional_shadow_mode = 0
 directional_shadow_fade_start = 0.566
 directional_shadow_max_distance = 36.3
 directional_shadow_pancake_size = 19.5
+script = ExtResource("1_21bcp")
 
 [node name="Terrain" parent="." unique_id=1045056070 instance=ExtResource("3_ohhpf")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)

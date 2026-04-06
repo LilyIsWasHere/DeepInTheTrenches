@@ -8,12 +8,14 @@
 [ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="4_afynt"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="4_tgkd2"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_woosa"]
+[ext_resource type="PackedScene" uid="uid://dwnn82b3ulpmd" path="res://UI/Title/join_game_ui.tscn" id="7_8uaf2"]
+[ext_resource type="PackedScene" uid="uid://p5p464rwtofv" path="res://UI/Title/host_game_ui.tscn" id="8_eoro6"]
 [ext_resource type="ButtonGroup" uid="uid://bx2pnycplr8d3" path="res://UI/Title/title_toggles.tres" id="8_woosa"]
 
 [sub_resource type="Environment" id="Environment_tgkd2"]
 background_mode = 3
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_afynt"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8uaf2"]
 resource_local_to_scene = true
 shader = ExtResource("5_woosa")
 shader_parameter/offset = Vector2(0, 0)
@@ -51,7 +53,7 @@ environment = SubResource("Environment_tgkd2")
 unique_name_in_owner = true
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(1, 1)
-heightmap_gen_material = SubResource("ShaderMaterial_afynt")
+heightmap_gen_material = SubResource("ShaderMaterial_8uaf2")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1442860059]
 transform = Transform3D(1, 0, 0, 0, 0.68011975, 0.733101, 0, -0.733101, 0.68011975, 5.063382, 14.719957, 9.379066)
@@ -100,6 +102,16 @@ visible = false
 layout_mode = 2
 
 [node name="TitleSettingsUI" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/PanelContainer" unique_id=1858148070 instance=ExtResource("3_y7csd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="JoinGameUI" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/PanelContainer" unique_id=1445190923 instance=ExtResource("7_8uaf2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HostGameUI" parent="CanvasLayer/Control/MarginContainer/HBoxContainer/PanelContainer" unique_id=171624050 instance=ExtResource("8_eoro6")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -162,5 +174,7 @@ text = "Credits"
 alignment = 2
 
 [connection signal="pressed" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/SingleplayerButton" to="." method="_on_singleplayer_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/HostButton" to="." method="_on_host_button_toggled"]
+[connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/JoinButton" to="." method="_on_join_button_toggled"]
 [connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/SettingsButton" to="." method="_on_settings_button_toggled"]
 [connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/CreditsButton" to="." method="_on_credits_button_toggled"]
