@@ -40,6 +40,11 @@ text = "Excavate"
 layout_mode = 2
 text = "Transport"
 
+[node name="Button4" type="Button" parent="PanelContainer/Options/Buttons" unique_id=1574791866]
+layout_mode = 2
+text = "Hold Position"
+
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Button" to="." method="on_patrol_button"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Button2" to="." method="on_excavate_button"]
 [connection signal="button_down" from="PanelContainer/Options/Buttons/Button3" to="." method="on_transport_role"]
+[connection signal="button_down" from="PanelContainer/Options/Buttons/Button4" to="." method="on_hold_position_role"]

@@ -1,6 +1,6 @@
 extends Control
 
-@onready var cursor : Node3D = get_parent().get_parent()
+@onready var cursor : Cursor = get_parent().get_parent()
 @onready var buttons : Array = $PanelContainer/Options/Buttons.get_children()
 
 
@@ -12,6 +12,9 @@ func on_excavate_button() -> void:
 
 func on_transport_role() -> void:
 	cursor.handle_on_transport_role()
+	
+func on_hold_position_role() -> void:
+	cursor.handle_on_hold_position_role()
 
 func enable_all() -> void:
 	for button : Button in buttons:
@@ -29,3 +32,5 @@ func disable_button(buttonName : String) -> void:
 			buttons[1].hide()
 		"transport":
 			buttons[2].hide()
+		"hold_position":
+			buttons[3].hide()

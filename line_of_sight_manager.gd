@@ -37,7 +37,7 @@ func _process(_delta: float) -> void:
 	
 func _physics_process(delta: float) -> void:
 
-		
+			
 	_get_enemy_unit_visibility(0)
 	_get_enemy_unit_visibility(1)
 	

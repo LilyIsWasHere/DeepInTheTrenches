@@ -307,3 +307,7 @@ func handle_on_transport_role() -> void:
 	for unit : FootUnit in selectedUnits:
 		print("Setting ", unit.name, " role to TRANSPORT")
 		unit.role = FootUnit.FootUnitRoles.RESOURCE_TRANSPORT
+		
+func handle_on_hold_position_role() -> void:
+	for unit : FootUnit in selectedUnits:
+		unit.role = FootUnit.FootUnitRoles.HOLD_POSITION

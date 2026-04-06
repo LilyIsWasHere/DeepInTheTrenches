@@ -4,7 +4,7 @@ class_name MoveableUnit
 signal just_arrived
 
 var move_target_pos : Vector3
-var arrived : bool = true
+var arrived : bool = false
 var previouslyArrived : bool = true
 
 func get_arrived()->bool:
@@ -33,7 +33,11 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	#velocity.x = 0
 	#velocity.z = 0
-	#should_move = false
+	if (!should_move):
+		velocity.x = 0.0
+		velocity.z = 0.0
+		
+	should_move = false
 	pass
 
 func move_direct_tick_fn() -> void:
@@ -44,6 +48,7 @@ func move_direct_tick_fn() -> void:
 	arrived = steer_result.arrived
 	if (arrived):
 		should_move = false
+		velocity = Vector3(0,0,0)
 	
 func move_safe_tick_fn() -> void:
 	#TODO: REPLACE THIS WITH NAVIGATION STEERING STUFF
@@ -54,6 +59,7 @@ func move_safe_tick_fn() -> void:
 	arrived = steer_result.arrived
 	if (arrived):
 		should_move = false
+		velocity = Vector3(0,0,0)
 
 
 func set_destination_point_safe(destination: Vector3) -> void:
