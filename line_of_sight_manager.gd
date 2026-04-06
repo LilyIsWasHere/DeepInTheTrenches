@@ -36,13 +36,14 @@ func _process(_delta: float) -> void:
 	phys_ticks_without_process = 0
 	
 func _physics_process(delta: float) -> void:
-	
-	phys_ticks_without_process += 1
-	if (phys_ticks_without_process > 10):
-		return
+
 		
 	_get_enemy_unit_visibility(0)
 	_get_enemy_unit_visibility(1)
+	
+	var player: Player = GlobalPlayerManager.get_player_by_auth(multiplayer.get_unique_id())
+	if (player):
+		set_unit_vis_from_los(player.player_id)
 	
 	if (should_update_closest):
 		update_closest_visible_enemy_dict(0)

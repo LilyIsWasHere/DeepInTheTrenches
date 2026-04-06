@@ -1,8 +1,17 @@
-extends Resource # or Object? Or Node?
+@tool
 class_name InventorySlot
+extends Node # or Object? Or Node?
 
 
-@export var item: InventoryItem # A set of these are already created, exist in file system 
+
+@export var item: InventoryItem:
+	set(value):
+		if (Engine.is_editor_hint()):
+			name = value.name + " Slot"
+		item = value
+	get:
+		return item
+		
 @export var num: int
 @export var max_num: int
 

@@ -132,10 +132,8 @@ func move_along_terrain() -> void:
 func set_hidden(hidden: bool) -> void:
 	if (hidden):
 		visible = false
-		$PrimaryMesh.material_override.albedo_color.a = 0.35
 	else:
 		visible = true
-		$PrimaryMesh.material_override.albedo_color.a = 1
 
 func deal_damage(dmg : float) -> void:
 	var remain : float = health - dmg
