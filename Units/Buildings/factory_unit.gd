@@ -31,7 +31,8 @@ func _ready() -> void:
 	
 	productionTimer.connect("timeout", start_production)
 	inventory.connect("itemAdded", productionTimer.start.bind(productionLength))
-	inventory.add_slot(output_item, 9999)
+	if output_item:
+		inventory.add_slot(output_item, 9999)
 	
 	for item: InventoryItem in input_ingredients.keys():
 		inventory.add_slot(item, 9999)
