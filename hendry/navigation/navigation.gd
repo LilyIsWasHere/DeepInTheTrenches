@@ -63,7 +63,7 @@ func _process(_delta: float) -> void:
 
 	for i in range(completed_items.size()):
 		var item: NavPlanQueueItem = completed_items[i]
-		_publish_plan_result(item.handle, item.path)
+		_publish_plan_result(item.handle, item.path, item.costs)
 
 # should probably avoid hanging threads and such when exiting
 # https://docs.godotengine.org/en/stable/tutorials/performance/using_multiple_threads.html#using-multiple-threads
@@ -374,7 +374,7 @@ func _queue_plan_request(handle: NavPlanHandle, snapshot: NavPlanSnapshot) -> vo
 	_plan_queue_semaphore.post()
 
 # helper that applies a finished path to the handle if it's valid
-func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> void:
+func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array, costs: PackedFloat32Array) -> void:
 	if handle == null:
 		return
 
@@ -395,6 +395,7 @@ func _publish_plan_result(handle: NavPlanHandle, path: PackedVector3Array) -> vo
 	handle.status = NavPlanHandle.NavRequestStatus.READY
 	handle.failure_reason = ""
 	handle.waypoints = path
+	handle.segment_costs = costs
 	handle.ready.emit()
 
 # helper that starts the navigation worker threads for a player if they are not already running
@@ -446,14 +447,17 @@ func _run_navigation_worker() -> void:
 		# solve the item and put it in the completed queue
 		if item.snapshot == null or item.snapshot.agent_config == null or item.snapshot.terrain_snapshot == null:
 			item.path = PackedVector3Array()
+			item.costs = PackedFloat32Array()
 		else:
 			worker_nav_map.set_terrain_snapshot(item.snapshot.terrain_snapshot)
-			item.path = worker_nav_map.find_path(
+			var result: Dictionary = worker_nav_map.find_path(
 				item.snapshot.start,
 				item.snapshot.target,
 				item.snapshot.agent_config,
 				item.snapshot.agent_context
 			)
+			item.path = result.get("path", PackedVector3Array())
+			item.costs = result.get("costs", PackedFloat32Array())
 
 		_completed_queue_mutex.lock()
 		_completed_plan_items.append(item)

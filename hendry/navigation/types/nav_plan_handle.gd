@@ -19,4 +19,5 @@ var agent: Node3D = null
 var agent_config: NavAgentConfig = null
 var agent_context: Dictionary = {}
 var waypoints: PackedVector3Array = PackedVector3Array()
+var segment_costs: PackedFloat32Array = PackedFloat32Array()
 var failure_reason: String = ""

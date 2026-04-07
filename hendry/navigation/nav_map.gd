@@ -32,6 +32,10 @@ var _agent_context: Dictionary = {}
 # the key is the cell coordinate, and the value is a NavCellData instance
 var _grid_request_cell_data: Dictionary = {}
 
+# request-specific edge cost cache
+# the key is a pair of cell coordinates (from, to), and the value is the computed cost for that edge
+var _grid_request_edge_costs: Dictionary = {}
+
 # request-specific point data cache for sampling
 var _cached_point_nav_data: Dictionary = {}
 
@@ -70,45 +74,51 @@ func cell_to_world(cell: Vector2i, use_surface_height: bool = false, nav_data: _
 	return point
 
 # use Godot's AStarGrid2D to find a path
-func find_path(start: Vector3, goal: Vector3,	agent_config: NavAgentConfig,	agent_context: Dictionary) -> PackedVector3Array:
+# returns the list of waypoints as world positions, as well as a list of edge costs for the path segments
+func find_path(start: Vector3, goal: Vector3,	agent_config: NavAgentConfig,	agent_context: Dictionary) -> Dictionary:
 	if not _ensure_nav_grid_ready(agent_config, agent_context):
-		return PackedVector3Array()
+		return { "path": PackedVector3Array(), "costs": [] }
 
 	var start_cell: Vector2i = world_to_cell(start)
 	var goal_cell: Vector2i = world_to_cell(goal)
 
 	if not _grid_astar.region.has_point(start_cell) or not _grid_astar.region.has_point(goal_cell):
-		return PackedVector3Array()
+		return { "path": PackedVector3Array(), "costs": [] }
 
 	# clear per-request caches
 	_cached_point_nav_data.clear()
 	_grid_request_cell_data.clear()
+	_grid_request_edge_costs.clear()
 
 	var start_data: NavCellData = _get_request_cell_data(start_cell)
 	if start_data == null or not start_data.traversable:
 		print("Start position is not traversable")
-		return PackedVector3Array()
+		return { "path": PackedVector3Array(), "costs": [] }
 
 	var goal_data: NavCellData = _get_request_cell_data(goal_cell)
 	if goal_data == null or not goal_data.traversable:
 		print("Goal position is not traversable")
-		return PackedVector3Array()
+		return { "path": PackedVector3Array(), "costs": [] }
 
 	# actual pathfinding
 	var id_path: Array[Vector2i] = _grid_astar.get_id_path(start_cell, goal_cell)
 	if id_path.is_empty():
 		print("no path found")
-		return PackedVector3Array()
+		return { "path": PackedVector3Array(), "costs": [] }
 
 	# turn the path of cell IDs into a path of world points on the terrain surface
 	var path: PackedVector3Array = PackedVector3Array()
+	var costs: PackedFloat32Array = PackedFloat32Array()
 	for i in range(id_path.size()):
 		var cell: Vector2i = id_path[i]
 		var nav_data: _NavSample = _astar_nav_data.get(cell, null)
 		path.append(cell_to_world(cell, true, nav_data))
+		if i > 0:
+			var from_cell: Vector2i = id_path[i - 1]
+			var edge_cost: float = _grid_request_edge_costs.get([from_cell, cell], INF)
+			costs.append(edge_cost)
 		
-
-	return path
+	return { "path": path, "costs": costs }
 
 # GRID HELPERS
 # make sure the persistent grid and the current request state are ready
@@ -221,7 +231,9 @@ func _grid_compute_cost(from_id: Vector2i, to_id: Vector2i) -> float:
 	move_context.to_data = to_data
 	move_context.edge_max_slope_degrees = edge_max_slope_degrees
 
-	return _agent_config.get_nav_cost(_agent_context, move_context)
+	var cost := _agent_config.get_nav_cost(_agent_context, move_context)
+	_grid_request_edge_costs[[from_id, to_id]] = cost
+	return cost
 
 # GETTERS
 # get navigation data at a point
