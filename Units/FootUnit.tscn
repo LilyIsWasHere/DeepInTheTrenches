@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b22wpxxf0i1nw" path="res://Nick/Assets/Ready Assets/machineGun.tscn" id="7_im02j"]
 [ext_resource type="Script" uid="uid://cwwanfn8gie7m" path="res://Units/ai_state_icons_sprite.gd" id="10_obu8b"]
 [ext_resource type="PackedScene" uid="uid://b3t5jhs6exlrn" path="res://UI/AIStateDisplay.tscn" id="10_oup3h"]
-[ext_resource type="Shader" path="res://materials/distant_unit_marker.gdshader" id="12_h5n6i"]
+[ext_resource type="Shader" uid="uid://byr7uw8ooxg8t" path="res://materials/distant_unit_marker.gdshader" id="12_h5n6i"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -65,12 +65,143 @@ shader_parameter/vanish_range = 5.0
 
 [sub_resource type="TorusMesh" id="TorusMesh_obu8b"]
 
+[sub_resource type="Animation" id="Animation_cdvrk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Weapon:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.8325957, 0, 0)]
+}
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Weapon")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
+
 [sub_resource type="Animation" id="Animation_h5n6i"]
 resource_name = "idle"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character_American_Soldier_01")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": ["idle"],
+"method": &"play_animation"
+}]
+}
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Weapon")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Weapon:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.8325957, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vvufb"]
+resource_name = "shoot"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character_American_Soldier_01")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": ["shoot"],
+"method": &"play_animation"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Weapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "position_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Weapon")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, -0.05, 1.3, 0.66)
+
+[sub_resource type="Animation" id="Animation_6v5qr"]
+resource_name = "walk"
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character_American_Soldier_01")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": ["walk"],
+"method": &"play_animation"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Weapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.8325957, 0, 0)]
+}
+tracks/2/type = "position_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Weapon")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vvufb"]
 _data = {
-&"idle": SubResource("Animation_h5n6i")
+&"RESET": SubResource("Animation_cdvrk"),
+&"idle": SubResource("Animation_h5n6i"),
+&"shoot": SubResource("Animation_vvufb"),
+&"walk": SubResource("Animation_6v5qr")
 }
 
 [node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "ai_state_display", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
@@ -136,7 +267,7 @@ collision_mask = 0
 shape = SubResource("CapsuleShape3D_lvdn7")
 
 [node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("6_c0xtx")]
-transform = Transform3D(0.9, 0, 0, 0, 0.9000005, 1.4901161e-08, 0, -1.4901161e-08, 0.9000005, -0.054657936, 1.4176285, 0.6262314)
+transform = Transform3D(0.9, 0, 0, 0, -0.23293728, -0.86933374, 0, 0.86933374, -0.23293728, -0.225, 1, 0)
 
 [node name="SM_Wep_American_SubMachineGun_01" parent="Weapon" unique_id=83445828 instance=ExtResource("7_im02j")]
 
