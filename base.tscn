@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="1_21bcp"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
-[ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
+[ext_resource type="PackedScene" path="res://Fog.tscn" id="4_ohhpf"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
