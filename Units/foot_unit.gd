@@ -197,7 +197,9 @@ func init_ai_states() -> void:
 		.set_tick_function(move_safe_tick_fn)
 	
 	var resource_transport_pickup_items := resource_transport_role_state.add_child_state(AIState.create("pickup_items")) \
-		.set_enter_function(fulfill_pickup)
+		.set_enter_function(func() -> void:
+			fulfill_pickup()
+			$AnimationPlayer.play("grab_item"))
 	
 	var resource_transport_move_to_dropoff := resource_transport_role_state.add_child_state(AIState.create("move_to_dropoff")) \
 		.set_enter_function(func()->void: 
@@ -206,7 +208,9 @@ func init_ai_states() -> void:
 		.set_tick_function(move_safe_tick_fn)
 	
 	var resource_transport_dropoff_items := resource_transport_role_state.add_child_state(AIState.create("dropoff_items")) \
-		.set_enter_function(fulfill_dropoff)
+		.set_enter_function(func() -> void:
+			fulfill_dropoff()
+			$AnimationPlayer.play("drop_item"))
 		
 		
 	resource_transport_idle_state.add_transition(resource_transport_move_to_pickup, func()->bool: return pickup_request != null && dropoff_request != null)
@@ -241,16 +245,22 @@ func init_ai_states() -> void:
 		
 	var dig_at_point_state := excavate_role_state.add_child_state(AIState.create("dig_at_point")) \
 		.set_tick_function(dig_at_point_tick_fn) \
-		.set_enter_function(func()->void: dig_timer.start(dig_delay))
+		.set_enter_function(func()->void: 
+			dig_timer.start(dig_delay)
+			$AnimationPlayer.play("grab_item"))
 		
 	
 		
 		
 		
 	var dig_dropoff_resources := excavate_role_state.add_child_state(AIState.create("dig_dropoff")) \
-		.set_enter_function(set_excavation_item_dropoff_destination) \
+		.set_enter_function(func() -> void:
+			set_excavation_item_dropoff_destination()
+			$AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn) \
-		.set_exit_function(fulfill_personal_dropoff)
+		.set_exit_function(func() -> void:
+			fulfill_personal_dropoff()
+			$AnimationPlayer.play("drop_item"))
 		
 	move_to_dig_point_state.add_transition(dig_at_point_state, get_arrived)
 	dig_at_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])

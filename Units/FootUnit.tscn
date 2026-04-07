@@ -12,6 +12,11 @@
 [ext_resource type="Script" uid="uid://cwwanfn8gie7m" path="res://Units/ai_state_icons_sprite.gd" id="10_obu8b"]
 [ext_resource type="PackedScene" uid="uid://b3t5jhs6exlrn" path="res://UI/AIStateDisplay.tscn" id="10_oup3h"]
 [ext_resource type="Shader" uid="uid://byr7uw8ooxg8t" path="res://materials/distant_unit_marker.gdshader" id="12_h5n6i"]
+[ext_resource type="Animation" uid="uid://ddnm6l5rjnts2" path="res://Animations-Mel/AnimationCaller/drop_item.res" id="13_wbj50"]
+[ext_resource type="Animation" uid="uid://c2wybmk7ofng1" path="res://Animations-Mel/AnimationCaller/grab_item.res" id="14_la70f"]
+[ext_resource type="Animation" uid="uid://dfv7cce1bnssw" path="res://Animations-Mel/AnimationCaller/idle.res" id="15_1f2gt"]
+[ext_resource type="Animation" uid="uid://dvmyg1vydks4i" path="res://Animations-Mel/AnimationCaller/shoot.res" id="16_w8agt"]
+[ext_resource type="Animation" uid="uid://dwyo5k16thp01" path="res://Animations-Mel/AnimationCaller/walk.res" id="17_o8n67"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -87,121 +92,14 @@ tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
 
-[sub_resource type="Animation" id="Animation_h5n6i"]
-resource_name = "idle"
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Character_American_Soldier_01")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": ["idle"],
-"method": &"play_animation"
-}]
-}
-tracks/1/type = "position_3d"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Weapon")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Weapon:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.8325957, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_vvufb"]
-resource_name = "shoot"
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Character_American_Soldier_01")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": ["shoot"],
-"method": &"play_animation"
-}]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Weapon:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/2/type = "position_3d"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Weapon")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = PackedFloat32Array(0, 1, -0.05, 1.3, 0.66)
-
-[sub_resource type="Animation" id="Animation_6v5qr"]
-resource_name = "walk"
-loop_mode = 1
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Character_American_Soldier_01")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": ["walk"],
-"method": &"play_animation"
-}]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Weapon:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.8325957, 0, 0)]
-}
-tracks/2/type = "position_3d"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Weapon")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = PackedFloat32Array(0, 1, -0.225, 1, 0)
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vvufb"]
 _data = {
 &"RESET": SubResource("Animation_cdvrk"),
-&"idle": SubResource("Animation_h5n6i"),
-&"shoot": SubResource("Animation_vvufb"),
-&"walk": SubResource("Animation_6v5qr")
+&"drop_item": ExtResource("13_wbj50"),
+&"grab_item": ExtResource("14_la70f"),
+&"idle": ExtResource("15_1f2gt"),
+&"shoot": ExtResource("16_w8agt"),
+&"walk": ExtResource("17_o8n67")
 }
 
 [node name="FootUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("weapon", "item_transport_inventory", "ai_state_display", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]

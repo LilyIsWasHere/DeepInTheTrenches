@@ -17,3 +17,7 @@ func play_animation(name: String) -> void:
 		$Animations.play("shoot")
 	elif name == "walk":
 		$Animations.play("walk")
+	elif name == "grab":
+		$Animations.play("grab")
+	elif name == "drop":
+		$Animations.play("grab", -1, 1.0, true)
