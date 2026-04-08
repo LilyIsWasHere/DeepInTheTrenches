@@ -18,6 +18,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
+	if (!owning_player.process_input):
+		return
+	
 	if (Input.is_action_just_pressed("SpawnPlayerUnit") || Input.is_action_just_pressed("SpawnEnemyUnit")):
 		
 		var mouse_pos := get_viewport().get_mouse_position()
@@ -40,7 +43,9 @@ func _physics_process(_delta: float) -> void:
 		
 
 func _input(event: InputEvent) -> void:
-	
+	if (!owning_player.process_input):
+		return
+		
 	if !is_multiplayer_authority():
 		return
 	
@@ -56,9 +61,3 @@ func _input(event: InputEvent) -> void:
 		unit_scene = turretUnit
 	elif event.is_action_pressed("4"):
 		unit_scene = productionUnit
-
-
-@rpc("any_peer", "call_local", "reliable") func print_once_per_client(scene: PackedScene, pos: Vector3, team: int) -> void:
-	print(multiplayer.get_peers())
-	print("I will be printed to the console once per each connected client.")
-	print(is_multiplayer_authority())

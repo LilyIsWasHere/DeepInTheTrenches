@@ -70,6 +70,7 @@ func shoot(target_pos : Vector3) -> void:
 			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
 
 @rpc("any_peer", "call_local", "reliable") func fire_bullet(direction: Vector3) -> void:
+	$FireAudioPlayer.play()
 	var bullet_instance : Bullet = bullet.instantiate()
 	get_tree().current_scene.add_child(bullet_instance) # will need to pick a specific node location eventually, for now its putting it in the root node 
 	bullet_instance.global_position = global_position

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cxf10ht8qgdcj" path="res://scenes/weapon_scenes/Shell.tscn" id="2_1m1d5"]
 [ext_resource type="Script" uid="uid://dt3vw34yg7c7t" path="res://scripts/weapon_scripts/artillery_weapon.gd" id="2_gth5h"]
 [ext_resource type="Texture2D" uid="uid://8s4plh2yb3y" path="res://resources/selectionring.png" id="4_qf1pc"]
+[ext_resource type="AudioStream" uid="uid://dug4p6te64qlb" path="res://Audio/mortar_fire.wav" id="5_0taen"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1m1d5"]
 albedo_color = Color(1, 0, 0, 1)
@@ -29,3 +30,6 @@ skeleton = NodePath("../Magazine")
 [node name="Decal" type="Decal" parent="." index="4" unique_id=997609785]
 size = Vector3(2, 10, 2)
 texture_albedo = ExtResource("4_qf1pc")
+
+[node name="FireAudioPlayer" parent="." index="5" unique_id=520196245]
+stream = ExtResource("5_0taen")

@@ -10,7 +10,7 @@ var CreatedPaths: Array[ExcavationPath]
 @export var point_distance_interval: float = 1.0
 @export var point_max_distance_delta: float = 10.0
 
-
+var owning_player: Player 
 
 var tool_active: bool = false
 
@@ -63,6 +63,10 @@ func _process(_delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
+	
+	if (!owning_player.process_input):
+		return
+	
 	if (event.is_action_pressed("BeginExcavationPath")):
 		print("Excavation path tool active")
 		tool_active = true
@@ -99,6 +103,10 @@ func _input(event: InputEvent) -> void:
 		
 
 func _physics_process(_delta: float) -> void:
+	
+	if (!owning_player.process_input):
+		return
+	
 	if (tool_active && Input.is_action_pressed("ToolClick")):
 		
 		

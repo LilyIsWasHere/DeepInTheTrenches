@@ -29,10 +29,10 @@ var settingDigPath : bool = false
 
 var teamID : int = 0
 
-@onready var player : Player = get_parent().owning_player
+@onready var owning_player : Player = get_parent().owning_player
 
 func _ready() -> void:
-	teamID = player.player_id
+	teamID = owning_player.player_id
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
 	rolesDropdown.visible = false
@@ -40,6 +40,9 @@ func _ready() -> void:
 	update_role_buttons()
 
 func _physics_process(_delta: float) -> void:
+	
+	if (!owning_player.process_input):
+		return
 	
 	for unit : Unit in selectedUnits:
 		unit.is_selected(true)
@@ -158,6 +161,9 @@ func deselect_units() -> void:
 	selectedUnits = []
 
 func _input(event: InputEvent) -> void:
+	
+	if (!owning_player.process_input):
+		return
 	
 	if event.is_action_pressed("BeginExcavationPath"):
 		settingDigPath = true
