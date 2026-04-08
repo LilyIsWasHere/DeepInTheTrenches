@@ -287,16 +287,21 @@ func handle_view_specific_inventory(unitArray : Array) -> void:
 	var resources : Dictionary
 	var textures : Dictionary
 	for unit : Unit in unitArray:
-			for slot in unit.inventory.slots:
-				if slot.item == null:
-					pass
-				elif slot.item.name == "" || slot.num == 0:
-					pass
-				elif resources.get(slot.item.name) == null:
-					resources[slot.item.name] = slot.num
-					textures[slot.item.name] = slot.item.display_icon
-				else:
-					resources[slot.item.name] += slot.num
+		var children: Array[Node] = unit.get_children()
+		for c in children:
+			if (c is Inventory):
+				var inventory: Inventory = c as Inventory
+				for slot in inventory.slots:
+					if slot.item == null:
+						pass
+					elif slot.item.name == "":
+						pass
+
+					elif resources.get(slot.item.name) == null:
+						resources[slot.item.name] = slot.num
+						textures[slot.item.name] = slot.item.display_icon
+					else:
+						resources[slot.item.name] += slot.num
 	inventoryViewer.clear()
 	for key : String in resources.keys():
 		inventoryViewer.add_item(key, resources[key], textures[key])

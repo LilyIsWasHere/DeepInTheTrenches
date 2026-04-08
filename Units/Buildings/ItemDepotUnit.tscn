@@ -81,6 +81,7 @@ material_override = SubResource("StandardMaterial3D_c58w5")
 mesh = SubResource("SphereMesh_ypl2c")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1767881, 0, 0)
 script = ExtResource("2_grfpu")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 
@@ -123,5 +124,6 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 replication_config = SubResource("SceneReplicationConfig_5vs5s")
 
 [node name="ConstructionInventory" type="Node3D" parent="." unique_id=1496517546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1767881, 0, 0)
 script = ExtResource("2_grfpu")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"

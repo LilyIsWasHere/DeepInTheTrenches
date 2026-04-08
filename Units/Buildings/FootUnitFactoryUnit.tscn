@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://buew8adykh5g4"]
 
-[ext_resource type="Script" path="res://Units/Buildings/FootUnitFactory.gd" id="1_13gf2"]
+[ext_resource type="Script" uid="uid://cunrjtbsso3y7" path="res://Units/Buildings/FootUnitFactory.gd" id="1_13gf2"]
 [ext_resource type="FontFile" uid="uid://cqbkyhs6g8trq" path="res://examples_dd3d/Minecraft - by BennyFonts1002 - from fontstruct.ttf" id="2_0e64r"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_nbufn"]
 [ext_resource type="ArrayMesh" uid="uid://ln8bgwgqy1t4" path="res://resources/factory.obj" id="3_nbufn"]
@@ -149,6 +149,7 @@ material_override = SubResource("StandardMaterial3D_c58w5")
 mesh = SubResource("SphereMesh_ypl2c")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 script = ExtResource("4_yxetk")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 
@@ -165,6 +166,7 @@ shape = SubResource("BoxShape3D_x534k")
 replication_config = SubResource("SceneReplicationConfig_q7vbn")
 
 [node name="ConstructionInventory" type="Node3D" parent="." unique_id=438235801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 script = ExtResource("4_yxetk")
 metadata/_custom_type_script = "uid://bfmh3e0len4to"
 

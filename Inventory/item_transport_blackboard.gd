@@ -108,7 +108,7 @@ func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportReques
 			
 			if (dist < closest_dist):
 				var dropoff: ItemTransportRequest = _find_matching_dropoff(pickup)
-				if (!dropoff || pickup.inventory == dropoff.inventory || pickup.local): 
+				if (!dropoff || pickup.inventory == dropoff.inventory): 
 					continue
 					
 				
@@ -137,13 +137,15 @@ func _find_matching_dropoff(pickup_request: ItemTransportRequest) -> ItemTranspo
 	for d_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var dropoff_arr: Array = dropoff_requests[d_idx]
 		for dropoff: ItemTransportRequest in dropoff_arr:
-			if (dropoff.item == pickup_request.item && pickup_request.inventory != dropoff.inventory && !dropoff.local):
+			if (pickup_request.local && dropoff.local):
+				continue
+			if (dropoff.item == pickup_request.item && pickup_request.inventory != dropoff.inventory):
 				return dropoff
 				
 	return null
 			
 
-func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false) -> void:
+func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false, reset_existing_quantity: bool = false) -> void:
 	
 	assert(from_inventory.has_slot_for_item(item))
 	
@@ -156,7 +158,10 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 			existing_request.priority = priority
 			existing_request.local = is_local
 		
-		existing_request.quantity += qty
+		if (reset_existing_quantity):
+			existing_request.quantity = qty
+		else:
+			existing_request.quantity += qty
 		
 	else:
 		var new_request: ItemTransportRequest = ItemTransportRequest.new()
@@ -170,7 +175,7 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 		var key: Array = [from_inventory, item]
 		pickup_request_inv_item_map.set(key, new_request)	
 
-func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false) -> void:
+func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, priority: ItemTransportRequest.RequestPriority, is_local: bool = false, reset_existing_quantity: bool = false) -> void:
 	
 	assert(to_inventory.has_slot_for_item(item))
 	
@@ -182,7 +187,10 @@ func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, pri
 			dropoff_requests[priority].append(existing_request)
 			existing_request.priority = priority
 			existing_request.local = is_local
-		existing_request.quantity += qty
+		if (reset_existing_quantity):
+			existing_request.quantity = qty
+		else:
+			existing_request.quantity += qty
 		
 	else:
 		var new_request: ItemTransportRequest = ItemTransportRequest.new()
@@ -196,6 +204,8 @@ func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, pri
 		var key: Array = [to_inventory, item]
 		dropoff_request_inv_item_map.set(key, new_request)	
 
+	
+	
 	
 func _claim_pickup_request(request: ItemTransportRequest, pickup_qty: int) -> void:
 	pickup_request_inv_item_map.erase([request.inventory, request.item])

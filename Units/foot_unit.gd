@@ -4,7 +4,7 @@ class_name FootUnit
 @export var weapon : Weapon
 
 var active_order: DirectOrders = DirectOrders.NONE
-var role: FootUnitRoles = FootUnitRoles.EXCAVATE
+var role: FootUnitRoles = FootUnitRoles.PATROL
 
 enum DirectOrders {
 	NONE,
@@ -25,7 +25,7 @@ var dig_point_info: Dictionary
 var dig_timer: Timer = Timer.new()
 
 const dig_point_range: float = 0.5
-const dig_amount: float = 3
+const dig_amount: float = 0.3
 const dig_radius: float = 25
 const dig_delay: float = 1
 

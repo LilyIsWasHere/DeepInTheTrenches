@@ -35,7 +35,7 @@ func _ready() -> void:
 		inventory.add_slot(output_item, 9999)
 	
 	for item: InventoryItem in input_ingredients.keys():
-		inventory.add_slot(item, 9999)
+		inventory.add_slot(item, input_ingredients[item] * 100)
 
 func _input(event: InputEvent) -> void:
 	super(event)
@@ -44,6 +44,14 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	super(delta)
+	
+	if (is_placed && is_constructed):
+		for ingredient: InventoryItem in input_ingredients.keys():
+			if (!inventory.is_item_slot_full(ingredient)):
+				ItemTransportBlackboard.request_dropoff(inventory, ingredient, inventory.item_slot_dict[ingredient].max_num, ItemTransportRequest.RequestPriority.HIGH, false, true)
+		
+	
+	
 	#this fills the production progress bar
 	#ONLY if the production timer is running and the building has been constructed
 	if productionTimer.is_stopped():
@@ -62,11 +70,20 @@ func debug_inventory() -> void:
 		print("adding ", item.name)
 		inventory.add_items(item, 200)
 
+
+func consume_ingredients() -> void:
+	for item : InventoryItem in input_ingredients.keys():
+		print("Removing ", item.name)
+		inventory.remove_items(item, input_ingredients[item])
+
+func produce_output() -> void:
+	if output_item != null:
+		print("Creating ", output_item.name)
+		var overflow: int = inventory.add_items(output_item, output_batch_size)
+		ItemTransportBlackboard.request_pickup(inventory, output_item, output_batch_size - overflow, ItemTransportRequest.RequestPriority.MEDIUM)
+
 func start_production() -> void:
-	#If the output item isn't assigned, this isn't a valid factory yet.
-	if output_item == null:
-		return
-	
+
 	if !is_constructed:
 		#only produce stuff if the building has been constructed
 		return
@@ -79,19 +96,16 @@ func start_production() -> void:
 	for item : InventoryItem in input_ingredients.keys():
 		if inventory.get_item_quantity(item) < input_ingredients[item]:
 			#if we don't have enough of something, get out of there
-			print("Insufficient ", item.name, " in ", name)
-			print(inventory.get_item_quantity(item), " < ", input_ingredients[item])
+			#print("Insufficient ", item.name, " in ", name)
+			#print(inventory.get_item_quantity(item), " < ", input_ingredients[item])
 			return
 	
 	#otherwise, there is enough to craft at least 1 of the output item\
 	#remove required input items
-	for item : InventoryItem in input_ingredients.keys():
-		print("Removing ", item.name)
-		inventory.remove_items(item, input_ingredients[item])
+	consume_ingredients()
+	
 	#add output_batch_size worth of output_item
-	if output_item != null:
-		print("Creating ", output_item.name)
-		inventory.add_items(output_item, output_batch_size)
+	produce_output()
 	
 	#Check if we can make another one (to know if we restart the timer)
 	for item : InventoryItem in input_ingredients.keys():
@@ -103,4 +117,4 @@ func start_production() -> void:
 			return
 	
 	#restart production timer to try again later
-	productionTimer.start(max(productionLength, 0.05))
+	productionTimer.start(productionLength)

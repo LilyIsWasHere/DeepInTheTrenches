@@ -55,8 +55,9 @@ func _process(_delta: float) -> void:
 	
 	if (is_placed == true && is_constructed == false && are_construction_resource_requirements_met()):
 		is_constructed = true
-		
 		_set_materials_constructed()
+		for item: InventoryItem in construction_inventory.item_slot_dict.keys():
+			construction_inventory.remove_items(item, construction_inventory.get_item_quantity(item))
 
 func _physics_process(delta: float) -> void:
 	super(delta)
@@ -118,4 +119,4 @@ func _set_materials_constructed() -> void:
 func on_placed() -> void:
 	ai_controller.process_mode = Node.PROCESS_MODE_INHERIT
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
-		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM)
+		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.TOP)

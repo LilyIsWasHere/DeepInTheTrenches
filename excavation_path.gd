@@ -5,7 +5,9 @@ var height_delta: float = -2.0
 
 var owning_camera: Camera3D
 
+var path_fully_excavated: bool = false
 
+var point_fully_excavated: Dictionary[int, bool]
 
 # Called when the node enters the scene tree for tdhe first time.
 func _ready() -> void:
@@ -34,29 +36,40 @@ func _process(_delta: float) -> void:
 			arrow_color = Color(0.2, 1.0, 0.2)
 		
 		DebugDraw3D.draw_arrow(arrow_begin, arrow_end, arrow_color, 0.1)
-		DebugDraw3D.draw_text(arrow_begin, "%.2f" % (GlobalTerrainManager.get_terrain().get_terrain_data(point).height - GlobalTerrainManager.get_terrain().get_terrain_data(point).initial_height))
 		idx += 1
 
 
 func is_point_excavated(idx: int) -> bool: 
+	
+	if (point_fully_excavated.has(idx) && point_fully_excavated[idx]):
+		return point_fully_excavated[idx]
+	
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
 	var points: PackedVector3Array = curve.get_baked_points()
 	var point: Vector3 = points[idx]
 	
 	var data: Dictionary = terrain.get_terrain_data(point)
+	
+	var fully_excavated: bool = false
 	if (height_delta >= 0.0):
-		return data.height - data.initial_height >= height_delta - 0.01
+		fully_excavated = data.height - data.initial_height >= height_delta - 0.01
 	else:
-		return data.height - data.initial_height <= height_delta + 0.01
+		fully_excavated = data.height - data.initial_height <= height_delta + 0.01
+		
+	point_fully_excavated[idx] = fully_excavated
+	return fully_excavated
 	
 
 
 func get_closest_unexcavated_point(position: Vector3) -> Array:
-	var points := curve.get_baked_points()
 	
 	var closest_point: Vector3 = Vector3(9999, 9999, 9999)
 	var closest_idx: int = -1
 	
+	if (path_fully_excavated):
+		return [closest_idx, closest_point]
+	
+	var points := curve.get_baked_points()
 	for i in range(points.size()):
 		var point: Vector3 = points[i]
 		if (is_point_excavated(i)):
@@ -80,14 +93,19 @@ func get_closest_fully_excavated_point(position: Vector3) -> Array:
 	var closest_point: Vector3 = Vector3(9999, 9999, 9999)
 	var closest_idx: int = -1
 	
+	
+	var all_fully_excavated: bool = true
 	for i in range(points.size()):
 		var point: Vector3 = points[i]
 		if (not is_point_excavated(i)):
+			all_fully_excavated = false
 			continue
 			
 		if (position.distance_to(point) < position.distance_to(closest_point)):
 			closest_point = point
 			closest_idx = i
 			
-	
+	if (all_fully_excavated):
+		path_fully_excavated = true
+
 	return [closest_idx, closest_point]

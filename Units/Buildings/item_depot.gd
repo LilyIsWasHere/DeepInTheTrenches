@@ -8,12 +8,13 @@ var energy_crystal_item: InventoryItem = preload("res://Inventory/InventoryItems
 
 func _ready() -> void:
 	super()
-
-func on_placed() -> void:
-	super()
-	for i in range(10):
-		ItemTransportBlackboard.request_dropoff(inventory, organic_item, 10000, ItemTransportRequest.RequestPriority.LOW, true)
-		ItemTransportBlackboard.request_dropoff(inventory, energy_crystal_item, 10000, ItemTransportRequest.RequestPriority.LOW, true)
-			
-		ItemTransportBlackboard.request_pickup(inventory, organic_item, 10000, ItemTransportRequest.RequestPriority.HIGH)
-		ItemTransportBlackboard.request_pickup(inventory, energy_crystal_item, 10000, ItemTransportRequest.RequestPriority.HIGH)
+	
+	
+func _process(_delta: float) -> void:
+	super(_delta)
+	if (is_constructed && is_placed):
+		for item: InventoryItem in inventory.item_slot_dict.keys():
+			ItemTransportBlackboard.request_dropoff(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.LOW, true, true)
+			ItemTransportBlackboard.request_pickup(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM, true, true)
+		
+		
