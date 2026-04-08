@@ -329,7 +329,6 @@ func set_destination_to_nearest_dig_point_if_exists() -> void:
 func dig_at_point_tick_fn() -> void:
 	var terrain: Terrain = GlobalTerrainManager.get_terrain()
 	if (!dig_point_info["exists"]): 
-		print("AAAAAAAAAA")
 		return
 	var height_delta: float = dig_point_info["height_delta"]
 	
