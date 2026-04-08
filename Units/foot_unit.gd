@@ -52,6 +52,11 @@ func _ready() -> void:
 	add_to_group("foot_unit")
 	add_child(dig_timer)
 	dig_timer.one_shot = true
+	
+	if team == 0:
+		$Decal.modulate = Color.BLUE
+	else:
+		$Decal.modulate = Color.RED
 	#uncomment this vvv when we get troops digging working
 	#add_to_group("can_dig")
 
@@ -69,6 +74,10 @@ func die() -> void:
 
 func _process(_delta: float) -> void:
 	super(_delta)
+	
+	$Decal.visible = selectedArrow.visible
+	if move_order_destination:
+		$Decal.global_position = move_order_destination
 	
 	if (is_multiplayer_authority()):
 		var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()
@@ -173,6 +182,7 @@ func init_ai_states() -> void:
 		.set_enter_function(get_patrol_destination)
 		
 	var move_to_patrol_destination_state: AIState = patrol_role_state.add_child_state(AIState.create("move_to_patrol_destination")) \
+		.set_enter_function(func() -> void: $AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn)
 
 	get_patrol_destination_state.add_transition(move_to_patrol_destination_state, negate(get_arrived))
@@ -185,22 +195,31 @@ func init_ai_states() -> void:
 	###########################################
 	
 	var resource_transport_idle_state := resource_transport_role_state.add_child_state(AIState.create("resouce_transport_idle")) \
+		.set_enter_function(func() -> void: $AnimationPlayer.play("idle")) \
 		.set_tick_function(try_get_transport_plan) \
 		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
 		
 	var resource_transport_move_to_pickup := resource_transport_role_state.add_child_state(AIState.create("move_to_pickup")) \
-		.set_enter_function(func()->void: set_destination_point_safe(pickup_request.inventory.global_position)) \
+		.set_enter_function(func()->void: 
+			set_destination_point_safe(pickup_request.inventory.global_position)
+			$AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn)
 	
 	var resource_transport_pickup_items := resource_transport_role_state.add_child_state(AIState.create("pickup_items")) \
-		.set_enter_function(fulfill_pickup)
+		.set_enter_function(func() -> void:
+			fulfill_pickup()
+			$AnimationPlayer.play("grab_item"))
 	
 	var resource_transport_move_to_dropoff := resource_transport_role_state.add_child_state(AIState.create("move_to_dropoff")) \
-		.set_enter_function(func()->void: set_destination_point_safe(dropoff_request.inventory.global_position))\
+		.set_enter_function(func()->void: 
+			set_destination_point_safe(dropoff_request.inventory.global_position)
+			$AnimationPlayer.play("walk"))\
 		.set_tick_function(move_safe_tick_fn)
 	
 	var resource_transport_dropoff_items := resource_transport_role_state.add_child_state(AIState.create("dropoff_items")) \
-		.set_enter_function(fulfill_dropoff)
+		.set_enter_function(func() -> void:
+			fulfill_dropoff()
+			$AnimationPlayer.play("drop_item"))
 		
 		
 	resource_transport_idle_state.add_transition(resource_transport_move_to_pickup, func()->bool: return pickup_request != null && dropoff_request != null)
@@ -222,26 +241,35 @@ func init_ai_states() -> void:
 	#################################
 	
 	var dig_idle_state := excavate_role_state.add_child_state(AIState.create("dig_idle")) \
+		.set_enter_function(func() -> void: $AnimationPlayer.play("idle")) \
 		.set_tick_function(set_destination_to_nearest_dig_point_if_exists) \
 		.set_display_icon(load("res://UnitAI/StateIcons/idle_icon.png"))
 		
 	var move_to_dig_point_state := excavate_role_state.add_child_state(AIState.create("move_to_dig_point")) \
 		.set_tick_function(move_safe_tick_fn) \
 		# enter functions can be lambdas too
-		.set_enter_function(set_destination_to_nearest_dig_point_if_exists)
+		.set_enter_function(func() -> void: 
+			set_destination_to_nearest_dig_point_if_exists()
+			$AnimationPlayer.play("walk"))
 		
 	var dig_at_point_state := excavate_role_state.add_child_state(AIState.create("dig_at_point")) \
 		.set_tick_function(dig_at_point_tick_fn) \
-		.set_enter_function(func()->void: dig_timer.start(dig_delay))
+		.set_enter_function(func()->void: 
+			dig_timer.start(dig_delay)
+			$AnimationPlayer.play("grab_item"))
 		
 	
 		
 		
 		
 	var dig_dropoff_resources := excavate_role_state.add_child_state(AIState.create("dig_dropoff")) \
-		.set_enter_function(set_excavation_item_dropoff_destination) \
+		.set_enter_function(func() -> void:
+			set_excavation_item_dropoff_destination()
+			$AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn) \
-		.set_exit_function(fulfill_personal_dropoff)
+		.set_exit_function(func() -> void:
+			fulfill_personal_dropoff()
+			$AnimationPlayer.play("drop_item"))
 		
 	move_to_dig_point_state.add_transition(dig_at_point_state, get_arrived)
 	dig_at_point_state.add_transition(dig_idle_state, func()->bool: return !dig_point_info["exists"])
@@ -289,11 +317,10 @@ func set_excavation_item_dropoff_destination() -> void:
 
 func shoot_at_point(point : Vector3) -> void:
 	weapon.shoot(point)
+	$AnimationPlayer.play("shoot")
 
 func attack_enemy_tick_fn() -> void:
 	var targetEnemy: Unit = LineOfSightManager.get_closest_visible_enemy(self)
-	
-
 	
 	if targetEnemy != null:
 		var look_at_pos: Vector3 = Vector3(targetEnemy.global_position.x, global_position.y, targetEnemy.global_position.z)
