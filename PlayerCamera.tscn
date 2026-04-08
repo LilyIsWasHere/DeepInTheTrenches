@@ -51,7 +51,7 @@ metadata/_custom_type_script = "uid://c8kyg434ywwc7"
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=779811412]
 
 [node name="BuildingConstructionUi" parent="CanvasLayer" unique_id=643160159 instance=ExtResource("7_ri33b")]
-offset_right = -945.0
+offset_right = -944.29
 
 [node name="Panel" type="Panel" parent="CanvasLayer" unique_id=1997286220]
 anchors_preset = 15
