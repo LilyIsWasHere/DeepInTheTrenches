@@ -126,10 +126,6 @@ func _physics_process(_delta: float) -> void:
 			rolesDropdown.visible = !actionsDropdown.visible
 			actionsDropdown.visible = !actionsDropdown.visible
 			inDropdown = !inDropdown
-		
-			var mousePos : Vector2 = get_viewport().get_mouse_position()
-			actionsDropdown.position = mousePos + offset
-			rolesDropdown.position = mousePos + offset*4
 			
 			#open relevant inventories
 			handle_view_inventory()
