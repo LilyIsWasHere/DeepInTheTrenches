@@ -5,13 +5,12 @@
 [ext_resource type="Resource" uid="uid://by0g7oh7m86g5" path="res://Units/Buildings/ConstructableBuildingResources/ItemDepotConstructable.tres" id="3_ekgkd"]
 [ext_resource type="Resource" uid="uid://nvjpjq62q2ma" path="res://Units/Buildings/ConstructableBuildingResources/MortarConstructable.tres" id="5_1fhj8"]
 [ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="5_76k1u"]
+[ext_resource type="Resource" uid="uid://cw3horow68vwn" path="res://Units/Buildings/ConstructableBuildingResources/SoldierFactoryConstructable.tres" id="5_w14h8"]
 [ext_resource type="Resource" uid="uid://da2ll7bdwolxx" path="res://Units/Buildings/ConstructableBuildingResources/TurretConstructable.tres" id="6_1fhj8"]
 [ext_resource type="Resource" uid="uid://b3q4gbqcal6qa" path="res://Units/Buildings/ConstructableBuildingResources/BulletFactoryConstructable.tres" id="6_ll810"]
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_w14h8"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="7_ptcvr"]
-[ext_resource type="Texture2D" uid="uid://c2ghx20qowq2h" path="res://resources/unit_factory_icon.png" id="8_5rypg"]
 [ext_resource type="Texture2D" uid="uid://co27wqvck3grf" path="res://resources/magazine_factory_icon.png" id="8_w14h8"]
-[ext_resource type="PackedScene" uid="uid://buew8adykh5g4" path="res://Units/Buildings/FootUnitFactoryUnit.tscn" id="9_ihrtd"]
 [ext_resource type="PackedScene" uid="uid://brra3u8g46ifs" path="res://Units/Buildings/MagazineFactoryUnit.tscn" id="9_ptcvr"]
 
 [sub_resource type="Resource" id="Resource_ptcvr"]
@@ -25,17 +24,6 @@ ExtResource("7_ptcvr"): 75
 scene = ExtResource("9_ptcvr")
 metadata/_custom_type_script = "uid://c60tm374tpnru"
 
-[sub_resource type="Resource" id="Resource_vur2q"]
-script = ExtResource("2_8bl1r")
-name = "Solider Factory"
-icon = ExtResource("8_5rypg")
-construction_cost = Dictionary[ExtResource("5_76k1u"), int]({
-ExtResource("6_w14h8"): 50,
-ExtResource("7_ptcvr"): 100
-})
-scene = ExtResource("9_ihrtd")
-metadata/_custom_type_script = "uid://c60tm374tpnru"
-
 [node name="BuildingConstructionUi" type="Control" unique_id=643160159]
 layout_mode = 3
 anchors_preset = 15
@@ -45,7 +33,7 @@ offset_right = -972.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fj5ih")
-buildings = Array[ExtResource("2_8bl1r")]([ExtResource("3_ekgkd"), ExtResource("6_ll810"), SubResource("Resource_ptcvr"), SubResource("Resource_vur2q"), ExtResource("5_1fhj8"), ExtResource("6_1fhj8")])
+buildings = Array[ExtResource("2_8bl1r")]([ExtResource("3_ekgkd"), ExtResource("6_ll810"), ExtResource("5_w14h8"), SubResource("Resource_ptcvr"), ExtResource("5_1fhj8"), ExtResource("6_1fhj8")])
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=360731175]
 layout_mode = 1

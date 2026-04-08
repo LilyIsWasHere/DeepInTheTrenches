@@ -10,17 +10,6 @@
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="8_3y4og"]
 [ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="9_qqtj1"]
 
-[sub_resource type="Resource" id="Resource_vur2q"]
-script = ExtResource("8_y5j1n")
-name = "Soldier Factory"
-icon = ExtResource("12_p46be")
-construction_cost = Dictionary[ExtResource("11_j84cy"), int]({
-ExtResource("13_j84cy"): 25,
-ExtResource("12_vynk2"): 100
-})
-scene = ExtResource("13_tgj5u")
-metadata/_custom_type_script = "uid://c60tm374tpnru"
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ri33b"]
 draw_center = false
 border_width_left = 3
