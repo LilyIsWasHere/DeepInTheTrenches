@@ -23,11 +23,13 @@ const RAY_LENGTH: float = 3000.0
 
 var terrain: Terrain
 
+var owning_player: Player
 
 
 func _physics_process(delta: float) -> void:
 	
-
+	if (!owning_player.process_input):
+		return
 	
 	var do_edit: bool = false
 	if (continuous):
@@ -59,4 +61,5 @@ func _physics_process(delta: float) -> void:
 			$"../HeightmapDBGMesh".set_heightmap(result["collider"].get_heightmap_viewport_tex())
 	
 func on_resource_items_acquired(item: InventoryItem, quantity: int) -> void:
-	print("Acquired " + str(quantity) + " " + item.name)
+	pass
+	# print("Acquired " + str(quantity) + " " + item.name)

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dg6r5g71jjggu" path="res://scripts/weapon_scripts/shell.gd" id="1_nli3a"]
 [ext_resource type="ArrayMesh" uid="uid://dlwsgceg838ch" path="res://resources/shell.obj" id="2_yosw4"]
+[ext_resource type="AudioStream" uid="uid://dxxnev5gilafy" path="res://Audio/incoming_artillery.wav" id="3_7kk88"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nli3a"]
 radius = 0.2
@@ -111,3 +112,7 @@ draw_pass_2 = null
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=964750626]
 root_path = NodePath("../CollisionShape3D")
 replication_config = SubResource("SceneReplicationConfig_yosw4")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=139649333]
+stream = ExtResource("3_7kk88")
+unit_size = 50.0

@@ -14,6 +14,8 @@ var cursor : Cursor
 @export var unit_spawner: MultiplayerSpawner
 @export var bullet_spawner: MultiplayerSpawner
 
+var process_input: bool = true
+
 
 func _input(event: InputEvent) -> void:
 	#if (event.is_action_pressed("ToolClick")):
@@ -28,7 +30,6 @@ func _ready() -> void:
 	print("peer id: " + str(multiplayer.get_unique_id()))
 	
 	#UnitSpawner.spawn_path = $"../..".get_path()
-	
 	
 	if (is_multiplayer_authority()):
 		attach_camera()

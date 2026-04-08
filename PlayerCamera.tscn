@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dnw4gbdik3nhu" path="res://free_cam.gd" id="1_ibo1c"]
 [ext_resource type="Script" uid="uid://bsouf48aos0dn" path="res://scripts/label_3d.gd" id="2_ri33b"]
-[ext_resource type="Script" uid="uid://cowpqpwjhdku2" path="res://heightmap_dbg_mesh.gd" id="3_3y4og"]
 [ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="4_qqtj1"]
 [ext_resource type="Script" uid="uid://csyt8r0gbu2hd" path="res://sculpt_brush.gd" id="5_1u4fj"]
 [ext_resource type="Script" uid="uid://c8kyg434ywwc7" path="res://resource_extractor.gd" id="6_l4wm4"]
@@ -11,15 +10,16 @@
 [ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="8_3y4og"]
 [ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="9_qqtj1"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_wi0c6"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hp6x6"]
-resource_local_to_scene = true
-shading_mode = 0
-albedo_texture = SubResource("ViewportTexture_wi0c6")
-
-[sub_resource type="QuadMesh" id="QuadMesh_3tkgg"]
-resource_local_to_scene = true
+[sub_resource type="Resource" id="Resource_vur2q"]
+script = ExtResource("8_y5j1n")
+name = "Soldier Factory"
+icon = ExtResource("12_p46be")
+construction_cost = Dictionary[ExtResource("11_j84cy"), int]({
+ExtResource("13_j84cy"): 25,
+ExtResource("12_vynk2"): 100
+})
+scene = ExtResource("13_tgj5u")
+metadata/_custom_type_script = "uid://c60tm374tpnru"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ri33b"]
 draw_center = false
@@ -43,13 +43,6 @@ text = "FPS: "
 font_size = 10
 outline_size = 5
 script = ExtResource("2_ri33b")
-
-[node name="HeightmapDBGMesh" type="MeshInstance3D" parent="." unique_id=961688203]
-transform = Transform3D(1, 0, 0, 1.4901161e-08, 1.0000002, 3.7252903e-08, 2.9802322e-08, -3.7252903e-08, 1.0000002, -1.5946579, 0.42312622, -1.7217789)
-visible = false
-material_override = SubResource("StandardMaterial3D_hp6x6")
-mesh = SubResource("QuadMesh_3tkgg")
-script = ExtResource("3_3y4og")
 
 [node name="UnitSpawner" type="Node3D" parent="." unique_id=498173308]
 script = ExtResource("4_qqtj1")

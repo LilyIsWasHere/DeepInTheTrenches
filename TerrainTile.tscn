@@ -27,9 +27,99 @@ radius = 0.0
 height = 0.0
 metadata/_custom_type_script = "uid://dsejgw4f86mnh"
 
+[sub_resource type="CompositorEffect" id="CompositorEffect_68x4c"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_fxlds"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_vp52g"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_1blrm"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_27wy6"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_kt35w"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_2atjw"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_rgr7i"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_cpge0"]
+resource_local_to_scene = true
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_cfsic")
+metadata/_custom_type_script = "uid://dsejgw4f86mnh"
+
 [sub_resource type="Compositor" id="Compositor_lrlw4"]
 resource_local_to_scene = true
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1fw")])
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_hp1fw"), SubResource("CompositorEffect_68x4c"), SubResource("CompositorEffect_fxlds"), SubResource("CompositorEffect_vp52g"), SubResource("CompositorEffect_1blrm"), SubResource("CompositorEffect_27wy6"), SubResource("CompositorEffect_kt35w"), SubResource("CompositorEffect_2atjw"), SubResource("CompositorEffect_rgr7i"), SubResource("CompositorEffect_cpge0")])
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lrlw4"]
 shader = ExtResource("3_hp1fw")
