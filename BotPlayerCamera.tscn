@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://d28bemm0qynio" path="res://unit_spawner.gd" id="3_8jl82"]
 [ext_resource type="Script" uid="uid://csyt8r0gbu2hd" path="res://sculpt_brush.gd" id="4_3mw0k"]
 [ext_resource type="Script" uid="uid://c8kyg434ywwc7" path="res://resource_extractor.gd" id="5_11lm6"]
-[ext_resource type="Script" uid="uid://b8s6bt4l4tn7m" path="res://excavation_path_tool.gd" id="18_r0m7f"]
+[ext_resource type="PackedScene" path="res://EnemyAI/PrefabExcavationPathTool.tscn" id="7_ae2wr"]
 [ext_resource type="PackedScene" uid="uid://c72wk1hhnxv5b" path="res://Nick/cursor.tscn" id="19_ve5af"]
 
 [node name="Camera3D" type="Camera3D" unique_id=1454175158 node_paths=PackedStringArray("unit_spawner", "excavation_path_tool")]
@@ -38,9 +38,7 @@ resource_extractor = NodePath("ResourceExtractor")
 script = ExtResource("5_11lm6")
 metadata/_custom_type_script = "uid://c8kyg434ywwc7"
 
-[node name="ExcavationPathTool" type="Node3D" parent="." unique_id=812009993]
-top_level = true
-script = ExtResource("18_r0m7f")
-
 [node name="Cursor" parent="." unique_id=1597200158 instance=ExtResource("19_ve5af")]
 visibleDebugMesh = true
+
+[node name="ExcavationPathTool" parent="." unique_id=101601630 instance=ExtResource("7_ae2wr")]

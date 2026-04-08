@@ -42,7 +42,7 @@ func _on_singleplayer_button_pressed() -> void:
 
 	# do some weird stuff to get the multiplayer scene to start
 	var scene_resource := ResourceLoader.load("res://Multiplayer/Multiplayer.tscn")
-	var scene_instance : Node = scene_resource.instantiate()
+	var scene_instance : MultiplayerGame = scene_resource.instantiate()
 	var tree := get_tree()
 	var current_scene := tree.current_scene
 	tree.root.add_child(scene_instance)

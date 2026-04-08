@@ -1,3 +1,4 @@
+class_name MultiplayerGame
 extends Node
 
 @export var auto_connect: bool = true
@@ -35,4 +36,4 @@ func start_game(local: bool = false) -> void:
 	if (is_multiplayer_authority()):
 		$"GameScene/PlayerSpawner".spawn_player(1)
 		if (!local): $"GameScene/PlayerSpawner".spawn_player(multiplayer.get_peers().get(0))
-		else: $"GameScene/PlayerSpawner".spawn_player(2)
+		else: $"GameScene/PlayerSpawner".spawn_bot_player()

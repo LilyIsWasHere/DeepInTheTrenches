@@ -144,6 +144,9 @@ func _get_global_scale(basis: Basis) -> Vector3:
 
 func get_terrain_data(location: Vector3) -> Dictionary:
 	
+	if (!heightmap_img):
+		return {"height": 0.0, "initial_height": 0.0, "resource": 0}
+	
 	var pixel_pos: Vector2i = global_to_pixel(location)
 	var px_val: Color = heightmap_img.get_pixelv(pixel_pos)
 	var data: Dictionary

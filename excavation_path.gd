@@ -20,7 +20,9 @@ func _process(_delta: float) -> void:
 	var points := curve.get_baked_points()
 	if (points.size() > 0):
 		
-		var dist: float = points[0].distance_to(owning_camera.global_position)
+		
+		var cam: Camera3D = get_parent().get_parent() # ew gross
+		var dist: float = points[0].distance_to(cam.global_position)
 		
 		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 3 * dist, Color(1, 1, 0))
 	
