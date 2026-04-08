@@ -37,6 +37,25 @@ func set_shadows_enabled(enabled: bool) -> void:
 	save_settings()
 	shadows_changed.emit(enabled)
 
+# this is called from the settings panel when the user changes the volume sliders
+func set_master_volume(volume: float) -> void:
+	volume /= 100.0
+	audio["master_volume"] = volume
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(volume))
+	save_settings()
+
+func set_sfx_volume(volume: float) -> void:
+	volume /= 100.0
+	audio["sfx_volume"] = volume
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(volume))
+	save_settings()
+
+func set_music_volume(volume: float) -> void:
+	volume /= 100.0
+	audio["music_volume"] = volume
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(volume))
+	save_settings()
+
 func load_settings() -> void:
 	var config := ConfigFile.new()
 	var err := config.load(SETTINGS_PATH)
@@ -47,6 +66,11 @@ func load_settings() -> void:
 		var target: Dictionary = get(section)
 		for key: String in DEFAULTS[section].keys():
 			target[key] = config.get_value(section, key, DEFAULTS[section][key])
+	
+	# apply the volume settings upon loading
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(audio["master_volume"]))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(audio["sfx_volume"]))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(audio["music_volume"]))
 
 
 func save_settings() -> void:

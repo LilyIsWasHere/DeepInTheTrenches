@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
 [ext_resource type="Shader" uid="uid://s0r20ipcd1sw" path="res://materials/heightmap_gen_hills.gdshader" id="5_21bcp"]
+[ext_resource type="AudioStream" uid="uid://cjhdt6o8hsmeq" path="res://hendry/music/DeepInTheTrenches.wav" id="6_tpea4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rhti"]
 shader = ExtResource("5_21bcp")
@@ -75,5 +76,10 @@ visible = false
 [node name="Player1CamOrigin" type="Node3D" parent="." unique_id=1991555454]
 transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 120.659, 225.265, 304.11188)
 visible = false
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1900565120]
+stream = ExtResource("6_tpea4")
+autoplay = true
+bus = &"Music"
 
 [connection signal="spawned" from="PlayerSpawner" to="PlayerSpawner" method="_on_spawned"]
