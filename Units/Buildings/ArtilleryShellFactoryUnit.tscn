@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://dc1fh0dqkw7sn"]
+
+[ext_resource type="Script" uid="uid://d34g24qgwep6x" path="res://Units/Buildings/factory_unit.gd" id="1_eowrb"]
+[ext_resource type="Resource" uid="uid://dfg5nwqfle8gv" path="res://Inventory/InventoryItems/artillery_shell_item.tres" id="2_w2ah7"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="3_eabrs"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="4_eowrb"]
+[ext_resource type="FontFile" uid="uid://cqbkyhs6g8trq" path="res://examples_dd3d/Minecraft - by BennyFonts1002 - from fontstruct.ttf" id="6_uyksp"]
+[ext_resource type="ArrayMesh" uid="uid://ln8bgwgqy1t4" path="res://resources/factory.obj" id="7_344hm"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="8_cu6ox"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w72rk"]
+bg_color = Color(0.15487596, 0.154876, 0.15487587, 0.48235294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gulig"]
+bg_color = Color(0.453475, 0.66699445, 0.39567596, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_v0871"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l434h"]
+size = Vector3(6.110718, 3.899643, 4.203804)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypl2c"]
+resource_local_to_scene = true
+transparency = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c58w5"]
+resource_local_to_scene = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c58w5"]
+albedo_color = Color(0.68235296, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ypl2c"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x534k"]
+size = Vector3(6.096588, 3.371521, 4.29023)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q7vbn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:team")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:health")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:velocity")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:is_constructed")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:is_placed")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+
+[node name="ArtilleryShellFactoryUnit" type="AnimatableBody3D" unique_id=1494502536 node_paths=PackedStringArray("productionTimer", "productionProgressBar", "construction_inventory", "LineOfSightTarget", "BodyMesh", "inventory", "selectableArea")]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_eowrb")
+output_item = ExtResource("2_w2ah7")
+output_batch_size = 10
+input_ingredients = Dictionary[ExtResource("3_eabrs"), int]({
+ExtResource("4_eowrb"): 120
+})
+productionTimer = NodePath("ProductionTimer")
+productionProgressBar = NodePath("SubViewport/ProductionProgressBar")
+construction_inventory = NodePath("ConstructionInventory")
+LineOfSightTarget = NodePath("LineOfSightTarget")
+BodyMesh = NodePath("MeshInstance3D")
+inventory = NodePath("Inventory")
+selectableArea = NodePath("Selectable")
+
+[node name="ProductionTimer" type="Timer" parent="." unique_id=1677865496]
+one_shot = true
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=943050233]
+disable_3d = true
+transparent_bg = true
+
+[node name="ProductionProgressBar" type="ProgressBar" parent="SubViewport" unique_id=862923321]
+offset_right = 200.0
+offset_bottom = 29.999996
+scale = Vector2(2, 2)
+theme_override_fonts/font = ExtResource("6_uyksp")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_w72rk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_gulig")
+
+[node name="ProductionProgress" type="Sprite3D" parent="." unique_id=114825899]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -1.0637617, 2.86728, -1.0210788)
+billboard = 1
+texture = SubResource("ViewportTexture_v0871")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952073814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9210968, -0.01706314)
+shape = SubResource("BoxShape3D_l434h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1138292857]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, 1, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_ypl2c")
+mesh = SubResource("CapsuleMesh_c58w5")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1311444610]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, 0, 0)
+mesh = ExtResource("7_344hm")
+
+[node name="LineOfSightTarget" type="Node3D" parent="." unique_id=1813088803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9877052, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LineOfSightTarget" unique_id=11716211]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_c58w5")
+mesh = SubResource("SphereMesh_ypl2c")
+
+[node name="Inventory" type="Node3D" parent="." unique_id=1571323257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+script = ExtResource("8_cu6ox")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="Selectable" type="Area3D" parent="." unique_id=2106328019]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0188318, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Selectable" unique_id=1831588783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00819397, 1.1857604, -0.025562286)
+shape = SubResource("BoxShape3D_x534k")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=195851278]
+replication_config = SubResource("SceneReplicationConfig_q7vbn")
+
+[node name="ConstructionInventory" type="Node3D" parent="." unique_id=438235801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+script = ExtResource("8_cu6ox")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
