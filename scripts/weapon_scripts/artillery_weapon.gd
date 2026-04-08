@@ -8,15 +8,17 @@ var owning_player: Player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$TargetDBG.visible = true
+	$Decal.visible = true
 
+func set_targ_pos_colour(colour : Color) -> void:
+	$Decal.modulate = colour
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	$TargetDBG.global_position = fixed_target
+	$Decal.global_position = fixed_target
 
 func set_target_pos_visibility(isVisible : bool) -> void:
-	$TargetDBG.visible = isVisible
+	$Decal.visible = isVisible
 
 func shoot(target_pos : Vector3) -> void:
 	fixed_target = target_pos

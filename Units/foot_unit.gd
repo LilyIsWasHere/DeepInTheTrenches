@@ -52,6 +52,11 @@ func _ready() -> void:
 	add_to_group("foot_unit")
 	add_child(dig_timer)
 	dig_timer.one_shot = true
+	
+	if team == 0:
+		$Decal.modulate = Color.BLUE
+	else:
+		$Decal.modulate = Color.RED
 	#uncomment this vvv when we get troops digging working
 	#add_to_group("can_dig")
 
@@ -69,6 +74,10 @@ func die() -> void:
 
 func _process(_delta: float) -> void:
 	super(_delta)
+	
+	$Decal.visible = selectedArrow.visible
+	if move_order_destination:
+		$Decal.global_position = move_order_destination
 	
 	if (is_multiplayer_authority()):
 		var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()

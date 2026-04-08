@@ -11,6 +11,10 @@ func _ready() -> void:
 	super()
 	add_to_group("can_attack")
 	weapon.owning_player = GlobalPlayerManager.get_player(team)
+	if team == 0:
+		weapon.set_targ_pos_colour(Color.BLUE)
+	else:
+		weapon.set_targ_pos_colour(Color.RED)
 
 func set_target_visible(isVisible : bool) -> void:
 	weapon.set_target_pos_visibility(isVisible)
