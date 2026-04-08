@@ -54,7 +54,9 @@ func get_closest_fully_excavated_point(position: Vector3) -> Dictionary:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
+	for child in get_children():
+		if (child is ExcavationPath):
+			CreatedPaths.append(child)
 	pass # Replace with function body.
 
 

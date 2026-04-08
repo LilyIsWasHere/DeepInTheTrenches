@@ -60,10 +60,9 @@ func _physics_process(_delta: float) -> void:
 			if selectedUnits.size() == 1:
 				if workstation.is_occupied():
 					workstation.eject_operator()
-				var unit : MoveableUnit = selectedUnits[0]
-				unit.move_order_destination = workstation.get_unit_position()
-				unit.active_order = FootUnit.DirectOrders.MOVE_SAFE
-				unit.connect("just_arrived", workstation.operate.bind(unit))
+				var unit : FootUnit = selectedUnits[0]
+				unit.designated_workstation = workstation
+				unit.active_order = FootUnit.DirectOrders.MOVE_TO_WORKSTATION
 		
 		isOperating = false
 		deselect_units()

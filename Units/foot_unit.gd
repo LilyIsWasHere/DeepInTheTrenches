@@ -10,6 +10,7 @@ enum DirectOrders {
 	NONE,
 	MOVE_DIRECT,
 	MOVE_SAFE,
+	MOVE_TO_WORKSTATION,
 	ATTACK,
 	HOLD
 }
@@ -25,13 +26,14 @@ var dig_point_info: Dictionary
 var dig_timer: Timer = Timer.new()
 
 const dig_point_range: float = 0.5
-const dig_amount: float = 0.3
+const dig_amount: float = 0.5
 const dig_radius: float = 25
 const dig_delay: float = 1
 
 @export var item_transport_inventory: Inventory
 @export var ai_state_display: AIStateDisplay
 
+var designated_workstation: Workstation = null
 
 var move_order_destination : Vector3
 var organic_item: InventoryItem = preload("res://Inventory/InventoryItems/organic_material_item.tres")
@@ -100,7 +102,9 @@ func init_ai_states() -> void:
 		.set_tick_function(attack_enemy_tick_fn)
 		
 	var occupied_state := base_state.add_child_state(AIState.create("occupied"))\
+		.set_exit_function(func()->void: designated_workstation = null) \
 		.set_display_icon(load("res://icon.svg"))
+		
 	var direct_order_state := base_state.add_child_state(AIState.create("direct_order")) \
 		.set_display_icon(load("res://UnitAI/StateIcons/order_icon.png"))
 	var execute_role_state := base_state.add_child_state(AIState.create("execute_role"))
@@ -137,20 +141,26 @@ func init_ai_states() -> void:
 	var attack_order_state := direct_order_state.add_child_state(AIState.create("attack_order", attack_order_tick_fn)) \
 		.set_display_icon(load("res://UnitAI/StateIcons/crosshair_icon.png"))
 	var hold_order_state := direct_order_state.add_child_state(AIState.create("hold_order", hold_tick_fn))
+	
+	var move_to_workstation_state := direct_order_state.add_child_state(AIState.create("move_to_workstation")) \
+		.set_enter_function(func() -> void: set_destination_point_safe(designated_workstation.global_position)) \
+		.set_tick_function(move_safe_tick_fn) \
+		.set_exit_function(func() -> void: if arrived: designated_workstation.operate(self)	)
+	
 	var none_order_state := direct_order_state.add_child_state(AIState.create("none_order")) \
 		.set_enter_function(func() -> void : active_order = DirectOrders.NONE)
 	
 	# when many states share a transition, you can use the AIState.add_transition_to funciton to add a transition to many states at once
 	# this function will skip adding a self-transition from A->A, for ease of use
-	var order_states: Array[AIState] = [none_order_state, move_direct_order_state, move_safe_order_state, attack_order_state, hold_order_state]
+	var order_states: Array[AIState] = [none_order_state, move_direct_order_state, move_safe_order_state, attack_order_state, hold_order_state, move_to_workstation_state]
 	AIState.add_transition_to(order_states, move_direct_order_state, func()->bool:return active_order == DirectOrders.MOVE_DIRECT)
 	AIState.add_transition_to(order_states, move_safe_order_state, func()->bool:return active_order == DirectOrders.MOVE_SAFE)
 	AIState.add_transition_to(order_states, attack_order_state, func()->bool:return active_order == DirectOrders.ATTACK)
 	AIState.add_transition_to(order_states, hold_order_state, func()->bool:return active_order == DirectOrders.HOLD)
-	
+	AIState.add_transition_to(order_states, move_to_workstation_state, func()->bool:return active_order == DirectOrders.MOVE_TO_WORKSTATION)
 	move_direct_order_state.add_transition(none_order_state, get_arrived)
 	move_safe_order_state.add_transition(none_order_state, get_arrived)
-	
+	move_to_workstation_state.add_transition(none_order_state, get_arrived)
 	#################################
 	### EXECUTE ROLE CHILD STATES ###
 	#################################
