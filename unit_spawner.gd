@@ -35,7 +35,7 @@ func _physics_process(_delta: float) -> void:
 			return
 			
 		else:
-			MultiplayerSpawnerManager.unit_spawners[owning_player.player_id].spawn_unit("res://Units/FootUnit.tscn", result.position, owning_player.player_id)
+			owning_player.unit_spawner.spawn_unit("res://Units/FootUnit.tscn", result.position, owning_player.player_id)
 			#if unit.is_in_group("can_move"):
 				#unit.move_target_pos = result.position
 				
