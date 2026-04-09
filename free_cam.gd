@@ -95,6 +95,8 @@ func _process(delta: float) -> void:
 		
 	if freeCamActive:
 		_update_mouselook()
+
+func _physics_process(delta: float) -> void:
 	_update_movement(delta)
 
 # Updates camera movement

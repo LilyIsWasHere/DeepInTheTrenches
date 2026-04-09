@@ -82,7 +82,7 @@ func _ready() -> void:
 	CameraScene = load("res://BotPlayerCamera.tscn")
 	num_starting_units = 16
 	super()
-	#process_input = false
+	process_input = false
 	
 
 
