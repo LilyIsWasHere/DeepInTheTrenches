@@ -29,10 +29,10 @@ var settingDigPath : bool = false
 
 var teamID : int = 0
 
-@onready var player : Player = get_parent().owning_player
+@onready var owning_player : Player = get_parent().owning_player
 
 func _ready() -> void:
-	teamID = player.player_id
+	teamID = owning_player.player_id
 	Input.set_custom_mouse_cursor(normalCursor, Input.CURSOR_ARROW, Vector2(0, 0))
 	actionsDropdown.visible = false
 	rolesDropdown.visible = false
@@ -40,6 +40,9 @@ func _ready() -> void:
 	update_role_buttons()
 
 func _physics_process(_delta: float) -> void:
+	
+	if (!owning_player.process_input):
+		return
 	
 	for unit : Unit in selectedUnits:
 		unit.is_selected(true)
@@ -57,10 +60,9 @@ func _physics_process(_delta: float) -> void:
 			if selectedUnits.size() == 1:
 				if workstation.is_occupied():
 					workstation.eject_operator()
-				var unit : MoveableUnit = selectedUnits[0]
-				unit.move_order_destination = workstation.get_unit_position()
-				unit.active_order = FootUnit.DirectOrders.MOVE_SAFE
-				unit.connect("just_arrived", workstation.operate.bind(unit))
+				var unit : FootUnit = selectedUnits[0]
+				unit.designated_workstation = workstation
+				unit.active_order = FootUnit.DirectOrders.MOVE_TO_WORKSTATION
 		
 		isOperating = false
 		deselect_units()
@@ -126,10 +128,6 @@ func _physics_process(_delta: float) -> void:
 			rolesDropdown.visible = !actionsDropdown.visible
 			actionsDropdown.visible = !actionsDropdown.visible
 			inDropdown = !inDropdown
-		
-			var mousePos : Vector2 = get_viewport().get_mouse_position()
-			actionsDropdown.position = mousePos + offset
-			rolesDropdown.position = mousePos + offset*4
 			
 			#open relevant inventories
 			handle_view_inventory()
@@ -158,6 +156,9 @@ func deselect_units() -> void:
 	selectedUnits = []
 
 func _input(event: InputEvent) -> void:
+	
+	if (!owning_player.process_input):
+		return
 	
 	if event.is_action_pressed("BeginExcavationPath"):
 		settingDigPath = true

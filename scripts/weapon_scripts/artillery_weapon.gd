@@ -73,7 +73,7 @@ func get_firing_direction(pos: Vector3, target_pos: Vector3, velocity: float) ->
 
 
 @rpc("any_peer", "call_local", "reliable") func fire_shell(shell: Shell, direction: Vector3, velocity: float) -> void:
-	
+	$FireAudioPlayer.play()
 	shell.shoot(global_position + Vector3(0,3,0), direction, velocity) # calls the shooting function for the bullet scene
 
 	

@@ -1,3 +1,4 @@
+class_name MortarUnit
 extends BuildingUnit
 
 @export var weapon : ArtilleryWeapon

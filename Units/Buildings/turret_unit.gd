@@ -1,3 +1,4 @@
+class_name TurretUnit
 extends BuildingUnit
 
 @export var weapon : Weapon

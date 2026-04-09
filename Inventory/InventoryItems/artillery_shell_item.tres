@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="InventoryItem" format=3 uid="uid://dfg5nwqfle8gv"]
+
+[ext_resource type="Texture2D" uid="uid://bwn5jsftphjc" path="res://resources/ArtilleryShellicon.png" id="1_nj8ie"]
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="2_vwttv"]
+
+[resource]
+script = ExtResource("2_vwttv")
+name = "Artillery Shell"
+display_icon = ExtResource("1_nj8ie")
+metadata/_custom_type_script = "uid://ijy22e1e2kgk"

@@ -72,3 +72,5 @@ func _render_callback(p_effect_callback_type: int, p_render_data: RenderData) ->
 
 		# Dispatch the compute kernel
 		heightmap_edit_compute.dispatch(0, x_groups, y_groups, z_groups)
+		
+	enabled = false

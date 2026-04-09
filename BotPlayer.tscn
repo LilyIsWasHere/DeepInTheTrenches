@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://wfcpjp0jel48"]
+
+[ext_resource type="Script" uid="uid://bwjnhksajxwri" path="res://BotPlayer.gd" id="1_temvm"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="2_oxikt"]
+[ext_resource type="Script" uid="uid://cp2qyglrsxc12" path="res://Multiplayer/unit_spawner.gd" id="3_aod6t"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_d6rpx"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="BotPlayer" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("unit_spawner", "bullet_spawner")]
+script = ExtResource("1_temvm")
+unit_spawner = NodePath("UnitSpawner")
+bullet_spawner = NodePath("BulletSpawner")
+
+[node name="Inventory" type="Node3D" parent="." unique_id=1473978561]
+script = ExtResource("2_oxikt")
+metadata/_custom_type_script = "uid://bfmh3e0len4to"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2090344084]
+replication_config = SubResource("SceneReplicationConfig_d6rpx")
+
+[node name="CamAnchor" type="Node3D" parent="." unique_id=1898928595]
+
+[node name="UnitSpawner" type="MultiplayerSpawner" parent="." unique_id=1670406318]
+_spawnable_scenes = PackedStringArray("uid://btlpx6lr8ra1s")
+spawn_path = NodePath("..")
+script = ExtResource("3_aod6t")
+
+[node name="BulletSpawner" type="MultiplayerSpawner" parent="." unique_id=416918779]
+_spawnable_scenes = PackedStringArray("uid://bc103q6d7uwa2", "uid://cxf10ht8qgdcj")
+spawn_path = NodePath("..")

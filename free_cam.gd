@@ -36,13 +36,19 @@ var _alt := false
 var owning_player: Player
 
 func _ready() -> void:
-	var stylebox: StyleBoxFlat = $CanvasLayer/Panel.get_theme_stylebox("panel") as StyleBoxFlat
+	if ($CanvasLayer):
+		
+		var stylebox: StyleBoxFlat = $CanvasLayer/Panel.get_theme_stylebox("panel") as StyleBoxFlat
+		var border_color: Color = Color(0,0,1) if owning_player.player_id == 0 else Color(1,0,0)
+		stylebox.border_color = border_color
 	
-	var border_color: Color = Color(0,0,1) if owning_player.player_id == 0 else Color(1,0,0)
-	
-	stylebox.border_color = border_color
+	$SculptBrush.owning_player = owning_player
+	$ExcavationPathTool.owning_player = owning_player
 
 func _input(event: InputEvent)-> void:
+	if (!owning_player.process_input):
+		return
+	
 	if !is_multiplayer_authority(): return
 	
 	# Only handle mouse capture if free cam is active
@@ -84,6 +90,9 @@ func _input(event: InputEvent)-> void:
 
 # Updates mouselook and movement every frame
 func _process(delta: float) -> void:
+	if (!owning_player.process_input):
+		return
+		
 	if freeCamActive:
 		_update_mouselook()
 	_update_movement(delta)

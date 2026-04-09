@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConstructableBuilding" format=3 uid="uid://cw3horow68vwn"]
+
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_7onun"]
+[ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_e8tac"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="2_y5eq5"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="3_a6elf"]
+[ext_resource type="Texture2D" uid="uid://c2ghx20qowq2h" path="res://resources/unit_factory_icon.png" id="4_28ecv"]
+[ext_resource type="PackedScene" uid="uid://buew8adykh5g4" path="res://Units/Buildings/FootUnitFactoryUnit.tscn" id="5_ak4cb"]
+
+[resource]
+script = ExtResource("2_e8tac")
+name = "Soldier Factory"
+icon = ExtResource("4_28ecv")
+construction_cost = Dictionary[ExtResource("1_7onun"), int]({
+ExtResource("2_y5eq5"): 100,
+ExtResource("3_a6elf"): 25
+})
+scene = ExtResource("5_ak4cb")
+metadata/_custom_type_script = "uid://c60tm374tpnru"

@@ -19,12 +19,16 @@ func _ready() -> void:
 	shoot(global_position, Vector3(1,3,1), 20)
 	
 func detonate(body: Node) -> void:
-
+	
 	if (is_shot && !detonated):
 		detonated = true
-		
+		$AudioStreamPlayer3D.play()
 		lock_rotation = true
 		freeze_mode = RigidBody3D.FREEZE_MODE_STATIC
+		linear_velocity = Vector3(0,0,0)
+		
+		await get_tree().create_timer(0.3).timeout
+		
 		$ExplosionParticles.emitting = true
 		$ExhaustParticles.emitting = false
 		

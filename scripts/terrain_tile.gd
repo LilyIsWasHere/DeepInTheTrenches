@@ -30,8 +30,10 @@ func initialize(_position: Vector3i, _size: int, _heightmap_generator: ShaderMat
 		
 	
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+		
 		
 	if(get_parent_node_3d() != null):
 	
@@ -93,8 +95,18 @@ func _update_edit_heightmap_compositor(position: Vector2, radius: float, height:
 	
 	var resource_extractor: ResourceExtractor = ResourceExtractor.resource_extractors.get(resource_extractor_id)
 	
-	var compositor_effect: HeightmapEditCompositorEffect = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects[0]
+	var compositor_effects: Array[CompositorEffect] = $HeightMapGenViewport/WorldEnvironment/HeightMapEditCam.compositor.compositor_effects
 	
+	var compositor_effect: HeightmapEditCompositorEffect = null
+	for c in compositor_effects:
+		if (!c.enabled):
+			c.enabled = true
+			compositor_effect = c as HeightmapEditCompositorEffect
+			break
+	
+	if (compositor_effect == null):
+		push_error("COMPOSITOR EFFECT STACK FULL!!")
+		return
 	
 	compositor_effect.location = position
 	compositor_effect.radius = radius
@@ -131,6 +143,9 @@ func _get_global_scale(basis: Basis) -> Vector3:
 	return Vector3(scale_x_len, scale_y_len, scale_z_len)
 
 func get_terrain_data(location: Vector3) -> Dictionary:
+	
+	if (!heightmap_img):
+		return {"height": 0.0, "initial_height": 0.0, "resource": 0}
 	
 	var pixel_pos: Vector2i = global_to_pixel(location)
 	var px_val: Color = heightmap_img.get_pixelv(pixel_pos)
