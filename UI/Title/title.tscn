@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dwnn82b3ulpmd" path="res://UI/Title/join_game_ui.tscn" id="7_8uaf2"]
 [ext_resource type="PackedScene" uid="uid://p5p464rwtofv" path="res://UI/Title/host_game_ui.tscn" id="8_eoro6"]
 [ext_resource type="ButtonGroup" uid="uid://bx2pnycplr8d3" path="res://UI/Title/title_toggles.tres" id="8_woosa"]
+[ext_resource type="AudioStream" uid="uid://c47b1k0nw66sv" path="res://hendry/music/DeepInTheTrenchesMenu.wav" id="12_eoro6"]
 
 [sub_resource type="Environment" id="Environment_tgkd2"]
 background_mode = 3
@@ -174,6 +175,7 @@ text = "Credits"
 alignment = 2
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1990797089]
+stream = ExtResource("12_eoro6")
 autoplay = true
 bus = &"Music"
 
