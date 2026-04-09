@@ -102,6 +102,7 @@ func init_ai_states() -> void:
 		.set_tick_function(attack_enemy_tick_fn)
 		
 	var occupied_state := base_state.add_child_state(AIState.create("occupied"))\
+		.set_enter_function(func() -> void: active_order = DirectOrders.NONE) \
 		.set_exit_function(func()->void: designated_workstation = null) \
 		.set_display_icon(load("res://icon.svg"))
 		

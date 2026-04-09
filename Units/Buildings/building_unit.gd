@@ -8,6 +8,7 @@ extends Unit
 
 @export var construction_inventory: Inventory
 var under_construction_material: Material = preload("res://materials/building_under_construction_material.tres")
+var dead_material: Material = preload("res://materials/dead_building_material.tres")
 
 
 var original_materials: Dictionary[Node, Material] = {}
@@ -102,7 +103,6 @@ func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 # override me to set all the materials in this building
 @rpc("call_remote", "any_peer", "reliable") func _set_materials_under_construction() -> void:
 	var children: Array[Node] = get_all_children(self)
-	var m: MeshInstance3D
 	for child in children:
 		if child.has_method("set_surface_override_material"):
 			original_materials.set(child, child.get_surface_override_material(0))
@@ -120,3 +120,15 @@ func on_placed() -> void:
 	ai_controller.process_mode = Node.PROCESS_MODE_INHERIT
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
 		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.TOP)
+
+
+func die() -> void:
+	super()
+	
+	var children: Array[Node] = get_all_children(self)
+	for child in children:
+		if child.has_method("set_surface_override_material"):
+			original_materials.set(child, child.get_surface_override_material(0))
+			child.set_surface_override_material(0, dead_material)
+	
+	

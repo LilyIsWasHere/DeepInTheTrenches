@@ -90,6 +90,9 @@ func unregister_unit(unit: Unit) -> void:
 func check_los(a: Unit, b: Unit) -> bool:
 	raycasts_this_tick += 1
 	
+	if (a.global_position.distance_to(b.global_position) > a.sight_range):
+		return false
+	
 	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 	
 	var origin: Vector3 = a.LineOfSightTarget.global_position

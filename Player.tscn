@@ -25,7 +25,7 @@ replication_config = SubResource("SceneReplicationConfig_d6rpx")
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="." unique_id=1670406318]
 _spawnable_scenes = PackedStringArray("uid://btlpx6lr8ra1s")
-spawn_path = NodePath("..")
+spawn_path = NodePath(".")
 script = ExtResource("8_wi0c6")
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="." unique_id=416918779]

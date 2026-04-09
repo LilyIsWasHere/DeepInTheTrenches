@@ -33,11 +33,15 @@ func set_target(targetPos : Vector3) -> void:
 
 func _process(_delta: float) -> void:
 	super(_delta)
-	
-	if workstation.is_occupied():
-		shoot_at_point(target)
-	
 	if selectedArrow.visible:
 		set_target_visible(true)
 	else:
 		set_target_visible(false)
+		
+	if (!(is_placed && is_constructed)):
+		return
+	
+	if workstation.is_occupied():
+		shoot_at_point(target)
+	
+	

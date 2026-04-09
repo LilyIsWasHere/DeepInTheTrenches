@@ -10,6 +10,9 @@ const JUMP_VELOCITY = 4.5
 @export var BodyMesh: MeshInstance3D
 @export var inventory: Inventory
 @export var selectableArea : Area3D
+
+@export var sight_range: float = 50.0
+
 var ai_controller: AIController
 var resource_extractor: ResourceExtractor
 
@@ -33,6 +36,10 @@ var alive: bool = true
 var slope_normal: Vector3 = Vector3(0.0, 1.0, 0.0)
 var on_floor: bool = false
 
+func print_info() -> void:
+	print(str(name) + "	[Vector3(" + str(global_position.x) + ", " + str(global_position.y) + ", " + str(global_position.z) + "), Vector3(" + str(global_rotation.x) + ", " + str(global_rotation.y) + ", " + str(global_rotation.z) + ")], ")   
+
+	
 func is_selected(isSelected : bool) -> void:
 	selectedArrow.visible = isSelected
 

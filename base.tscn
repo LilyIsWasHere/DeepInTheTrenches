@@ -76,4 +76,10 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 120.659, 225.265, 304.11188)
 visible = false
 
+[node name="Player0UnitSpawnPos" type="Node3D" parent="." unique_id=1979538392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.7621, 11.346235, 63.723934)
+
+[node name="Player1UnitSpawnPos" type="Node3D" parent="." unique_id=2129983184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.82269, 11.346235, 165.80995)
+
 [connection signal="spawned" from="PlayerSpawner" to="PlayerSpawner" method="_on_spawned"]

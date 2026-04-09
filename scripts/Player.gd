@@ -36,10 +36,23 @@ func _ready() -> void:
 	
 	if (is_multiplayer_authority()):
 		attach_camera()
+		spawn_starting_units()
+		
 		
 
+func spawn_starting_units() -> void:
 	
+	var unit_spawn_pos: Vector3
+	if (player_id == 0):
+		unit_spawn_pos = $"../Player0UnitSpawnPos".global_position
+	else:
+		unit_spawn_pos = $"../Player1UnitSpawnPos".global_position
+		
 	
+
+	for i in range(num_starting_units):
+		var offset:  Vector3 = Vector3(randf_range(-30, 30), 10, randf_range(-30, 30))
+		unit_spawner.spawn_unit(foot_unit_scene_path, unit_spawn_pos + offset, player_id)
 
 	
 func attach_camera() -> void:

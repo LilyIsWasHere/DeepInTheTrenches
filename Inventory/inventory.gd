@@ -63,7 +63,7 @@ func add_slot(item: InventoryItem, max_quantity: int) -> void:
 # returns -1 if the inventory lacks a slot for the specified item type, or the quantity < 0
 func add_items(item: InventoryItem, quantity: int) -> int:
 	
-	print("adding items to inventory: " + str(self))
+	#print("adding items to inventory: " + str(self))
 	
 	if (is_multiplayer_authority()):
 		rpc_add_items.rpc(item.resource_path, quantity)

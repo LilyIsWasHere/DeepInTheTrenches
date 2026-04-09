@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConstructableBuilding" format=3 uid="uid://civb0n4f32j7v"]
+
+[ext_resource type="Script" uid="uid://ijy22e1e2kgk" path="res://Inventory/inventory_item.gd" id="1_w1gt5"]
+[ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="2_3oq4p"]
+[ext_resource type="Script" uid="uid://c60tm374tpnru" path="res://Units/Buildings/constructable_building.gd" id="2_7hg0x"]
+[ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="3_mcxd7"]
+[ext_resource type="Texture2D" uid="uid://csahcmrljoh5d" path="res://resources/artilleryshell_factory_icon.png" id="4_frb7l"]
+[ext_resource type="PackedScene" uid="uid://dc1fh0dqkw7sn" path="res://Units/Buildings/ArtilleryShellFactoryUnit.tscn" id="5_er6hr"]
+
+[resource]
+script = ExtResource("2_7hg0x")
+name = "Artillery Shell Factory"
+icon = ExtResource("4_frb7l")
+construction_cost = Dictionary[ExtResource("1_w1gt5"), int]({
+ExtResource("2_3oq4p"): 50,
+ExtResource("3_mcxd7"): 100
+})
+scene = ExtResource("5_er6hr")
+metadata/_custom_type_script = "uid://c60tm374tpnru"
