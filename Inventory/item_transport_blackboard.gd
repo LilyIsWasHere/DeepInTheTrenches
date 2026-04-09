@@ -49,6 +49,8 @@ func claim_closest_item_pickup(position: Vector3, item: InventoryItem, quantity:
 	for idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var pickup_arr: Array = pickup_requests[idx]
 		for pickup: ItemTransportRequest in pickup_arr:
+			if !_has_live_inventory(pickup):
+				continue
 			if (pickup.item == item):
 				if (pickup.inventory.global_position.distance_to(position) < closest_dist):
 					closest = pickup
@@ -64,6 +66,8 @@ func claim_closest_item_dropoff(position: Vector3, item: InventoryItem, quantity
 	for idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var dropoff_arr: Array = dropoff_requests[idx]
 		for dropoff: ItemTransportRequest in dropoff_arr:
+			if !_has_live_inventory(dropoff):
+				continue
 			if (dropoff.item == item):
 				if (dropoff.inventory.global_position.distance_to(position) < closest_dist):
 					closest = dropoff
@@ -102,6 +106,9 @@ func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportReques
 	
 	for p_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		for pickup: ItemTransportRequest in pickup_requests[p_idx]:
+			if !_has_live_inventory(pickup):
+				continue
+
 			var dist: float = near_point.distance_to(pickup.inventory.global_position)
 			
 			if (pickup.inventory.get_item_quantity(pickup.item) == 0):
@@ -136,6 +143,9 @@ func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportReques
 		
 		
 func _find_matching_dropoff(pickup_request: ItemTransportRequest) -> ItemTransportRequest:
+
+	if !_has_live_inventory(pickup_request):
+		return null
 	
 	for d_idx in range(ItemTransportRequest.RequestPriority.SIZE):
 		var dropoff_arr: Array = dropoff_requests[d_idx]
@@ -245,6 +255,5 @@ func _unclaim_dropoff_request(request: ItemTransportRequest) -> void:
 	request_dropoff(request.inventory, request.item, request.quantity, request.priority)
 	
 	
-
-
-	
+func _has_live_inventory(req: ItemTransportRequest) -> bool:
+	return req != null and is_instance_valid(req.inventory) and req.inventory.is_inside_tree()
