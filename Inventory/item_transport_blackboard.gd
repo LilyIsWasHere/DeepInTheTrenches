@@ -51,7 +51,7 @@ func claim_closest_item_pickup(position: Vector3, item: InventoryItem, quantity:
 		for pickup: ItemTransportRequest in pickup_arr:
 			if !_has_live_inventory(pickup):
 				continue
-			if (pickup.item == item):
+			if (pickup.item == item && pickup.inventory.get_item_quantity(item) > 0):
 				if (pickup.inventory.global_position.distance_to(position) < closest_dist):
 					closest = pickup
 				
@@ -68,7 +68,7 @@ func claim_closest_item_dropoff(position: Vector3, item: InventoryItem, quantity
 		for dropoff: ItemTransportRequest in dropoff_arr:
 			if !_has_live_inventory(dropoff):
 				continue
-			if (dropoff.item == item):
+			if (dropoff.item == item && dropoff.inventory.get_item_quantity(item) > 0):
 				if (dropoff.inventory.global_position.distance_to(position) < closest_dist):
 					closest = dropoff
 				
