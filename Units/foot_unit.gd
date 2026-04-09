@@ -26,7 +26,7 @@ var dig_point_info: Dictionary
 var dig_timer: Timer = Timer.new()
 
 const dig_point_range: float = 0.5
-const dig_amount: float = 0.5
+const dig_amount: float = 1
 const dig_radius: float = 25
 const dig_delay: float = 1
 
@@ -78,8 +78,7 @@ func _process(_delta: float) -> void:
 	super(_delta)
 	
 	$Decal.visible = selectedArrow.visible
-	if move_order_destination:
-		$Decal.global_position = move_order_destination
+	$Decal.global_position = move_target_pos
 	
 	if (is_multiplayer_authority()):
 		var new_icons: Array[Texture2D] = ai_controller.get_active_state_icons()
@@ -300,7 +299,7 @@ func excavation_resource_slot_full() -> bool:
 	return inventory.is_item_slot_full(organic_item) || inventory.is_item_slot_full(energy_crystal_item)
  
 func should_dropoff_resources_idle() -> bool:
-	if (!ItemTransportBlackboard.item_dropoff_exists(organic_item) && !ItemTransportBlackboard.item_dropoff_exists(energy_crystal_item)): return false
+	if (!owning_player.item_transport_blackboard.item_dropoff_exists(organic_item) && !owning_player.item_transport_blackboard.item_dropoff_exists(energy_crystal_item)): return false
 	return inventory.item_slot_dict[organic_item].num > 0 || inventory.item_slot_dict[energy_crystal_item].num > 0
 
 func set_excavation_item_dropoff_destination() -> void:
@@ -317,7 +316,7 @@ func set_excavation_item_dropoff_destination() -> void:
 	if fullest_item == null: 
 		return
 	
-	var dropoff: ItemTransportRequest = ItemTransportBlackboard.claim_closest_item_dropoff(global_position, fullest_item, inventory.item_slot_dict[fullest_item].num)
+	var dropoff: ItemTransportRequest = owning_player.item_transport_blackboard.claim_closest_item_dropoff(global_position, fullest_item, inventory.item_slot_dict[fullest_item].num)
 	if dropoff == null: 
 		print("No dropoff available")
 		return
@@ -399,7 +398,20 @@ func is_transport_plan_set() -> bool:
 	
 
 func try_get_transport_plan() -> void:
-	var pickup_dropoff: Array[ItemTransportRequest] = ItemTransportBlackboard.claim_pickup_dropoff_pair(global_position)
+	
+	for item: InventoryItem in item_transport_inventory.item_slot_dict.keys():
+		if (item_transport_inventory.item_slot_dict[item].num > 0):
+			var dropoff: ItemTransportRequest = owning_player.item_transport_blackboard.claim_closest_item_dropoff(global_position, item, item_transport_inventory.item_slot_dict[item].num)
+			if (dropoff):
+				dropoff_request = dropoff
+				pickup_request = ItemTransportRequest.new()
+				pickup_request.inventory = item_transport_inventory
+				pickup_request.item = item
+				pickup_request.quantity = item_transport_inventory.item_slot_dict[item].num
+				pickup_request.blackboard = owning_player.item_transport_blackboard
+				return
+	
+	var pickup_dropoff: Array[ItemTransportRequest] = owning_player.item_transport_blackboard.claim_pickup_dropoff_pair(global_position)
 	
 	if (!pickup_dropoff.is_empty()):
 		pickup_request = pickup_dropoff[0]
@@ -478,9 +490,13 @@ func fulfill_dropoff() -> void:
 		return
 		
 	var transfer_result: Dictionary = Inventory.transfer_items(item_transport_inventory, dropoff_request.inventory, item, dropoff_request.quantity)
-		
-	dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
+	var leftover_item: InventoryItem = dropoff_request.item
+	var leftover: int = dropoff_request.fulfill(dropoff_request.quantity - transfer_result["from_underflow"])
+	
 	dropoff_request = null
+	
+	if (leftover > 0):
+		owning_player.item_transport_blackboard.request_pickup(item_transport_inventory, leftover_item, leftover, ItemTransportRequest.RequestPriority.MEDIUM)
 	
 	
 	

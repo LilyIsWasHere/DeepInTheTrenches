@@ -1,3 +1,4 @@
+class_name ItemBlackboard
 extends Node
 
 
@@ -108,7 +109,9 @@ func claim_pickup_dropoff_pair(near_point: Vector3) -> Array[ItemTransportReques
 			
 			if (dist < closest_dist):
 				var dropoff: ItemTransportRequest = _find_matching_dropoff(pickup)
-				if (!dropoff || pickup.inventory == dropoff.inventory): 
+				if (!dropoff): 
+					continue
+				if (pickup.inventory == dropoff.inventory):
 					continue
 					
 				
@@ -139,7 +142,11 @@ func _find_matching_dropoff(pickup_request: ItemTransportRequest) -> ItemTranspo
 		for dropoff: ItemTransportRequest in dropoff_arr:
 			if (pickup_request.local && dropoff.local):
 				continue
-			if (dropoff.item == pickup_request.item && pickup_request.inventory != dropoff.inventory):
+				
+			if (pickup_request.inventory == dropoff.inventory):
+				continue
+				
+			if (dropoff.item == pickup_request.item):
 				return dropoff
 				
 	return null
@@ -152,6 +159,9 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 	var existing_request: ItemTransportRequest = pickup_request_inv_item_map.get([from_inventory, item])
 	
 	if (existing_request):
+		
+		assert(existing_request.inventory == from_inventory)
+		
 		if (existing_request.priority != priority):
 			pickup_requests[existing_request.priority].erase(existing_request)
 			pickup_requests[priority].append(existing_request)
@@ -165,6 +175,7 @@ func request_pickup(from_inventory: Inventory, item: InventoryItem, qty: int, pr
 		
 	else:
 		var new_request: ItemTransportRequest = ItemTransportRequest.new()
+		new_request.blackboard = self
 		new_request.inventory = from_inventory
 		new_request.item = item
 		new_request.priority = priority
@@ -194,6 +205,7 @@ func request_dropoff(to_inventory: Inventory, item: InventoryItem, qty: int, pri
 		
 	else:
 		var new_request: ItemTransportRequest = ItemTransportRequest.new()
+		new_request.blackboard = self
 		new_request.inventory = to_inventory
 		new_request.item = item
 		new_request.priority = priority

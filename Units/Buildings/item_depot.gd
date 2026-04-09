@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 	super(_delta)
 	if (is_constructed && is_placed):
 		for item: InventoryItem in inventory.item_slot_dict.keys():
-			ItemTransportBlackboard.request_dropoff(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.LOW, true, true)
-			ItemTransportBlackboard.request_pickup(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM, true, true)
+			owning_player.item_transport_blackboard.request_dropoff(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.LOW, true, true)
+			owning_player.item_transport_blackboard.request_pickup(inventory, item, inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.MEDIUM, true, true)
 		
 		

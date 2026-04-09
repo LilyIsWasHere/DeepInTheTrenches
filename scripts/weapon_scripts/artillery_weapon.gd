@@ -6,8 +6,13 @@ var fixed_target: Vector3
 @export var firing_velocity: float = 50.0
 var owning_player: Player
 
+@export var magazine: Inventory
+
+var shell_item: InventoryItem = preload("res://Inventory/InventoryItems/artillery_shell_item.tres")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	super()
 	$Decal.visible = true
 
 func set_targ_pos_colour(colour : Color) -> void:
@@ -16,6 +21,7 @@ func set_targ_pos_colour(colour : Color) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	$Decal.global_position = fixed_target
+	
 
 func set_target_pos_visibility(isVisible : bool) -> void:
 	$Decal.visible = isVisible
@@ -27,26 +33,32 @@ func shoot(target_pos : Vector3) -> void:
 	
 	if !reloading and !inWeaponCooldown:
 		# checks that the magazine has enough ammo loaded
-		if $Magazine.get_item_quantity(magazineItem) >= ammo_per_shot:
-			# check for missing bullets, shouldn't really be necessary but I'm leaving it in for now, incase we only want to check that there is one bullet on the line above
-			var missing_shots : int = $Magazine.remove_items(magazineItem, ammo_per_shot)
+		var mag: Inventory = $Magazine
+		if $Magazine.get_item_quantity(shell_item) > 0:
+			var underflow: int = $Magazine.remove_items(shell_item, 1)
+			print(underflow)
+			var direction: Vector3 = get_firing_direction(global_position + Vector3(0,3,0), target_pos, firing_velocity)
+			var rand_direction: Vector3 = get_random_gaussian_direction(direction, deg_to_rad(inaccuracy))
 			
-			# instantiate a bullet for every shot, will need to setup some kind of spray pattern
-			for i in range(ammo_per_shot - missing_shots):
-				
-				var direction: Vector3 = get_firing_direction(global_position + Vector3(0,3,0), target_pos, firing_velocity)
-				var rand_direction: Vector3 = get_random_gaussian_direction(direction, deg_to_rad(inaccuracy))
-				
-				var shell_instance : Shell = bullet.instantiate()
-				owning_player.add_child(shell_instance)
-				await get_tree().process_frame
-				fire_shell.rpc(shell_instance, rand_direction, firing_velocity)
+			var shell_instance : Shell = bullet.instantiate()
+			owning_player.add_child(shell_instance)
+			await get_tree().process_frame
+			fire_shell.rpc(shell_instance, rand_direction, firing_velocity)
 			
 			$CooldownTime.start()
 			inWeaponCooldown = true
 		else:
-			reload() # Auto reload if there is no more ammo left in the mag when trying to shoot
-
+			reload()
+			
+			
+func reload() -> void:
+	if inventory.get_item_quantity(shell_item) > 0:
+		# Remove one magazine from unit inventory and load it into the weapon's ammo
+		inventory.remove_items(shell_item, 1)
+		$Magazine.add_items(shell_item, $Magazine.get_max_item_quantity(shell_item))
+		# Start reload timer to avoid shooting while reloading
+		reloading = true
+		$ReloadTime.start()
 
 
 func get_firing_direction(pos: Vector3, target_pos: Vector3, velocity: float) -> Vector3:

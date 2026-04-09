@@ -19,6 +19,10 @@ run/main_scene="uid://cae8uj353lhne"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://b3cntf7vdc4mn"
+
 [autoload]
 
 AcerolaShaderCompiler="*res://scripts/acerola_shader_compiler.gd"
@@ -27,7 +31,6 @@ LineOfSightManager="*res://line_of_sight_manager.gd"
 GlobalTerrainManager="*res://terrain_manager.gd"
 GlobalPlayerManager="*res://global_player_manager.gd"
 Navigation="*uid://cy0mmna3ycsxr"
-ItemTransportBlackboard="*uid://ctufirrptf431"
 GameSettings="*uid://cm3tow1k6ot2p"
 MultiplayerSpawnerManager="*uid://bibb6a5oaogwf"
 

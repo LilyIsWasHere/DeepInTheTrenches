@@ -119,7 +119,7 @@ func _set_materials_constructed() -> void:
 func on_placed() -> void:
 	ai_controller.process_mode = Node.PROCESS_MODE_INHERIT
 	for item: InventoryItem in construction_inventory.item_slot_dict.keys():
-		ItemTransportBlackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.TOP)
+		owning_player.item_transport_blackboard.request_dropoff(construction_inventory, item, construction_inventory.item_slot_dict[item].max_num, ItemTransportRequest.RequestPriority.TOP)
 
 
 func die() -> void:

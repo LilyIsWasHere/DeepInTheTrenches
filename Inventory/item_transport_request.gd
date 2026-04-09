@@ -42,22 +42,25 @@ var type: RequestType:
 
 var _valid: bool = true
 
+var blackboard: ItemBlackboard = null
 
-func fulfill(fulfilled_quantity: int) -> void:
+func fulfill(fulfilled_quantity: int) -> int:
 	assert(_valid)
 	if (fulfilled_quantity >= quantity):
-		pass
+		return 0
 		
 	else:
 		quantity -= fulfilled_quantity
 		match (type):
 			RequestType.PICKUP:
-				ItemTransportBlackboard._unclaim_pickup_request(self)
+				blackboard._unclaim_pickup_request(self)
 			RequestType.DROPOFF:
-				ItemTransportBlackboard._unclaim_dropoff_request(self)
+				blackboard._unclaim_dropoff_request(self)
 				
 	# DO NOT TOUCH A REQUEST AFTER FULFULLING IT!
+	var leftover: int = quantity - fulfilled_quantity
 	_valid = false
+	return leftover
 
 	
 func unclaim() -> void:
@@ -65,9 +68,9 @@ func unclaim() -> void:
 	
 	match (type):
 		RequestType.PICKUP:
-			ItemTransportBlackboard._unclaim_pickup_request(self)
+			blackboard._unclaim_pickup_request(self)
 		RequestType.DROPOFF:
-			ItemTransportBlackboard._unclaim_dropoff_request(self)
+			blackboard._unclaim_dropoff_request(self)
 	
 	_valid = false
 

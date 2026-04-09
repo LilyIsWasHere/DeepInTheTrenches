@@ -7,6 +7,8 @@ var isTargeting : bool = false
 
 var target: Vector3 = Vector3(10, 10, 10)
 
+var shell_item: InventoryItem = preload("res://Inventory/InventoryItems/artillery_shell_item.tres")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super()
@@ -40,6 +42,8 @@ func _process(_delta: float) -> void:
 		
 	if (!(is_placed && is_constructed)):
 		return
+	
+	owning_player.item_transport_blackboard.request_dropoff(inventory, shell_item, inventory.item_slot_dict[shell_item].max_num, ItemTransportRequest.RequestPriority.TOP, false, true)
 	
 	if workstation.is_occupied():
 		shoot_at_point(target)

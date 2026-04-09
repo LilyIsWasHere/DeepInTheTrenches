@@ -61,8 +61,9 @@ inventory = NodePath("Inventory")
 selectableArea = NodePath("Selectable")
 health = 250.0
 
-[node name="Weapon" parent="." unique_id=687748021 instance=ExtResource("2_nk5dt")]
+[node name="Weapon" parent="." unique_id=687748021 node_paths=PackedStringArray("inventory") instance=ExtResource("2_nk5dt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.607254, 0)
+inventory = NodePath("../Inventory")
 inaccuracy = 10.0
 fire_delay = 0.1
 reload_delay = 5.0

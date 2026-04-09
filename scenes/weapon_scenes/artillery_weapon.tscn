@@ -1,35 +1,55 @@
 [gd_scene format=3 uid="uid://wiinibxdca3h"]
 
-[ext_resource type="PackedScene" uid="uid://bwvlxdwcpdifo" path="res://scenes/weapon_scenes/weapon.tscn" id="1_ty4qq"]
 [ext_resource type="PackedScene" uid="uid://cxf10ht8qgdcj" path="res://scenes/weapon_scenes/Shell.tscn" id="2_1m1d5"]
 [ext_resource type="Script" uid="uid://dt3vw34yg7c7t" path="res://scripts/weapon_scripts/artillery_weapon.gd" id="2_gth5h"]
+[ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="3_5680e"]
+[ext_resource type="Script" uid="uid://1aewywpcrjwu" path="res://Inventory/inventory_slot.gd" id="4_b2hkm"]
 [ext_resource type="Texture2D" uid="uid://8s4plh2yb3y" path="res://resources/selectionring.png" id="4_qf1pc"]
 [ext_resource type="AudioStream" uid="uid://dug4p6te64qlb" path="res://Audio/mortar_fire.wav" id="5_0taen"]
+[ext_resource type="Resource" uid="uid://dfg5nwqfle8gv" path="res://Inventory/InventoryItems/artillery_shell_item.tres" id="6_b2hkm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1m1d5"]
 albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_gth5h"]
 
-[node name="ArtilleryWeapon" unique_id=687748021 instance=ExtResource("1_ty4qq")]
+[node name="ArtilleryWeapon" type="Node3D" unique_id=687748021 node_paths=PackedStringArray("magazine")]
 script = ExtResource("2_gth5h")
-firing_velocity = 50.0
+magazine = NodePath("Magazine")
+range = 100.0
 bullet = ExtResource("2_1m1d5")
 inaccuracy = 1.5
 
-[node name="CooldownTime" parent="." index="2" unique_id=490793869]
-wait_time = 2.0
+[node name="Magazine" type="Node3D" parent="." unique_id=1170183349]
+script = ExtResource("3_5680e")
 
-[node name="TargetDBG" type="MeshInstance3D" parent="." index="3" unique_id=1939483130]
+[node name="Artillery Shell Slot" type="Node" parent="Magazine" unique_id=248896042]
+script = ExtResource("4_b2hkm")
+item = ExtResource("6_b2hkm")
+max_num = 1
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="ReloadTime" type="Timer" parent="." unique_id=627210623]
+wait_time = 5.0
+
+[node name="CooldownTime" type="Timer" parent="." unique_id=490793869]
+wait_time = 5.0
+
+[node name="TargetDBG" type="MeshInstance3D" parent="." unique_id=1939483130]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_1m1d5")
 mesh = SubResource("SphereMesh_gth5h")
 skeleton = NodePath("../Magazine")
 
-[node name="Decal" type="Decal" parent="." index="4" unique_id=997609785]
+[node name="Decal" type="Decal" parent="." unique_id=997609785]
 size = Vector3(2, 10, 2)
 texture_albedo = ExtResource("4_qf1pc")
 
-[node name="FireAudioPlayer" parent="." index="5" unique_id=520196245]
+[node name="FireAudioPlayer" type="AudioStreamPlayer3D" parent="." unique_id=520196245]
 stream = ExtResource("5_0taen")
+unit_size = 20.0
+bus = &"SFX"
+
+[connection signal="timeout" from="ReloadTime" to="." method="_on_reload_time_timeout"]
+[connection signal="timeout" from="CooldownTime" to="." method="_on_cooldown_time_timeout"]

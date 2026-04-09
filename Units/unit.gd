@@ -30,6 +30,7 @@ var selectedArrow : Sprite3D
 var alive: bool = true
 
 @export var team: int = 0
+var owning_player: Player
 
 @export var velocity: Vector3 = Vector3(0.0, 0.0, 0.0)
 
@@ -52,6 +53,8 @@ func get_all_children(in_node: Node,arr: Array[Node] = []) -> Array[Node]:
 	
 func initialize(_team: int) -> void:
 	team = _team
+	owning_player = GlobalPlayerManager.get_player(team)
+	
 	if (team == 0):
 		if BodyMesh != null:
 			BodyMesh.material_override.albedo_color = Color(0.2, 1, 0.2)
@@ -172,5 +175,5 @@ func die() -> void:
 		alive = false
 		visible = true
 		LineOfSightManager.unregister_unit(self)
-		ItemTransportBlackboard.cancel_all_requests(inventory)
+		owning_player.item_transport_blackboard.cancel_all_requests(inventory)
 		died.emit()

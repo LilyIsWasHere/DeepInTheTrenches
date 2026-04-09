@@ -80,9 +80,9 @@ func print_all_unit_transforms() -> String:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	CameraScene = load("res://BotPlayerCamera.tscn")
-	num_starting_units = 16
+	num_starting_units = 0 #16
 	super()
-	#process_input = false
+	process_input = false
 	
 
 

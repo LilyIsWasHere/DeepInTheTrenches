@@ -78,10 +78,11 @@ transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57
 visible = false
 
 [node name="Player0UnitSpawnPos" type="Node3D" parent="." unique_id=1979538392]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.7621, 11.346235, 63.723934)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.7621, 11.346235, 31.244972)
 
 [node name="Player1UnitSpawnPos" type="Node3D" parent="." unique_id=2129983184]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.82269, 11.346235, 165.80995)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.82269, 11.346235, 198.51302)
+
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1900565120]
 stream = ExtResource("6_tpea4")
 autoplay = true

@@ -12,7 +12,7 @@ class_name Weapon
 @export var bullet : PackedScene;
 
 # ammo/mag stuff
-var inventory : Node = null
+@export var inventory : Inventory = null
 const magazineItem : InventoryItem = preload("res://Inventory/InventoryItems/magazine_item.tres")
 const ammoItem : InventoryItem = preload("res://Inventory/InventoryItems/ammo_item.tres")
 
@@ -28,9 +28,7 @@ var enabled : bool = true
 func _ready() -> void:
 	$ReloadTime.wait_time = reload_delay
 	$CooldownTime.wait_time = fire_delay
-	
-	# get parent inventory
-	inventory = get_parent().get_node("Inventory")
+
 	
 	pass # Replace with function body.
 

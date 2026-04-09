@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://6822t7hmmaff" path="res://Inventory/InventoryItems/energy_crystal_item.tres" id="6_r7ra8"]
 [ext_resource type="Resource" uid="uid://b6jjubhfcai3n" path="res://Inventory/InventoryItems/organic_material_item.tres" id="7_5vs5s"]
 [ext_resource type="PackedScene" uid="uid://tlw800q3y84j" path="res://sm_prop_barrel_02.tscn" id="7_grfpu"]
+[ext_resource type="Resource" uid="uid://dfg5nwqfle8gv" path="res://Inventory/InventoryItems/artillery_shell_item.tres" id="8_l1c6e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pl1pi"]
 
@@ -106,6 +107,12 @@ metadata/_custom_type_script = "uid://1aewywpcrjwu"
 [node name="Compacted Organic Material Slot" type="Node" parent="Inventory" unique_id=1277614020]
 script = ExtResource("3_grfpu")
 item = ExtResource("7_5vs5s")
+max_num = 1000
+metadata/_custom_type_script = "uid://1aewywpcrjwu"
+
+[node name="Artillery Shell Slot" type="Node" parent="Inventory" unique_id=1004741222]
+script = ExtResource("3_grfpu")
+item = ExtResource("8_l1c6e")
 max_num = 1000
 metadata/_custom_type_script = "uid://1aewywpcrjwu"
 

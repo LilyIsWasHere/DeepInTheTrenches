@@ -16,9 +16,11 @@ var cursor : Cursor
 
 var process_input: bool = true
 
-@export var num_starting_units: int = 5
+@export var num_starting_units: int = 1
 
 var foot_unit_scene_path: String = "res://Units/FootUnit.tscn"
+
+@export var item_transport_blackboard: ItemBlackboard 
 
 func _input(event: InputEvent) -> void:
 	#if (event.is_action_pressed("ToolClick")):

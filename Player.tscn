@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dpgp3e6f2xmk5"]
 
 [ext_resource type="Script" uid="uid://wv8qughyk7t2" path="res://scripts/Player.gd" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://ctufirrptf431" path="res://Inventory/item_transport_blackboard.gd" id="4_e80uo"]
 [ext_resource type="Script" uid="uid://bfmh3e0len4to" path="res://Inventory/inventory.gd" id="8_5ncpa"]
 [ext_resource type="Script" uid="uid://cp2qyglrsxc12" path="res://Multiplayer/unit_spawner.gd" id="8_wi0c6"]
 
@@ -9,10 +10,11 @@ properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
-[node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("unit_spawner", "bullet_spawner")]
+[node name="Player" type="Node3D" unique_id=1877591714 node_paths=PackedStringArray("unit_spawner", "bullet_spawner", "item_transport_blackboard")]
 script = ExtResource("1_xhfnw")
 unit_spawner = NodePath("UnitSpawner")
 bullet_spawner = NodePath("BulletSpawner")
+item_transport_blackboard = NodePath("ItemBlackboard")
 
 [node name="Inventory" type="Node3D" parent="." unique_id=1473978561]
 script = ExtResource("8_5ncpa")
@@ -31,3 +33,7 @@ script = ExtResource("8_wi0c6")
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="." unique_id=416918779]
 _spawnable_scenes = PackedStringArray("uid://bc103q6d7uwa2", "uid://cxf10ht8qgdcj")
 spawn_path = NodePath("..")
+
+[node name="ItemBlackboard" type="Node" parent="." unique_id=1532014211]
+script = ExtResource("4_e80uo")
+metadata/_custom_type_script = "uid://ctufirrptf431"

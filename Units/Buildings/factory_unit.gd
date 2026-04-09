@@ -48,7 +48,7 @@ func _process(delta: float) -> void:
 	if (is_placed && is_constructed):
 		for ingredient: InventoryItem in input_ingredients.keys():
 			if (!inventory.is_item_slot_full(ingredient)):
-				ItemTransportBlackboard.request_dropoff(inventory, ingredient, inventory.item_slot_dict[ingredient].max_num, ItemTransportRequest.RequestPriority.HIGH, false, true)
+				owning_player.item_transport_blackboard.request_dropoff(inventory, ingredient, inventory.item_slot_dict[ingredient].max_num, ItemTransportRequest.RequestPriority.HIGH, false, true)
 		
 	
 	
@@ -80,7 +80,7 @@ func produce_output() -> void:
 	if output_item != null:
 		print("Creating ", output_item.name)
 		var overflow: int = inventory.add_items(output_item, output_batch_size)
-		ItemTransportBlackboard.request_pickup(inventory, output_item, output_batch_size - overflow, ItemTransportRequest.RequestPriority.MEDIUM)
+		owning_player.item_transport_blackboard.request_pickup(inventory, output_item, output_batch_size - overflow, ItemTransportRequest.RequestPriority.MEDIUM)
 
 func start_production() -> void:
 
