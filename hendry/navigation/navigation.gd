@@ -68,13 +68,19 @@ func _process(_delta: float) -> void:
 # should probably avoid hanging threads and such when exiting
 # https://docs.godotengine.org/en/stable/tutorials/performance/using_multiple_threads.html#using-multiple-threads
 func _exit_tree() -> void:
+	_worker_exit_requested = true
+
+	# post the semaphore enough times to wake up all the threads so they can exit
 	for player_id: int in _plan_threads.keys():
-		var player_threads: Array = _plan_threads[player_id]
-		for thread: Thread in player_threads:
-			if thread != null and thread.is_alive():
-				_worker_exit_requested = true
-				_plan_queue_semaphore.post()
-				thread.wait_to_finish()
+			for thread: Thread in _plan_threads[player_id]:
+					if thread != null and thread.is_alive():
+							_plan_queue_semaphore.post()
+
+	# wait for all the threads to finish
+	for player_id: int in _plan_threads.keys():
+			for thread: Thread in _plan_threads[player_id]:
+					if thread != null and thread.is_alive():
+							thread.wait_to_finish()
 
 # API
 # Call this function to remove an agent from the navigation system. This will cancel any active requests for that agent and free up resources.
