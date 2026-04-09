@@ -1,5 +1,7 @@
 extends Node3D
 
+signal gameOver(hasWon : bool)
+
 @export var visualize_los: bool = false
 @export var max_raycasts_per_tick: int = 100
 
@@ -62,6 +64,8 @@ func unregister_unit(unit: Unit) -> void:
 	unit_arrs[0].erase(unit)
 	unit_arrs[1].erase(unit)
 	
+	check_game_over()
+	
 	unit_last_seen_by.erase(unit_last_seen_by.find_key(unit))
 	unit_last_seen_by.erase(unit)
 	
@@ -82,11 +86,13 @@ func unregister_unit(unit: Unit) -> void:
 	
 	units_seen_this_frame[0].erase(unit)
 	units_seen_this_frame[1].erase(unit)
-	
 
-	
+func check_game_over() -> void:
+	if unit_arrs[0].is_empty():
+		gameOver.emit(false)
+	elif unit_arrs[1].is_empty():
+		gameOver.emit(true)
 
-	
 func check_los(a: Unit, b: Unit) -> bool:
 	raycasts_this_tick += 1
 	

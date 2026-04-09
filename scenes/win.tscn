@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://b0tfvmusdjtnt"]
+
+[ext_resource type="Script" uid="uid://1duyuwmoe3nw" path="res://scenes/return_menu_button.gd" id="1_r4oei"]
+
+[node name="Node3D" type="Node3D" unique_id=2011440468]
+
+[node name="Control" type="Control" parent="." unique_id=388703207]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1161.0
+offset_bottom = 658.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Control" unique_id=1075531841]
+layer = 20
+
+[node name="ColorRect" type="ColorRect" parent="Control/CanvasLayer" unique_id=1554039793]
+offset_right = 1159.0
+offset_bottom = 653.0
+color = Color(0.14977282, 0.64233106, 3.85046e-07, 1)
+
+[node name="Label" type="Label" parent="Control/CanvasLayer" unique_id=820005521]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -91.5
+offset_top = -24.3125
+offset_right = 100.5
+offset_bottom = 34.3125
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 42
+text = "You Won!"
+
+[node name="Button" type="Button" parent="Control/CanvasLayer" unique_id=555303980]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -65.0
+offset_top = 51.5
+offset_right = 65.0
+offset_bottom = 82.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Return to Menu"
+script = ExtResource("1_r4oei")
+metadata/_edit_use_anchors_ = true
