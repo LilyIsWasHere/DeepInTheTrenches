@@ -12,8 +12,8 @@ script = ExtResource("2_e8tac")
 name = "Soldier Factory"
 icon = ExtResource("4_28ecv")
 construction_cost = Dictionary[ExtResource("1_7onun"), int]({
-ExtResource("2_y5eq5"): 100,
-ExtResource("3_a6elf"): 50
+ExtResource("3_a6elf"): 50,
+ExtResource("2_y5eq5"): 100
 })
 scene = ExtResource("5_ak4cb")
 metadata/_custom_type_script = "uid://c60tm374tpnru"
