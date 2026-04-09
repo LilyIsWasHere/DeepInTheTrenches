@@ -17,7 +17,7 @@ func register_player(player: Player, team: int) -> void:
 
 func get_player_by_auth(multiplayer_authority: int) -> Player:
 	for key: int in players.keys():
-		if players[key].get_multiplayer_authority() == multiplayer_authority:
+		if is_instance_valid(players[key]) and players[key].get_multiplayer_authority() == multiplayer_authority:
 			return players[key]
 			
 	return null
@@ -25,3 +25,6 @@ func get_player_by_auth(multiplayer_authority: int) -> Player:
 	
 func get_player(id: int) -> Player:
 	return players[id]
+
+func clear_players() -> void:
+	players.clear()

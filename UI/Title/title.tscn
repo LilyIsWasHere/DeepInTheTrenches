@@ -173,6 +173,10 @@ button_group = ExtResource("8_woosa")
 text = "Credits"
 alignment = 2
 
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1990797089]
+autoplay = true
+bus = &"Music"
+
 [connection signal="pressed" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/SingleplayerButton" to="." method="_on_singleplayer_button_pressed"]
 [connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/HostButton" to="." method="_on_host_button_toggled"]
 [connection signal="toggled" from="CanvasLayer/Control/MarginContainer/HBoxContainer/MainPanel/JoinButton" to="." method="_on_join_button_toggled"]

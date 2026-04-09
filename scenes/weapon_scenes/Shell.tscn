@@ -116,3 +116,4 @@ replication_config = SubResource("SceneReplicationConfig_yosw4")
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=139649333]
 stream = ExtResource("3_7kk88")
 unit_size = 50.0
+bus = &"SFX"

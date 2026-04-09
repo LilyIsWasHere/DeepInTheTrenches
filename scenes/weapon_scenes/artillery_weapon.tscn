@@ -33,3 +33,4 @@ texture_albedo = ExtResource("4_qf1pc")
 
 [node name="FireAudioPlayer" parent="." index="5" unique_id=520196245]
 stream = ExtResource("5_0taen")
+bus = &"SFX"
