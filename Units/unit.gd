@@ -156,8 +156,7 @@ func move_along_terrain() -> void:
 
 func set_hidden(hidden: bool) -> void:
 	if (hidden):
-		pass
-		#visible = false
+		visible = false
 	else:
 		visible = true
 
