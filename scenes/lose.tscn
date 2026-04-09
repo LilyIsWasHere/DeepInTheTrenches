@@ -46,6 +46,6 @@ offset_right = 65.0
 offset_bottom = 82.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Quit Game"
+text = "Return to Title"
 script = ExtResource("1_vjdtf")
 metadata/_edit_use_anchors_ = true
