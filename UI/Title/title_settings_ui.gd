@@ -1,11 +1,16 @@
 extends Control
 
+@onready var shadows_toggle_button: Button = %ShadowsToggleButton
+@onready var master_slider: HSlider = %MasterSlider
+@onready var sfx_slider: HSlider = %SFXSlider
+@onready var music_slider: HSlider = %MusicSlider
+
 # set the UI elements to match the current settings
 func _ready() -> void:
-	%ShadowsToggleButton.button_pressed = GameSettings.graphics["shadows_enabled"]
-	%MasterSlider.value = GameSettings.audio["master_volume"] * 100.0
-	%SFXSlider.value = GameSettings.audio["sfx_volume"] * 100.0
-	%MusicSlider.value = GameSettings.audio["music_volume"] * 100.0
+	shadows_toggle_button.button_pressed = GameSettings.graphics["shadows_enabled"]
+	master_slider.value = GameSettings.audio["master_volume"] * 100.0
+	sfx_slider.value = GameSettings.audio["sfx_volume"] * 100.0
+	music_slider.value = GameSettings.audio["music_volume"] * 100.0
 
 func _on_shadows_toggle_button_toggled(toggled_on: bool) -> void:
 	GameSettings.set_shadows_enabled(toggled_on)

@@ -154,6 +154,6 @@ layout_mode = 2
 
 [connection signal="toggled" from="MarginContainer/ScrollContainer/VBoxContainer/ShadowsToggleButton" to="." method="_on_shadows_toggle_button_toggled"]
 [connection signal="value_changed" from="MarginContainer/ScrollContainer/VBoxContainer/MasterSliderContainer/MasterSlider" to="." method="_on_master_slider_value_changed"]
-[connection signal="value_changed" from="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
 [connection signal="value_changed" from="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer/SFXSlider" to="." method="_on_master_slider_value_changed"]
+[connection signal="value_changed" from="MarginContainer/ScrollContainer/VBoxContainer/SFXSliderContainer/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
 [connection signal="value_changed" from="MarginContainer/ScrollContainer/VBoxContainer/MusicSliderContainer/MusicSlider" to="." method="_on_music_slider_value_changed"]

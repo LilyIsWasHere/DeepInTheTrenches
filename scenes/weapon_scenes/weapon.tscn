@@ -40,6 +40,7 @@ wait_time = 0.5
 [node name="FireAudioPlayer" type="AudioStreamPlayer3D" parent="." unique_id=520196245]
 stream = ExtResource("7_kyrca")
 unit_size = 20.0
+bus = &"SFX"
 
 [connection signal="timeout" from="ReloadTime" to="." method="_on_reload_time_timeout"]
 [connection signal="timeout" from="CooldownTime" to="." method="_on_cooldown_time_timeout"]
