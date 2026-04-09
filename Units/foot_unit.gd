@@ -109,7 +109,17 @@ func init_ai_states() -> void:
 		.set_display_icon(load("res://UnitAI/StateIcons/order_icon.png"))
 	var execute_role_state := base_state.add_child_state(AIState.create("execute_role"))
 	
-	var base_states : Array[AIState] = [self_defense_state, direct_order_state, execute_role_state]
+	
+	var refill_ammo_state := base_state.add_child_state(AIState.create("refill_ammo")) \
+		.set_enter_function(func() -> void:
+			set_ammo_pickup_destination() 
+			$AnimationPlayer.play("walk")) \
+		.set_tick_function(move_safe_tick_fn) \
+		.set_exit_function(func() -> void:
+			fulfill_personal_pickup()
+			$AnimationPlayer.play("drop_item"))
+	
+	var base_states : Array[AIState] = [self_defense_state, direct_order_state, execute_role_state, refill_ammo_state]
 	
 	AIState.add_transition_to(base_states, occupied_state, func()->bool:return is_occupied)
 	occupied_state.add_transition(execute_role_state, func()->bool:return !is_occupied)
@@ -126,6 +136,12 @@ func init_ai_states() -> void:
 	
 	execute_role_state.add_transition(direct_order_state, func()->bool: return (active_order != DirectOrders.NONE))
 	execute_role_state.add_transition(self_defense_state, can_see_enemy)
+	execute_role_state.add_transition(refill_ammo_state, should_refill_ammo)
+	
+	refill_ammo_state.add_transition(execute_role_state, get_arrived)
+	
+	
+	
 	
 	
 	#################################
@@ -195,9 +211,15 @@ func init_ai_states() -> void:
 		.set_enter_function(func() -> void: $AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn)
 
+
+
+
+
+	
 	get_patrol_destination_state.add_transition(move_to_patrol_destination_state, negate(get_arrived))
 	move_to_patrol_destination_state.add_transition(get_patrol_destination_state, get_arrived)
 	
+
 	
 	
 	###########################################
@@ -294,6 +316,30 @@ func init_ai_states() -> void:
 	dig_dropoff_resources.add_transition(dig_idle_state, get_arrived)
 	
 	
+	
+var magazine_item: InventoryItem = preload("res://Inventory/InventoryItems/magazine_item.tres")
+
+
+func should_refill_ammo() -> bool:
+	var running_low: bool = inventory.get_item_quantity(magazine_item) < inventory.get_max_item_quantity(magazine_item) / 2
+	return (running_low && ammo_pickup_exists())
+
+
+func ammo_pickup_exists() -> bool:
+	var pickup: ItemTransportRequest = owning_player.item_transport_blackboard.claim_closest_item_pickup(global_position, magazine_item, 1)
+	var exists: bool = pickup != null
+	if (pickup):
+		pickup.unclaim()
+	return exists
+
+func set_ammo_pickup_destination() -> void:
+	var pickup_qty: int = inventory.get_max_item_quantity(magazine_item) - inventory.get_item_quantity(magazine_item)
+	var pickup: ItemTransportRequest = owning_player.item_transport_blackboard.claim_closest_item_pickup(global_position, magazine_item, pickup_qty)
+	if pickup == null:
+		return
+	else:
+		pickup_request = pickup
+		set_destination_point_safe(pickup.inventory.global_position)
 
 func excavation_resource_slot_full() -> bool:
 	return inventory.is_item_slot_full(organic_item) || inventory.is_item_slot_full(energy_crystal_item)

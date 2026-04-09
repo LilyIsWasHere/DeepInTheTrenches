@@ -204,5 +204,4 @@ mesh = SubResource("TorusMesh_obu8b")
 libraries/ = SubResource("AnimationLibrary_vvufb")
 
 [node name="Decal" type="Decal" parent="." unique_id=2023773027]
-size = Vector3(4, 4, 4)
 texture_albedo = ExtResource("18_la70f")
