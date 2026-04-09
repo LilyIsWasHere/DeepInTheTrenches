@@ -177,3 +177,7 @@ func die() -> void:
 		LineOfSightManager.unregister_unit(self)
 		owning_player.item_transport_blackboard.cancel_all_requests(inventory)
 		died.emit()
+
+func _exit_tree() -> void:
+	if alive:
+		LineOfSightManager.unregister_unit(self)
