@@ -134,6 +134,7 @@ func _physics_process(_delta: float) -> void:
 		var dist_2D: float = pos_xz.distance_to(prev_pos_xz)
 		if (dist_2D >= point_distance_interval && (dist_2D <= point_max_distance_delta || points.size() == 0)):
 			ActivePath.curve.add_point(result.position)
+			ActivePath.refresh_cache = true
 		
 		
 	
