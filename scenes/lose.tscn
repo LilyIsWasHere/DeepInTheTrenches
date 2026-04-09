@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://1duyuwmoe3nw" path="res://scenes/return_menu_button.gd" id="1_vjdtf"]
 
-[node name="Node3D" type="Node3D" unique_id=2011440468]
+[node name="Node3D2" type="Node3D" unique_id=2011440468]
 
 [node name="Control" type="Control" parent="." unique_id=388703207]
 layout_mode = 3
@@ -46,6 +46,6 @@ offset_right = 65.0
 offset_bottom = 82.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Return to Menu"
+text = "Quit Game"
 script = ExtResource("1_vjdtf")
 metadata/_edit_use_anchors_ = true

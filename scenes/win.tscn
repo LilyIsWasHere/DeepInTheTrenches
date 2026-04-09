@@ -46,6 +46,6 @@ offset_right = 65.0
 offset_bottom = 82.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Return to Menu"
+text = "Quit Game"
 script = ExtResource("1_r4oei")
 metadata/_edit_use_anchors_ = true
