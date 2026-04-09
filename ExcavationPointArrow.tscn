@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://b47geecg7ejub"]
+
+[ext_resource type="Script" uid="uid://erwk0vsv8kmq" path="res://excavation_point_arrow.gd" id="1_rxd6o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxd6o"]
+shading_mode = 0
+albedo_color = Color(0.17254902, 0.12156863, 1, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_1bagt"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rxd6o"]
+height = 1.0
+
+[node name="ExcavationPointArrow" type="Node3D" unique_id=384565880]
+script = ExtResource("1_rxd6o")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1601557291]
+transform = Transform3D(-0.2, 3.019916e-08, 0, -3.019916e-08, -0.2, 0, 0, 0, 0.2, 0, 0.1, 0)
+material_override = SubResource("StandardMaterial3D_rxd6o")
+mesh = SubResource("PrismMesh_1bagt")
+
+[node name="HeightScaler" type="Node3D" parent="." unique_id=469455249]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HeightScaler" unique_id=616569122]
+transform = Transform3D(0.1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_rxd6o")
+mesh = SubResource("CylinderMesh_rxd6o")

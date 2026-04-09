@@ -1,7 +1,13 @@
 extends Path3D
 class_name ExcavationPath
 
-var height_delta: float = -2.0
+var height_delta: float = -2.0:
+	set(value):
+		var points := curve.get_baked_points()
+		height_delta = value
+		for idx: int in arrows.keys():
+			arrows[idx].set_height_delta(value)
+			
 
 var owning_camera: Camera3D
 
@@ -9,10 +15,31 @@ var path_fully_excavated: bool = false
 
 var point_fully_excavated: Dictionary[int, bool]
 
+var arrows: Dictionary[int, ExcavationPointArrow]
+
+var point_arrow_scene: PackedScene = preload("res://ExcavationPointArrow.tscn")
+
 # Called when the node enters the scene tree for tdhe first time.
 func _ready() -> void:
+	
+	curve_changed.connect(on_curve_changed)
+	on_curve_changed()
 	pass # Replace with function body.
 
+
+
+func on_curve_changed() -> void:
+	var points := curve.get_baked_points()
+	for i in range(points.size()):
+		if (!arrows.has(i)):
+			var arrow: ExcavationPointArrow = point_arrow_scene.instantiate()
+			add_child(arrow)
+			arrow.global_position = points.get(i)
+			arrow.set_height_delta(height_delta)
+			arrows[i] = arrow
+			
+			
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -27,18 +54,6 @@ func _process(_delta: float) -> void:
 		DebugDraw3D.draw_text(points[0] + Vector3(0.0, abs(height_delta) + 1.0, 0.0), str(height_delta), 3 * dist, Color(1, 1, 0))
 	
 
-	
-	var idx: int = 0
-	for point: Vector3 in points:
-		var arrow_begin := Vector3(point.x, point.y + abs(height_delta), point.z) if height_delta < 0.0 else point
-		var arrow_end := point if height_delta < 0.0 else Vector3(point.x, point.y + abs(height_delta), point.z)
-		var arrow_color := Color(0.2, 0.2, 1) if height_delta < 0.0 else Color(1, 0.2, 0.2)
-		
-		if (is_point_excavated(idx)):
-			arrow_color = Color(0.2, 1.0, 0.2)
-		
-		DebugDraw3D.draw_arrow(arrow_begin, arrow_end, arrow_color, 0.1)
-		idx += 1
 
 
 func is_point_excavated(idx: int) -> bool: 
