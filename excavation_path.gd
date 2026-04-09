@@ -74,6 +74,10 @@ func is_point_excavated(idx: int) -> bool:
 		fully_excavated = data.height - data.initial_height <= height_delta + 0.01
 		
 	point_fully_excavated[idx] = fully_excavated
+	if (arrows.get(idx)):
+		var arrow: ExcavationPointArrow = arrows.get(idx)
+		arrow.visible = false
+		
 	return fully_excavated
 	
 
