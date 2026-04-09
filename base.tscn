@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
 [ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="1_21bcp"]
-[ext_resource type="Script" uid="uid://8ed1uu8tt3hr" path="res://game_over_manager.gd" id="1_42dj3"]
-[ext_resource type="PackedScene" uid="uid://ceo18178hq6qp" path="res://scenes/lose.tscn" id="2_cho24"]
-[ext_resource type="PackedScene" uid="uid://b0tfvmusdjtnt" path="res://scenes/win.tscn" id="3_dlkme"]
+[ext_resource type="Script" path="res://game_over_manager.gd" id="1_42dj3"]
+[ext_resource type="PackedScene" path="res://scenes/lose.tscn" id="2_cho24"]
+[ext_resource type="PackedScene" path="res://scenes/win.tscn" id="3_dlkme"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
@@ -96,6 +96,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.7621, 11.346235, 31.24497
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.82269, 11.346235, 198.51302)
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1900565120]
+process_mode = 3
 stream = ExtResource("6_tpea4")
 autoplay = true
 bus = &"Music"

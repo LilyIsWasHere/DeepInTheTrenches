@@ -116,8 +116,13 @@ func init_ai_states() -> void:
 			$AnimationPlayer.play("walk")) \
 		.set_tick_function(move_safe_tick_fn) \
 		.set_exit_function(func() -> void:
-			fulfill_personal_pickup()
-			$AnimationPlayer.play("drop_item"))
+			if arrived and pickup_request != null:
+				fulfill_personal_pickup()
+				$AnimationPlayer.play("drop_item")
+			elif pickup_request != null:
+				pickup_request.unclaim()
+				pickup_request = null
+			)
 	
 	var base_states : Array[AIState] = [self_defense_state, direct_order_state, execute_role_state, refill_ammo_state]
 	
@@ -495,26 +500,35 @@ func fulfill_pickup() -> void:
 	
 	
 func fulfill_personal_pickup() -> void:
+	if pickup_request == null:
+		return
+
+	if !is_instance_valid(pickup_request.inventory):
+		pickup_request.abandon()
+		pickup_request = null
+		return
+
 	var item: InventoryItem = pickup_request.item
-	
-	if (!is_instance_valid(pickup_request.inventory)):
+
+	if !inventory.has_slot_for_item(item):
+		inventory.add_slot(item, item.default_inventory_capacity)
+
+	if !pickup_request.inventory.has_slot_for_item(item):
 		pickup_request.abandon()
 		pickup_request = null
 		return
-	
-	
-	assert(inventory.has_slot_for_item(item))
-	assert(pickup_request.inventory.has_slot_for_item(item))
-	
-	if (!pickup_request.inventory.has_item(item)):
-		assert(false)
+
+	if !pickup_request.inventory.has_item(item):
 		pickup_request.abandon()
 		pickup_request = null
 		return
-			
-	var transfer_result: Dictionary = Inventory.transfer_items(pickup_request.inventory, inventory, item, pickup_request.quantity)
-	
-	pickup_request.fulfill(pickup_request.quantity - transfer_result["to_overflow"])
+
+	var transfer_result: Dictionary = Inventory.transfer_items(
+		pickup_request.inventory, inventory, item, pickup_request.quantity
+	)
+
+	var moved: int = pickup_request.quantity - transfer_result["from_underflow"] - transfer_result["to_overflow"]
+	pickup_request.fulfill(max(0, moved))
 	pickup_request = null
 	
 	

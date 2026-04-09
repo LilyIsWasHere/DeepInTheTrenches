@@ -16,7 +16,7 @@
 [sub_resource type="Environment" id="Environment_tgkd2"]
 background_mode = 3
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8uaf2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eoro6"]
 resource_local_to_scene = true
 shader = ExtResource("5_woosa")
 shader_parameter/offset = Vector2(0, 0)
@@ -54,7 +54,7 @@ environment = SubResource("Environment_tgkd2")
 unique_name_in_owner = true
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 num_tiles = Vector2i(1, 1)
-heightmap_gen_material = SubResource("ShaderMaterial_8uaf2")
+heightmap_gen_material = SubResource("ShaderMaterial_eoro6")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1442860059]
 transform = Transform3D(1, 0, 0, 0, 0.68011975, 0.733101, 0, -0.733101, 0.68011975, 5.063382, 14.719957, 9.379066)
@@ -175,6 +175,7 @@ text = "Credits"
 alignment = 2
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1990797089]
+process_mode = 3
 stream = ExtResource("12_eoro6")
 autoplay = true
 bus = &"Music"
