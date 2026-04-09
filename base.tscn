@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://b438djrjx0hs4"]
 
 [ext_resource type="Script" uid="uid://cqrqot06a4yco" path="res://hendry/directional_light_3d.gd" id="1_21bcp"]
+[ext_resource type="Script" uid="uid://8ed1uu8tt3hr" path="res://game_over_manager.gd" id="1_42dj3"]
+[ext_resource type="PackedScene" uid="uid://ceo18178hq6qp" path="res://scenes/lose.tscn" id="2_cho24"]
+[ext_resource type="PackedScene" uid="uid://b0tfvmusdjtnt" path="res://scenes/win.tscn" id="3_dlkme"]
 [ext_resource type="PackedScene" uid="uid://b4msqubryiixn" path="res://Terrain.tscn" id="3_ohhpf"]
 [ext_resource type="Script" uid="uid://2ogvod6pxhpw" path="res://Multiplayer/player_spawner.gd" id="4_21bcp"]
 [ext_resource type="PackedScene" uid="uid://bm7w4xywesist" path="res://Fog.tscn" id="4_ohhpf"]
@@ -33,6 +36,15 @@ ssao_intensity = 0.3
 volumetric_fog_density = 0.0
 
 [node name="Node3D" type="Node3D" unique_id=198694909]
+
+[node name="GameOverManager" type="Node3D" parent="." unique_id=1274410312 node_paths=PackedStringArray("loseScreen", "winScreen")]
+script = ExtResource("1_42dj3")
+loseScreen = NodePath("Lose")
+winScreen = NodePath("Win")
+
+[node name="Lose" parent="GameOverManager" unique_id=2011440468 instance=ExtResource("2_cho24")]
+
+[node name="Win" parent="GameOverManager" unique_id=2066408449 instance=ExtResource("3_dlkme")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=531165362]
 transform = Transform3D(-0.72961056, 0.38139787, -0.56763023, 0, 0.8300352, 0.557711, 0.68386286, 0.40691182, -0.60560244, -20.049286, 54.485455, -22.650867)
@@ -82,6 +94,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.7621, 11.346235, 63.72393
 
 [node name="Player1UnitSpawnPos" type="Node3D" parent="." unique_id=2129983184]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 114.82269, 11.346235, 165.80995)
+
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1900565120]
 stream = ExtResource("6_tpea4")
 autoplay = true

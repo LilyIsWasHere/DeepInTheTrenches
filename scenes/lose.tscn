@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://cgll7nrcc3t2s"]
+[gd_scene format=3 uid="uid://ceo18178hq6qp"]
+
+[ext_resource type="Script" uid="uid://1duyuwmoe3nw" path="res://scenes/return_menu_button.gd" id="1_vjdtf"]
 
 [node name="Node3D" type="Node3D" unique_id=2011440468]
 
@@ -8,25 +10,42 @@ anchors_preset = 0
 offset_right = 1161.0
 offset_bottom = 658.0
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1554039793]
-layout_mode = 0
+[node name="CanvasLayer" type="CanvasLayer" parent="Control" unique_id=1849672068]
+layer = 20
+
+[node name="ColorRect" type="ColorRect" parent="Control/CanvasLayer" unique_id=1554039793]
 offset_right = 1159.0
 offset_bottom = 653.0
 color = Color(0.37775227, 0, 0.012108518, 1)
 
-[node name="Label" type="Label" parent="Control" unique_id=820005521]
-layout_mode = 1
+[node name="Label" type="Label" parent="Control/CanvasLayer" unique_id=820005521]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -93.0
-offset_top = -29.3125
-offset_right = 93.0
-offset_bottom = 29.3125
+offset_left = -88.5
+offset_top = -24.3125
+offset_right = 97.5
+offset_bottom = 34.3125
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 42
 text = "You Lost."
+
+[node name="Button" type="Button" parent="Control/CanvasLayer" unique_id=826930302]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -65.0
+offset_top = 51.5
+offset_right = 65.0
+offset_bottom = 82.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Return to Menu"
+script = ExtResource("1_vjdtf")
+metadata/_edit_use_anchors_ = true
