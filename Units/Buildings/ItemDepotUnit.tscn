@@ -89,7 +89,6 @@ metadata/_custom_type_script = "uid://bfmh3e0len4to"
 [node name="Magazine Slot" type="Node" parent="Inventory" unique_id=1409332964]
 script = ExtResource("3_grfpu")
 item = ExtResource("4_5vs5s")
-num = 100
 max_num = 1000
 metadata/_custom_type_script = "uid://1aewywpcrjwu"
 
