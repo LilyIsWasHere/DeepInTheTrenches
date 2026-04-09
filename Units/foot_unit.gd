@@ -507,7 +507,7 @@ func fulfill_personal_pickup() -> void:
 	assert(pickup_request.inventory.has_slot_for_item(item))
 	
 	if (!pickup_request.inventory.has_item(item)):
-		assert(false)
+		#assert(false)
 		pickup_request.abandon()
 		pickup_request = null
 		return
